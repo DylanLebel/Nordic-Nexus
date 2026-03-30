@@ -1,0 +1,745 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NMT Service Hub - Control Center</title>
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --card: #151921;
+            --primary: #3b82f6;
+            --success: #10b981;
+            --warn: #f59e0b;
+            --error: #ef4444;
+            --text: #f3f4f6;
+            --text-dim: #9ca3af;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 2rem;
+            line-height: 1.5;
+        }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .brand h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+        .status-badge { padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+        .status-online { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-offline { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: var(--card); border-radius: 0.75rem; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); }
+        .card h2 { font-size: 0.875rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; letter-spacing: 0.05em; }
+        
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .stat-item .label { display: block; font-size: 0.75rem; color: var(--text-dim); }
+        .stat-item .value { font-size: 1.125rem; font-weight: 600; }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+        .btn { 
+            padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.875rem;
+            cursor: pointer; border: none; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { filter: brightness(1.1); }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--text); }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); }
+        .btn.active-mode { border-color: rgba(59,130,246,0.6); background: rgba(59,130,246,0.18); }
+
+        .log-area { 
+            background: #000; border-radius: 0.5rem; padding: 1rem; font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.8125rem; height: 300px; overflow-y: auto; color: #a6accd; border: 1px solid #1a1b26;
+        }
+        .log-entry { margin-bottom: 0.25rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .log-ts { color: var(--text-dim); margin-right: 0.75rem; }
+        .log-info { color: var(--primary); }
+        .log-success { color: var(--success); }
+        .log-error { color: var(--error); }
+
+        .test-banner {
+            display: none;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--warn);
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.03em;
+        }
+
+        .progress-box {
+            display: none;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% { border-color: rgba(59, 130, 246, 0.3); }
+            50% { border-color: rgba(59, 130, 246, 0.8); }
+            100% { border-color: rgba(59, 130, 246, 0.3); }
+        }
+        .progress-title { font-size: 0.75rem; text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem; font-weight: 700; }
+        .progress-msg { font-size: 1rem; font-weight: 500; }
+        .progress-count { font-size: 0.875rem; color: var(--text-dim); margin-top: 0.25rem; }
+        .run-list-item {
+            padding: 0.65rem 0.75rem; border-radius: 0.375rem; cursor: pointer;
+            margin-bottom: 0.25rem; border: 1px solid transparent;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .run-list-item:hover { background: rgba(255,255,255,0.04); }
+        .run-list-item.selected {
+            background: rgba(59,130,246,0.14);
+            border-color: rgba(59,130,246,0.4);
+        }
+        .run-detail-empty {
+            display: flex; align-items: center; justify-content: center;
+            height: 100%; color: var(--text-dim); font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="testBanner" class="test-banner">
+        &#9888; TEST MODE ACTIVE &mdash; Safe paths only. Emails route to you, not the transmittal group. No production data is touched.
+    </div>
+
+    <div class="header">
+        <div class="brand">
+            <div id="hubVersion" style="color: var(--primary); font-size: 0.75rem; font-weight: 800;">NMT HUB v2.10</div>
+            <h1>Control Center</h1>
+        </div>
+        <div id="statusBadge" class="status-badge status-offline">
+            <span id="statusText">Service Offline</span>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem; padding: 1rem;">
+        <div style="display: flex; gap: 0.75rem;">
+            <input type="text" id="searchInput" placeholder="Search drawing index (part # or description)..." 
+                style="flex: 1; background: #0b0e14; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.75rem 1rem; color: white; outline: none;"
+                onkeyup="if(event.key==='Enter') performSearch()">
+            <button class="btn btn-primary" onclick="performSearch()">Search Index</button>
+        </div>
+        <div id="searchResults" style="display: none; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <h3 style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Search Results</h3>
+                <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.7rem;" onclick="document.getElementById('searchResults').style.display='none'">Close</button>
+            </div>
+            <div id="searchList" style="max-height: 200px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <div id="progressBox" class="progress-box">
+        <div class="progress-title">Active Task Progress</div>
+        <div id="progressMsg" class="progress-msg">Initializing...</div>
+        <div id="progressCount" class="progress-count">Waiting for first heartbeat...</div>
+    </div>
+
+    <div id="emailProgressBox" style="display:none; border-radius:0.75rem; padding:1.25rem; margin-bottom:1.5rem; border:1px solid rgba(59,130,246,0.3); background:rgba(59,130,246,0.1);">
+        <div id="emailProgressLabel" style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--primary); margin-bottom:0.5rem; letter-spacing:0.05em;">Email Status</div>
+        <div id="emailProgressOrder" style="font-size:1rem; font-weight:600; margin-bottom:0.25rem;"></div>
+        <div id="emailProgressDetail" style="font-size:0.875rem; color:var(--text-dim);"></div>
+        <div id="emailProgressTime" style="font-size:0.75rem; color:var(--text-dim); margin-top:0.5rem;"></div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>System Health</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="label">Up Time</span>
+                    <span id="statUptime" class="value">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Active Task</span>
+                    <span id="statTask" class="value" style="color: var(--warn);">None</span>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Last Operations</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="label">Email Monitor</span>
+                    <span id="statEmail" class="value">-</span>
+                    <span id="statNextEmail" style="font-size:0.75rem; color:#888; display:block;"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Index Crawl</span>
+                    <span id="statCrawl" class="value">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="emailSummaryBox" class="card" style="margin-bottom: 2rem; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2 style="margin-bottom: 0;">Last Email Check Result</h2>
+            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="triggerTask('clear-last-summary')">Clear</button>
+        </div>
+        <div id="emailSummaryContent"></div>
+    </div>
+
+    <div class="card section" style="margin-bottom: 2rem;">
+        <h2>Transmittal Mode</h2>
+        <div class="actions">
+            <button id="modeAuto" class="btn btn-outline" onclick="setDispatchMode('Auto')">Auto</button>
+            <button id="modeManual" class="btn btn-outline" onclick="setDispatchMode('Manual')">Manual</button>
+            <button id="modeHold" class="btn btn-outline" onclick="setDispatchMode('Hold')">Hold</button>
+            <button id="btnSendDraft" class="btn btn-primary" style="display:none;" onclick="sendLastDraft()">Send Last Draft</button>
+        </div>
+        <div id="dispatchModeHelp" style="margin-top:0.75rem; font-size:0.82rem; color:var(--text-dim);"></div>
+    </div>
+
+    <div id="errorBox" class="card" style="margin-bottom: 2rem; display: none; border: 1px solid rgba(239, 68, 68, 0.3);">
+        <h2 style="color: var(--error);">Recent Errors</h2>
+        <div id="errorList" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--error);"></div>
+    </div>
+
+    <div id="runLogSection" class="card" style="margin-bottom: 2rem; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+                <h2 style="margin-bottom: 0;">Order History</h2>
+                <div id="lastCheckNote" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem; display: none;"></div>
+            </div>
+            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; color: var(--error);" onclick="triggerTask('clear-history-all')">Clear All</button>
+        </div>
+        <div style="display: flex; gap: 0; min-height: 300px;">
+            <div id="runList" style="width: 240px; flex-shrink: 0; overflow-y: auto; max-height: 440px;
+                border-right: 1px solid rgba(255,255,255,0.06); padding-right: 1rem; margin-right: 1.25rem;"></div>
+            <div id="runDetail" style="flex: 1; min-width: 0; padding-left: 0.25rem;">
+                <div class="run-detail-empty">Select a run to view details</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card section" style="margin-bottom: 2rem;">
+        <h2>Command Palette</h2>
+        <div class="actions">
+            <button id="btnCrawl" class="btn btn-primary" onclick="triggerTask('trigger-crawl')">
+                &#128640; Force Index Rebuild
+            </button>
+            <button id="btnEmail" class="btn btn-outline" onclick="triggerTask('check-emails')">
+                &#128231; Check Emails Now
+            </button>
+            <button id="btnClean" class="btn btn-outline" onclick="triggerTask('clean-index')">
+                &#129529; Run De-duplicator
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Live Event Stream</h2>
+        <div id="logArea" class="log-area"></div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin.includes('http') 
+            ? window.location.origin 
+            : "http://localhost:8000";
+            
+        let lastTask = "None";
+        let currentHistory = [];
+        let selectedRunIndex = -1;
+
+        function isDraftHistory(h) {
+            const status = (h?.Status || '').toLowerCase();
+            return !!(h?.TestMode || h?.DraftCreated || status.includes('draft'));
+        }
+
+        function getDisplayOrderName(h) {
+            const rawName = (h?.OrderName || '').trim();
+            if (rawName && rawName.toLowerCase() !== 'order') return rawName;
+            const client = (h?.Client || '').trim();
+            if (h?.JobNumber && client && client.toLowerCase() !== 'epicor order') return `${h.JobNumber} - ${client}`;
+            if (h?.JobNumber) return `Job ${h.JobNumber}`;
+            if (h?.EmailSubject) return h.EmailSubject;
+            return '(no order name)';
+        }
+
+        function getHistoryOutcome(h) {
+            if (!h) return { color: 'var(--text-dim)', text: 'Unknown', icon: '?' };
+            const mode = h.DispatchMode || '';
+            if (isDraftHistory(h)) {
+                if (h.DraftCreated || (h.Status || '').toLowerCase().includes('draft')) return { color: 'var(--warn)', text: h.Status || (mode === 'Hold' ? 'Draft Saved' : 'Draft Ready'), icon: '&#9998;' };
+                return { color: 'var(--error)', text: h.Status || 'Draft Failed', icon: '&#10007;' };
+            }
+            if (h.TransmittalSent) return { color: 'var(--success)', text: h.Status || 'Transmittal Sent', icon: '&#10003;' };
+            return { color: 'var(--error)', text: h.Status || 'Transmittal Failed', icon: '&#10007;' };
+        }
+
+        function renderDispatchMode(mode) {
+            const effective = mode || 'Auto';
+            document.getElementById('modeAuto').classList.toggle('active-mode', effective === 'Auto');
+            document.getElementById('modeManual').classList.toggle('active-mode', effective === 'Manual');
+            document.getElementById('modeHold').classList.toggle('active-mode', effective === 'Hold');
+            const help = {
+                Auto: 'Auto sends the transmittal immediately after processing.',
+                Manual: 'Manual creates a draft and lets you send it from the dashboard.',
+                Hold: 'Hold saves the draft only and does not pop it open.'
+            };
+            document.getElementById('dispatchModeHelp').innerText = help[effective] || '';
+        }
+
+        async function setDispatchMode(mode) {
+            try {
+                const res = await fetch(`${API_BASE}/set-dispatch-mode?mode=${encodeURIComponent(mode)}`, { method: 'POST' });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Mode update failed');
+                renderDispatchMode(data.DispatchMode || mode);
+                addLog(data.message || `Dispatch mode set to ${mode}`, 'success');
+            } catch (err) {
+                addLog(`Dispatch mode error: ${err.message}`, 'error');
+            }
+        }
+
+        async function sendLastDraft() {
+            try {
+                const res = await fetch(`${API_BASE}/send-last-draft`, { method: 'POST' });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Draft send failed');
+                addLog(data.message || 'Draft sent', 'success');
+                updateStatus();
+            } catch (err) {
+                addLog(`Draft send error: ${err.message}`, 'error');
+            }
+        }
+
+        function renderPartsTable(h) {
+            const parts = Array.isArray(h?.Parts) ? h.Parts : [];
+            if (parts.length === 0) return '';
+            // Format qty: strip trailing .00
+            const fmtQty = (q) => {
+                if (!q || q === '0') return '&mdash;';
+                return String(q).replace(/\.0+$/, '');
+            };
+            // Title-case description
+            const fmtDesc = (d) => {
+                if (!d) return '';
+                return d.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+            };
+            const hasRevisionFields = parts.some(p => p && (Object.prototype.hasOwnProperty.call(p, 'EpicorRev') || Object.prototype.hasOwnProperty.call(p, 'IndexRev') || Object.prototype.hasOwnProperty.call(p, 'RevMatch')));
+            if (hasRevisionFields) {
+                const rows = parts.map(p => {
+                    const orderRev = p.Rev || p.OrderRev || '&mdash;';
+                    const epicorRev = p.EpicorRev || '&mdash;';
+                    const indexRev = p.IndexRev || '&mdash;';
+                    const match = p.RevMatch || 'Unknown';
+                    const matchColor =
+                        match === 'Match' ? 'var(--success)' :
+                        match === 'Index Mismatch' ? 'var(--warn)' :
+                        (match.includes('Mismatch') ? 'var(--error)' : 'var(--text-dim)');
+                    const matchIcon =
+                        match === 'Match' ? '&#10003;' :
+                        match === 'Index Mismatch' ? '&#9888;' :
+                        (match.includes('Mismatch') ? '&#10007;' : '?');
+                    return `<tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                        <td style="padding:0.4rem 0.5rem; font-family:monospace; font-size:0.82rem; white-space:nowrap;">${p.Part || ''}</td>
+                        <td style="padding:0.4rem 0.5rem; font-size:0.8rem; max-width:180px; overflow:hidden; text-overflow:ellipsis;">${fmtDesc(p.Desc)}</td>
+                        <td style="padding:0.4rem 0.5rem; text-align:center;">${orderRev}</td>
+                        <td style="padding:0.4rem 0.5rem; text-align:center;">${epicorRev}</td>
+                        <td style="padding:0.4rem 0.5rem; text-align:center;">${indexRev}</td>
+                        <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:500;">${fmtQty(p.Qty)}</td>
+                        <td style="padding:0.4rem 0.5rem; text-align:center; color:${matchColor}; font-weight:600; white-space:nowrap;">${matchIcon} ${match}</td>
+                    </tr>`;
+                }).join('');
+                return `<div style="margin-top:1rem;">
+                    <div style="font-size:0.75rem; color:var(--text-dim); font-weight:600; margin-bottom:0.4rem;">Parts &amp; Revision Check</div>
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
+                            <thead><tr style="border-bottom:2px solid rgba(255,255,255,0.1);">
+                                <th style="padding:0.4rem 0.5rem; text-align:left; color:var(--text-dim); font-weight:500;">Part</th>
+                                <th style="padding:0.4rem 0.5rem; text-align:left; color:var(--text-dim); font-weight:500;">Description</th>
+                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Order Rev</th>
+                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Epicor Rev</th>
+                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Index Rev</th>
+                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Qty</th>
+                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Status</th>
+                            </tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+            const rows = parts.map(p => `
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                    <td style="padding:0.4rem 0.5rem; font-family:monospace; font-size:0.82rem; white-space:nowrap;">${p.Part || ''}</td>
+                    <td style="padding:0.4rem 0.5rem; text-align:center;">${p.Rev || '&mdash;'}</td>
+                    <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:500;">${fmtQty(p.Qty)}</td>
+                    <td style="padding:0.4rem 0.5rem; font-size:0.8rem;">${fmtDesc(p.Desc || p.Description || '')}</td>
+                </tr>
+            `).join('');
+            return `<div style="margin-top:1rem;">
+                <div style="font-size:0.75rem; color:var(--text-dim); font-weight:600; margin-bottom:0.4rem;">Extracted Order Lines</div>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
+                        <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                            <th style="padding:0.35rem 0.5rem; text-align:left; color:var(--text-dim); font-weight:500;">Part</th>
+                            <th style="padding:0.35rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Rev</th>
+                            <th style="padding:0.35rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Qty</th>
+                            <th style="padding:0.35rem 0.5rem; text-align:left; color:var(--text-dim); font-weight:500;">Description</th>
+                        </tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            </div>`;
+        }
+
+        function renderSummaryPartsTable(h) {
+            const html = renderPartsTable(h);
+            return html ? `<div style="margin-top:1rem;">${html}</div>` : '';
+        }
+
+        function renderRunDetail(index) {
+            const h = currentHistory[index];
+            if (!h) return;
+            const detail = document.getElementById('runDetail');
+            const outcome = getHistoryOutcome(h);
+
+            let notFoundHtml = '';
+            const nfParts = Array.isArray(h.NotFoundParts) ? h.NotFoundParts : [];
+            if (nfParts.length > 0) {
+                notFoundHtml = `<div style="margin-top:1rem; padding:0.75rem;
+                    background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); border-radius:0.375rem;">
+                    <div style="font-size:0.75rem; color:var(--warn); font-weight:600; margin-bottom:0.35rem;">&#9888; Parts Not Found in Index</div>
+                    <div style="font-size:0.82rem; color:var(--text);">${nfParts.join(', ')}</div>
+                </div>`;
+            }
+
+            const pathRows = [];
+            if (h.SourceDocPath) pathRows.push(`<div style="margin-top:0.4rem;"><span style="color:var(--text-dim);">F80:</span> ${h.SourceDocPath}</div>`);
+            if (h.SourcePdfPath) pathRows.push(`<div style="margin-top:0.4rem;"><span style="color:var(--text-dim);">Sales Order PDF:</span> ${h.SourcePdfPath}</div>`);
+            if (h.OutputFolder) pathRows.push(`<div style="margin-top:0.4rem;"><span style="color:var(--text-dim);">Output Folder:</span> ${h.OutputFolder}</div>`);
+
+            detail.innerHTML = `
+                <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:0.2rem;">${h.Timestamp || ''}</div>
+                <div style="font-size:1rem; font-weight:600; margin-bottom:1.25rem; line-height:1.3; color:var(--text);">${getDisplayOrderName(h)}</div>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="label">Job #</span>
+                        <span class="value">${h.JobNumber || '&mdash;'}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Client</span>
+                        <span class="value" style="font-size:1rem;">${h.Client || '&mdash;'}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Transmittal #</span>
+                        <span class="value">${h.TransmittalNo || '&mdash;'}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Status</span>
+                        <span class="value" style="color:${outcome.color};">${outcome.text}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Parts Extracted</span>
+                        <span class="value">${h.PartsExtracted ?? 0}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">PDFs Collected</span>
+                        <span class="value">${h.PdfsCollected ?? 0}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">DXFs Collected</span>
+                        <span class="value">${h.DxfsCollected ?? 0}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Source</span>
+                        <span class="value" style="font-size:0.85rem;">${h.SourcePdf || h.EmailSubject || '&mdash;'}</span>
+                    </div>
+                </div>
+                ${notFoundHtml}
+                ${renderPartsTable(h)}
+                ${pathRows.length ? `<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.05); font-size:0.8rem; word-break:break-word;">${pathRows.join('')}</div>` : ''}
+                <div style="margin-top:1.25rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:1rem;">
+                    <button onclick="clearHistoryItem(${index})"
+                        style="background:transparent; border:1px solid rgba(239,68,68,0.3); color:var(--error);
+                            padding:0.35rem 0.75rem; border-radius:0.375rem; cursor:pointer; font-size:0.8rem;">
+                        Remove from Log
+                    </button>
+                </div>`;
+        }
+
+        function selectRun(index) {
+            selectedRunIndex = index;
+            document.querySelectorAll('.run-list-item').forEach((el, i) => {
+                el.classList.toggle('selected', i === index);
+            });
+            renderRunDetail(index);
+        }
+
+        function renderRunLog(history) {
+            if (history !== null && history !== undefined && !Array.isArray(history)) {
+                history = [history];
+            }
+
+            const historyJson = JSON.stringify(history);
+            const listNeedsUpdate = historyJson !== renderRunLog._lastJson;
+            renderRunLog._lastJson = historyJson;
+
+            currentHistory = history || [];
+            const section = document.getElementById('runLogSection');
+            section.style.display = 'block';
+
+            if (!currentHistory.length) {
+                document.getElementById('runList').innerHTML =
+                    '<div style="color:var(--text-dim); font-size:0.8rem; padding:0.5rem 0;">No runs yet.</div>';
+                document.getElementById('runDetail').innerHTML =
+                    '<div class="run-detail-empty">No order history yet.<br>Processed orders will appear here.</div>';
+                return;
+            }
+
+            if (selectedRunIndex < 0 || selectedRunIndex >= currentHistory.length) {
+                selectedRunIndex = 0;
+            } else if (listNeedsUpdate) {
+                selectedRunIndex = 0;
+            }
+
+            if (!listNeedsUpdate) {
+                renderRunDetail(selectedRunIndex);
+                return;
+            }
+
+            document.getElementById('runList').innerHTML = currentHistory.map((h, i) => {
+                const isSelected = i === selectedRunIndex;
+                const outcome = getHistoryOutcome(h);
+                const parts = (h.Timestamp || '').split(' ');
+                const datePart = parts[0] || '';
+                const timePart = parts[1] || '';
+                const tNo = h.TransmittalNo ? ` &nbsp;<span style="color:var(--text-dim);">${h.TransmittalNo}</span>` : '';
+                return `<div class="run-list-item${isSelected ? ' selected' : ''}" onclick="selectRun(${i})">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.15rem;">
+                        <span style="font-weight:700; font-size:0.875rem;">${h.JobNumber || '(no job #)'}</span>
+                        <span style="font-size:0.7rem; color:var(--text-dim);">${timePart}</span>
+                    </div>
+                    <div style="font-size:0.78rem; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">${h.Client || '&mdash;'}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem;">
+                        <span style="color:${outcome.color};">${outcome.icon} ${outcome.text}</span>
+                        <span style="color:#555;">${datePart}${tNo}</span>
+                    </div>
+                </div>`;
+            }).join('');
+
+            renderRunDetail(selectedRunIndex);
+        }
+
+        async function updateStatus() {
+            try {
+                const res = await fetch(`${API_BASE}/status`);
+                const data = await res.json();
+                
+                document.getElementById('statusBadge').className = "status-badge status-online";
+                document.getElementById('statusText').innerText = "Service Online";
+
+                document.getElementById('statUptime').innerText = data.UpTime;
+                document.getElementById('statTask').innerText = data.ActiveTask;
+                document.getElementById('statEmail').innerText = data.LastEmailCheck;
+                document.getElementById('statCrawl').innerText = data.LastIndexRebuild;
+                renderDispatchMode(data.DispatchMode || 'Auto');
+                const nextEl = document.getElementById('statNextEmail');
+                if (data.NextEmailCheck && data.NextEmailCheck !== 'Pending') {
+                    nextEl.innerText = 'Next check ' + data.NextEmailCheck;
+                } else {
+                    nextEl.innerText = '';
+                }
+
+                // Progress box ΓÇö task-aware so stale progress.json never shows for unrelated tasks
+                const pBox = document.getElementById('progressBox');
+                if (data.ActiveTask !== "None") {
+                    pBox.style.display = 'block';
+                    const isCrawlTask = (data.ActiveTask === 'Index Rebuild' || data.ActiveTask === 'Cleaning Index');
+                    if (isCrawlTask && data.Progress) {
+                        document.getElementById('progressMsg').innerText = data.Progress.Message;
+                        document.getElementById('progressCount').innerText = `Total items processed: ${data.Progress.Count.toLocaleString()}`;
+                    } else if (isCrawlTask) {
+                        document.getElementById('progressMsg').innerText = "Task Initializing...";
+                        document.getElementById('progressCount').innerText = "Waiting for network discovery...";
+                    } else if (data.ActiveTask === 'Email Check') {
+                        document.getElementById('progressMsg').innerText = "Checking email inbox for new orders...";
+                        document.getElementById('progressCount').innerText = "";
+                    } else {
+                        document.getElementById('progressMsg').innerText = data.ActiveTask + " in progress...";
+                        document.getElementById('progressCount').innerText = "";
+                    }
+                } else {
+                    pBox.style.display = 'none';
+                }
+
+                // --- Email progress live status ---
+                const epBox = document.getElementById('emailProgressBox');
+                const ep = data.EmailProgress;
+                if (ep && ep.Step && ep.Step !== 'idle') {
+                    const stepCfg = {
+                        scanning:      { bg: 'rgba(59,130,246,0.1)',  border: 'rgba(59,130,246,0.4)',  lc: 'var(--primary)', label: 'Email Check \u2014 Scanning',       pulse: true  },
+                        found:         { bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.6)',  lc: 'var(--primary)', label: 'Email Check \u2014 Orders Found',    pulse: true  },
+                        processing:    { bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.7)',  lc: 'var(--primary)', label: 'Email Check \u2014 Processing',      pulse: true  },
+                        complete:      { bg: 'rgba(16,185,129,0.1)',  border: 'rgba(16,185,129,0.4)',  lc: 'var(--success)', label: 'Email Check \u2014 Complete',        pulse: false },
+                        failed:        { bg: 'rgba(239,68,68,0.1)',   border: 'rgba(239,68,68,0.4)',   lc: 'var(--error)',   label: 'Email Check \u2014 Failed',          pulse: false },
+                        pending_retry: { bg: 'rgba(245,158,11,0.1)',  border: 'rgba(245,158,11,0.4)',  lc: 'var(--warn)',    label: 'Email Check \u2014 Pending Retry',   pulse: false },
+                    };
+                    const c = stepCfg[ep.Step] || stepCfg.scanning;
+                    epBox.style.display = 'block';
+                    epBox.style.background = c.bg;
+                    epBox.style.border = '1px solid ' + c.border;
+                    epBox.style.animation = c.pulse ? 'pulse 2s infinite ease-in-out' : 'none';
+                    document.getElementById('emailProgressLabel').style.color = c.lc;
+                    document.getElementById('emailProgressLabel').innerText = c.label;
+                    document.getElementById('emailProgressOrder').innerText = ep.Order || '';
+                    document.getElementById('emailProgressDetail').innerText = ep.Detail || '';
+                    document.getElementById('emailProgressTime').innerText = ep.Timestamp || '';
+                } else {
+                    epBox.style.display = 'none';
+                }
+
+                // --- Email check result panel ---
+                const esBox = document.getElementById('emailSummaryBox');
+                if (data.LastEmailSummary) {
+                    const s = data.LastEmailSummary;
+                    esBox.style.display = 'block';
+                    document.getElementById('btnSendDraft').style.display = (s.DraftCreated && s.DraftEntryId) ? 'inline-flex' : 'none';
+                    const ts = s.Timestamp || '';
+                    let html = `<div style="font-size:0.8rem; color:var(--text-dim); margin-bottom:0.75rem;">${ts}</div>`;
+                    if (s.Status === 'No orders found') {
+                        html += `<div style="color:var(--text-dim);">&#10003; Inbox checked &mdash; no new orders found.</div>`;
+                    } else {
+                        html += `<div style="font-weight:600; margin-bottom:0.75rem;">${getDisplayOrderName(s)}`;
+                        if (s.Client) html += ` &mdash; ${s.Client}`;
+                        if (s.JobNumber) html += ` <span style="color:var(--text-dim); font-weight:400;">(Job #${s.JobNumber})</span>`;
+                        html += `</div>`;
+                        html += `<div class="stat-grid">`;
+                        html += `<div class="stat-item"><span class="label">Status</span><span class="value" style="font-size:1rem;">${s.Status || '-'}</span></div>`;
+                        html += `<div class="stat-item"><span class="label">Parts Extracted</span><span class="value">${s.PartsExtracted ?? 0}</span></div>`;
+                        html += `<div class="stat-item"><span class="label">PDFs Collected</span><span class="value">${s.PdfsCollected ?? 0}</span></div>`;
+                        html += `<div class="stat-item"><span class="label">DXFs Collected</span><span class="value">${s.DxfsCollected ?? 0}</span></div>`;
+                        const sentColor = isDraftHistory(s) ? ((s.DraftCreated || (s.Status || '').toLowerCase().includes('draft')) ? 'var(--warn)' : 'var(--error)') : (s.TransmittalSent ? 'var(--success)' : 'var(--error)');
+                        const sentText  = isDraftHistory(s) ? ((s.DraftCreated || (s.Status || '').toLowerCase().includes('draft')) ? ((s.DispatchMode === 'Hold') ? 'Draft Saved &#9998;' : 'Draft Ready &#9998;') : 'Draft Failed &#10007;') : (s.TransmittalSent ? 'Yes &#10003;' : 'No &#10007;');
+                        html += `<div class="stat-item"><span class="label">${isDraftHistory(s) ? 'Draft Status' : 'Transmittal Sent'}</span><span class="value" style="color:${sentColor};">${sentText}</span></div>`;
+                        html += `</div>`;
+                        if (s.NotFoundParts && s.NotFoundParts.length > 0) {
+                            html += `<div style="margin-top:0.75rem; font-size:0.8rem; color:var(--warn);">&#9888; Parts not found in index: ${s.NotFoundParts.join(', ')}</div>`;
+                        }
+                        html += renderSummaryPartsTable(s);
+                    }
+                    document.getElementById('emailSummaryContent').innerHTML = html;
+                } else {
+                    esBox.style.display = 'none';
+                    document.getElementById('btnSendDraft').style.display = 'none';
+                }
+
+                if (data.TestMode) {
+                    document.getElementById('testBanner').style.display = 'block';
+                    document.getElementById('hubVersion').style.color = 'var(--warn)';
+                    document.getElementById('hubVersion').innerText = 'NMT HUB v2.10 \u2014 TEST MODE';
+                }
+
+                // --- Error panel ---
+                const errBox = document.getElementById('errorBox');
+                if (data.RecentErrors && data.RecentErrors.length > 0) {
+                    errBox.style.display = 'block';
+                    document.getElementById('errorList').innerHTML = data.RecentErrors.map(e =>
+                        `<div style="padding: 0.25rem 0; border-bottom: 1px solid rgba(239,68,68,0.1);">${e}</div>`
+                    ).join('');
+                } else {
+                    errBox.style.display = 'none';
+                }
+
+                // --- History table ---
+                renderRunLog(data.History || []);
+
+                if (data.ActiveTask !== lastTask) {
+                    if (data.ActiveTask === "None") {
+                        addLog(`Task Completed: ${lastTask}`, 'success');
+                    } else {
+                        addLog(`Task Started: ${data.ActiveTask}`, 'info');
+                    }
+                    lastTask = data.ActiveTask;
+                }
+
+                const isBusy = data.ActiveTask !== "None";
+                document.getElementById('btnCrawl').disabled = isBusy;
+                document.getElementById('btnEmail').disabled = isBusy;
+                document.getElementById('btnClean').disabled = isBusy;
+                document.getElementById('btnCrawl').style.opacity = isBusy ? 0.5 : 1;
+
+            } catch (err) {
+                document.getElementById('statusBadge').className = "status-badge status-offline";
+                document.getElementById('statusText').innerText = "Service Offline";
+            }
+        }
+
+        async function clearHistoryItem(index) {
+            try {
+                await fetch(`${API_BASE}/clear-history-item?index=${index}`, { method: 'POST' });
+                updateStatus();
+            } catch (err) { }
+        }
+
+        async function triggerTask(endpoint) {
+            addLog(`Triggering ${endpoint}...`, 'info');
+            try {
+                const res = await fetch(`${API_BASE}/${endpoint}`, { method: 'POST' });
+                const data = await res.json();
+                if (res.status === 409) {
+                    addLog(data.message || 'Task already running', 'error');
+                } else {
+                    addLog(data.message, 'success');
+                }
+            } catch (err) {
+                addLog(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function performSearch() {
+            const q = document.getElementById('searchInput').value.trim();
+            if (!q) return;
+            
+            const list = document.getElementById('searchList');
+            const resBox = document.getElementById('searchResults');
+            list.innerHTML = '<div style="padding: 1rem; color: var(--text-dim);">Searching...</div>';
+            resBox.style.display = 'block';
+
+            try {
+                const res = await fetch(`${API_BASE}/search?q=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                
+                if (data.results && data.results.length > 0) {
+                    list.innerHTML = data.results.map(r => `
+                        <div style="padding: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 0.25rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="font-weight: 700; color: var(--primary);">${r.PartNumber}</span>
+                                <span style="font-size: 0.75rem; color: var(--text-dim);">Rev ${r.Revision}</span>
+                            </div>
+                            <div style="font-size: 0.875rem;">${r.Description}</div>
+                            <div style="font-size: 0.7rem; color: #555; word-break: break-all;">${r.FullPath}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    list.innerHTML = '<div style="padding: 1rem; color: var(--text-dim);">No results found.</div>';
+                }
+            } catch (err) {
+                list.innerHTML = `<div style="padding: 1rem; color: var(--error);">Error: ${err.message}</div>`;
+            }
+        }
+
+        function addLog(msg, type = 'info') {
+            const area = document.getElementById('logArea');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const ts = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="log-ts">${ts}</span> <span class="log-${type}">${msg}</span>`;
+            area.prepend(entry);
+        }
+
+        addLog('Dashboard initialized. Waiting for Hub Service...', 'info');
+        setInterval(updateStatus, 1500);
+        updateStatus();
+    </script>
+</body>
+</html>
+

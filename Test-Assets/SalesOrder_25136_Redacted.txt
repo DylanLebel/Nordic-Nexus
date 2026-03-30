@@ -1,0 +1,45 @@
+# ==============================================================================
+#  Redacted-SO-25136.txt - Nordic Minesteel Technologies
+#  SAFE FOR HOME: This file contains the OCR text of SO 25136.
+#  Your extraction script (Extract-EpicorOrderParts.ps1) will process this 
+#  as if it had just come from a PDF.
+# ==============================================================================
+Sales Order Acknowledgement 1 of 1
+Sales Order: 25136
+Sold To:
+REDACTED CUSTOMER
+333 North Central Ave.
+United States
+Ship To:
+P.T. FREEPORT INDONESIA
+C/O AGILITY LOGISTICS
+15993 Diplomatic Plaza Drive
+Houston TX 77032
+United States
+Phone: 504-458-4386
+Order Date:15-Jan-2021
+Need By: 22-Mar-2021
+Terms:Net 30
+PO Number: 5200539793 
+Sales Person: Neal Carr
+Ship Via: Land
+Shipping Terms: Ex Works
+Quote #: 10136
+Color code: RED
+United States Dollar
+Line Part Number/Description Rev Order Qty Unit Price Ext. Price
+1 4823-P27 B 2.00EA 409.400 818.80
+TRIP ROLLER
+Rel Date Quantity
+1 22-Mar-2021 2.00
+2 4823-P30-L ADD 
+MAT
+1.00EA 1,529.400 1,529.40
+LATCH ARM PLATE WELDMENT LEFT
+Rel Date Quantity
+1 22-Mar-2021 1.00
+Line Total: 2,348.20
+Line Miscellaneous Charges: 0.00
+Order Miscellaneous Charges: 0.00
+OrderAck:001:00 Order Total 2,348.20
+Total Tax 0.00

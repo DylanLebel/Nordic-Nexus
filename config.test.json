@@ -1,0 +1,71 @@
+{
+    "_comment":  "TEST MODE config — uses REAL crawl roots but local output/logs/email for safety.",
+    "indexFolder":  "C:\\Temp\\NMT_HubTest\\PDFIndex",
+    "outputFolder":  "C:\\Temp\\NMT_HubTest\\AssemblyPDFs",
+    "logFolder":  "C:\\Temp\\NMT_HubTest\\Logs",
+    "crawlRoots":  [
+                       "C:\\NMT_PDM",
+                       "J:\\Epicor",
+                       "J:\\MFL Jobs",
+                       "J:\\NordicMinesteel",
+                       "Y:\\"
+                   ],
+    "pathFilters":  {
+                        "obsoleteFolderNames":  [
+                                                    "Obsolete",
+                                                    "Archive",
+                                                    "Old",
+                                                    "Deprecated"
+                                                ],
+                        "disallowedModelFolderNames":  [
+                                                           "Obsolete",
+                                                           "Archive",
+                                                           "Old",
+                                                           "Deprecated",
+                                                           "Quotes"
+                                                       ],
+                        "disallowedModelNamePatterns":  [
+                                                            "*-OBS*",
+                                                            "* OBS"
+                                                        ]
+                    },
+    "protectedRoots":  [
+                           "C:\\NMT_PDM"
+                       ],
+    "pdmVaultPath":  "C:\\NMT_PDM",
+    "emailCheckIntervalMinutes":  30,
+    "epicor":  {
+                    "enabled":  true,
+                    "apiUrl":  "https://epicor.groupnmt.com/Prod",
+                    "company":  "NMT",
+                    "username":  "YOUR_EPICOR_USERNAME",
+                    "password":  "YOUR_EPICOR_PASSWORD"
+                },
+    "emailMonitor":  {
+                         "inboxFolder":  "NMT_PDM",
+                         "processedFolder":  "NMT_PDM\\Processed",
+                         "subjectKeywords": [
+                             "Sales Order",
+                             "Order Acknowledgement",
+                             "Order Acknowledgment",
+                             "SO Acknowledgement",
+                             "SO Acknowledgment",
+                             "SO Ack",
+                             "Sales Acknowledgement",
+                             "Sales Acknowledgment",
+                             "Order"
+                         ],
+                         "collectMode":  "BOTH",
+                         "forceSendReceiveBeforeScan":  true,
+                         "sendReceiveWaitSeconds":  4,
+                         "transmittalToProd":  "NMT Transmittal Group",
+                         "transmittalCcProd":  "",
+                         "transmittalToTest":  "dlebel@nmtech.com",
+                         "transmittalCcTest":  "",
+                         "transmittalTo":  "dlebel@nmtech.com",
+                         "transmittalCc":  "",
+                         "sendTransmittalWhenNoDrawings":  true,
+                         "preferVbsMacroOnly":  true,
+                         "enableVbsHelperFallback":  true
+                     }
+}

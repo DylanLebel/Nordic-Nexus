@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -Command ':*)",
+      "Bash(powershell.exe -NoProfile -Command \":*)",
+      "Bash(\"C:/Program Files/Git/mingw64/bin/pdftotext.exe\" -layout \"J:/Epicor/Orders/Spare Parts/27000-27199/27131 - Alamos Gold YD - Upper and Lower Drawbars and Pins/50 - Sales/Sales Order Acknowledgment_27131_REV_0.pdf\" -)",
+      "Bash(\"C:/Program Files/Git/mingw64/bin/pdftotext.exe\" -layout \"J:/Epicor/Orders/Spare Parts/27000-27199/27129 - PTFI - Side Wear Shoes Qty 12 & Eye Rod End Qty 3/50 - Sales/Sales Order Acknowledgment 27129_REV_2.pdf\" -)"
+    ]
+  }
+}

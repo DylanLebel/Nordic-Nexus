@@ -1,0 +1,48 @@
+%!PS
+/Helvetica-Bold findfont 18 scalefont setfont
+100 750 moveto (Nordic Minesteel Technologies) show
+/Helvetica findfont 10 scalefont setfont
+100 735 moveto (373 Main Street West, Unit 1) show
+100 725 moveto (North Bay, ON, P1B 2T9) show
+
+/Helvetica-Bold findfont 14 scalefont setfont
+200 680 moveto (Sales Order Acknowledgement) show
+100 685 400 675 rectstroke
+
+/Helvetica-Bold findfont 12 scalefont setfont
+50 650 moveto (Sales Order: 25136) show
+
+% Sold To / Ship To Boxes
+50 500 240 630 rectstroke
+50 615 moveto ( Sold To:) show
+60 590 moveto (REDACTED CUSTOMER) show
+60 580 moveto (333 North Central Ave.) show
+60 570 moveto (United States) show
+
+300 500 540 630 rectstroke
+300 615 moveto ( Ship To:) show
+310 590 moveto (P.T. FREEPORT INDONESIA) show
+310 580 moveto (C/O AGILITY LOGISTICS) show
+310 570 moveto (Houston TX 77032) show
+
+% Table Header
+50 450 550 470 rectstroke
+55 458 moveto (Line  Part Number/Description      Rev     Order Qty    Unit Price    Ext. Price) show
+
+% Line 1
+55 430 moveto (1     4823-P27                     B       2.00EA       409.400       818.80) show
+55 420 moveto (      TRIP ROLLER) show
+55 410 moveto (      Our Part: 4823-P27) show
+
+% Line 2
+55 380 moveto (2     4823-P30-L                   ADD     1.00EA       1,529.400     1,529.40) show
+55 370 moveto (      LATCH ARM PLATE WELDMENT LEFT) show
+55 360 moveto (      Our Part: 4823-P30-L) show
+
+% Totals
+400 300 moveto (Line Total:) show
+500 300 moveto (2,348.20) show
+400 280 moveto (Order Total:) show
+500 280 moveto (2,348.20) show
+
+showpage

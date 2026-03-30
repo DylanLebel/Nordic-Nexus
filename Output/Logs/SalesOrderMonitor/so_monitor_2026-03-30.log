@@ -1,0 +1,492 @@
+2026-03-30 14:00:35 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 14:00:35 [ ] Mode: PRODUCTION  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 14:00:35 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27131 - Alamos Gold YD - Upper and Lower Drawbars and Pins\50 - Sales\Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:00:35 [ ] --- Processing Sales Order ---
+2026-03-30 14:00:35 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 14:00:35 [ ] Extracting text from: Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:00:35 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 14:00:36 [+]   Native PDF parser: 2344 chars extracted
+2026-03-30 14:00:36 [+] Step 1/5 done: 2344 chars of text ready
+2026-03-30 14:00:36 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 14:00:36 [+]   Line 1 : 17069-10-P06  Rev=3  Qty=4.00
+2026-03-30 14:00:36 [+]   Line 2 : 17069-10-P22  Rev=3  Qty=8.00
+2026-03-30 14:00:36 [+]   Line 3 : 17069-10-P23  Rev=3  Qty=8.00
+2026-03-30 14:00:36 [+]   Line 4 : 17069-10-A07  Rev=1  Qty=4.00
+2026-03-30 14:00:36 [+]   Line 5 : 17069-10-P27  Rev=3  Qty=3.00
+2026-03-30 14:00:36 [+]   Line 6 : 17069-10-P28  Rev=3  Qty=6.00
+2026-03-30 14:00:36 [+]   Line 7 : 17069-10-P29  Rev=2  Qty=6.00
+2026-03-30 14:00:36 [+]   Line 8 : 17069-10-A08  Rev=1  Qty=3.00
+2026-03-30 14:00:36 [ ] Order number from filename: 27131
+2026-03-30 14:00:36 [ ] Order 27131 : 8 parts found, Client: 
+2026-03-30 14:00:36 [+] Step 2/5 done: 8 parts extracted from order 27131
+2026-03-30 14:00:36 [ ] Step 3/5: Validating 8 parts  [Epicor API + Drawing Index]...
+2026-03-30 14:00:36 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 14:00:36 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 14:00:36 [+]   [IN EPICOR] 17069-10-P06  Latest approved rev: 3
+2026-03-30 14:00:36 [+]   [OK] 17069-10-P06  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:00:36 [+]   [IN EPICOR] 17069-10-P22  Latest approved rev: 3
+2026-03-30 14:00:36 [+]   [OK] 17069-10-P22  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:00:36 [+]   [IN EPICOR] 17069-10-P23  Latest approved rev: 3
+2026-03-30 14:00:36 [+]   [OK] 17069-10-P23  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:00:37 [+]   [IN EPICOR] 17069-10-A07  Latest approved rev: 1
+2026-03-30 14:00:37 [+]   [OK] 17069-10-A07  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:00:37 [+]   [IN EPICOR] 17069-10-P27  Latest approved rev: 3
+2026-03-30 14:00:37 [+]   [OK] 17069-10-P27  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:00:37 [+]   [IN EPICOR] 17069-10-P28  Latest approved rev: 3
+2026-03-30 14:00:37 [+]   [OK] 17069-10-P28  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:00:37 [+]   [IN EPICOR] 17069-10-P29  Latest approved rev: 2
+2026-03-30 14:00:37 [+]   [OK] 17069-10-P29  Rev 2 - Epicor rev matches order (no drawing file)
+2026-03-30 14:00:37 [+]   [IN EPICOR] 17069-10-A08  Latest approved rev: 1
+2026-03-30 14:00:37 [+]   [OK] 17069-10-A08  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:00:37 [+] Step 3/5 done: 0 with drawings in index, 0 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 14:00:37 [ ] Step 4/5: Collecting drawings for 8 part(s) (sending all to SimpleCollector)...
+2026-03-30 14:00:37 [+] Drawing collection complete
+2026-03-30 14:00:37 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27131
+2026-03-30 14:00:37 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 14:00:38 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 14:00:38 [ ] Transmittal number: T01
+2026-03-30 14:00:38 [ ] F02 template populated with job 27131, transmittal T01
+2026-03-30 14:00:38 [+] Transmittal T01 draft saved for SO 27131 -> To: NMT Transmittal Group (0 PDFs, 0 DXFs)
+2026-03-30 14:00:38 [+] Order 27131 done - 8 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 14:05:10 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 14:05:10 [ ] Mode: PRODUCTION  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 14:05:10 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27131 - Alamos Gold YD - Upper and Lower Drawbars and Pins\50 - Sales\Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:05:10 [ ] --- Processing Sales Order ---
+2026-03-30 14:05:10 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 14:05:10 [ ] Extracting text from: Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:05:10 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 14:05:10 [+]   Native PDF parser: 2344 chars extracted
+2026-03-30 14:05:10 [+] Step 1/5 done: 2344 chars of text ready
+2026-03-30 14:05:10 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 14:05:10 [+]   Line 1 : 17069-10-P06  Rev=3  Qty=4.00  Desc=UPPER DRAW BAR
+2026-03-30 14:05:10 [+]   Line 2 : 17069-10-P22  Rev=3  Qty=8.00  Desc=BUSHING DRAW BAR, 76.9
+2026-03-30 14:05:10 [+]   Line 3 : 17069-10-P23  Rev=3  Qty=8.00  Desc=BUSHING DRAW BAR, 64
+2026-03-30 14:05:10 [+]   Line 4 : 17069-10-A07  Rev=1  Qty=4.00  Desc=PIN, DRAW BAR, 64 X 165
+2026-03-30 14:05:10 [+]   Line 5 : 17069-10-P27  Rev=3  Qty=3.00  Desc=LOWER DRAWBAR
+2026-03-30 14:05:10 [+]   Line 6 : 17069-10-P28  Rev=3  Qty=6.00  Desc=BUSHING DRAWBAR
+2026-03-30 14:05:10 [+]   Line 7 : 17069-10-P29  Rev=2  Qty=6.00  Desc=BUSHING DRAWBAR
+2026-03-30 14:05:10 [+]   Line 8 : 17069-10-A08  Rev=1  Qty=3.00  Desc=PIN, DRAWBAR 64 X 103
+2026-03-30 14:05:10 [ ] Order number from filename: 27131
+2026-03-30 14:05:10 [ ] Order 27131 : 8 parts found, Client: 
+2026-03-30 14:05:10 [+] Step 2/5 done: 8 parts extracted from order 27131
+2026-03-30 14:05:10 [ ] Step 3/5: Validating 8 parts  [Epicor API + Drawing Index]...
+2026-03-30 14:05:10 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 14:05:10 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 14:05:10 [+]   [IN EPICOR] 17069-10-P06  Latest approved rev: 3
+2026-03-30 14:05:10 [+]   [OK] 17069-10-P06  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:05:11 [+]   [IN EPICOR] 17069-10-P22  Latest approved rev: 3
+2026-03-30 14:05:11 [+]   [OK] 17069-10-P22  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:05:11 [+]   [IN EPICOR] 17069-10-P23  Latest approved rev: 3
+2026-03-30 14:05:11 [+]   [OK] 17069-10-P23  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:05:11 [+]   [IN EPICOR] 17069-10-A07  Latest approved rev: 1
+2026-03-30 14:05:11 [+]   [OK] 17069-10-A07  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:05:11 [+]   [IN EPICOR] 17069-10-P27  Latest approved rev: 3
+2026-03-30 14:05:11 [+]   [OK] 17069-10-P27  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:05:12 [+]   [IN EPICOR] 17069-10-P28  Latest approved rev: 3
+2026-03-30 14:05:12 [+]   [OK] 17069-10-P28  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:05:12 [+]   [IN EPICOR] 17069-10-P29  Latest approved rev: 2
+2026-03-30 14:05:12 [+]   [OK] 17069-10-P29  Rev 2 - Epicor rev matches order (no drawing file)
+2026-03-30 14:05:12 [+]   [IN EPICOR] 17069-10-A08  Latest approved rev: 1
+2026-03-30 14:05:12 [+]   [OK] 17069-10-A08  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:05:12 [+] Step 3/5 done: 0 with drawings in index, 0 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 14:05:12 [ ] Step 4/5: Collecting drawings for 8 part(s) (sending all to SimpleCollector)...
+2026-03-30 14:05:12 [+] Drawing collection complete
+2026-03-30 14:05:12 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27131
+2026-03-30 14:05:12 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 14:05:12 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 14:05:12 [ ] Transmittal number: T01
+2026-03-30 14:05:12 [ ] F02 template populated with job 27131, transmittal T01
+2026-03-30 14:05:12 [+] Transmittal T01 draft saved for SO 27131 -> To: NMT Transmittal Group (0 PDFs, 0 DXFs)
+2026-03-30 14:05:12 [+] Order 27131 done - 8 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 14:08:48 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 14:08:48 [ ] Mode: PRODUCTION  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 14:08:48 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27131 - Alamos Gold YD - Upper and Lower Drawbars and Pins\50 - Sales\Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:08:48 [ ] --- Processing Sales Order ---
+2026-03-30 14:08:48 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 14:08:48 [ ] Extracting text from: Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:08:48 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 14:08:48 [+]   Native PDF parser: 2344 chars extracted
+2026-03-30 14:08:48 [+] Step 1/5 done: 2344 chars of text ready
+2026-03-30 14:08:48 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 14:08:48 [+]   Line 1 : 17069-10-P06  Rev=3  Qty=4.00  Desc=UPPER DRAW BAR
+2026-03-30 14:08:48 [+]   Line 2 : 17069-10-P22  Rev=3  Qty=8.00  Desc=BUSHING DRAW BAR, 76.9
+2026-03-30 14:08:48 [+]   Line 3 : 17069-10-P23  Rev=3  Qty=8.00  Desc=BUSHING DRAW BAR, 64
+2026-03-30 14:08:48 [+]   Line 4 : 17069-10-A07  Rev=1  Qty=4.00  Desc=PIN, DRAW BAR, 64 X 165
+2026-03-30 14:08:48 [+]   Line 5 : 17069-10-P27  Rev=3  Qty=3.00  Desc=LOWER DRAWBAR
+2026-03-30 14:08:48 [+]   Line 6 : 17069-10-P28  Rev=3  Qty=6.00  Desc=BUSHING DRAWBAR
+2026-03-30 14:08:48 [+]   Line 7 : 17069-10-P29  Rev=2  Qty=6.00  Desc=BUSHING DRAWBAR
+2026-03-30 14:08:48 [+]   Line 8 : 17069-10-A08  Rev=1  Qty=3.00  Desc=PIN, DRAWBAR 64 X 103
+2026-03-30 14:08:48 [ ] Order number from filename: 27131
+2026-03-30 14:08:48 [ ] Order 27131 : 8 parts found, Client: 
+2026-03-30 14:08:48 [+] Step 2/5 done: 8 parts extracted from order 27131
+2026-03-30 14:08:48 [ ] Step 3/5: Validating 8 parts  [Epicor API + Drawing Index]...
+2026-03-30 14:08:48 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 14:08:48 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 14:08:49 [+]   [IN EPICOR] 17069-10-P06  Latest approved rev: 3
+2026-03-30 14:08:49 [+]   [OK] 17069-10-P06  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:08:49 [+]   [IN EPICOR] 17069-10-P22  Latest approved rev: 3
+2026-03-30 14:08:49 [+]   [OK] 17069-10-P22  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:08:49 [+]   [IN EPICOR] 17069-10-P23  Latest approved rev: 3
+2026-03-30 14:08:49 [+]   [OK] 17069-10-P23  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:08:49 [+]   [IN EPICOR] 17069-10-A07  Latest approved rev: 1
+2026-03-30 14:08:49 [+]   [OK] 17069-10-A07  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:08:50 [+]   [IN EPICOR] 17069-10-P27  Latest approved rev: 3
+2026-03-30 14:08:50 [+]   [OK] 17069-10-P27  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:08:50 [+]   [IN EPICOR] 17069-10-P28  Latest approved rev: 3
+2026-03-30 14:08:50 [+]   [OK] 17069-10-P28  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:08:50 [+]   [IN EPICOR] 17069-10-P29  Latest approved rev: 2
+2026-03-30 14:08:50 [+]   [OK] 17069-10-P29  Rev 2 - Epicor rev matches order (no drawing file)
+2026-03-30 14:08:50 [+]   [IN EPICOR] 17069-10-A08  Latest approved rev: 1
+2026-03-30 14:08:50 [+]   [OK] 17069-10-A08  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:08:50 [+] Step 3/5 done: 0 with drawings in index, 0 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 14:08:50 [ ] Step 4/5: Collecting drawings for 8 part(s) (sending all to SimpleCollector)...
+2026-03-30 14:08:50 [+] Drawing collection complete
+2026-03-30 14:08:50 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27131
+2026-03-30 14:08:50 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 14:08:50 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 14:08:50 [ ] Transmittal number: T01
+2026-03-30 14:08:50 [ ] F02 template populated with job 27131, transmittal T01
+2026-03-30 14:08:50 [+] Transmittal T01 draft saved for SO 27131 -> To: NMT Transmittal Group (0 PDFs, 0 DXFs)
+2026-03-30 14:08:50 [+] Order 27131 done - 8 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 14:10:33 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 14:10:33 [ ] Mode: PRODUCTION  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 14:10:33 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27131 - Alamos Gold YD - Upper and Lower Drawbars and Pins\50 - Sales\Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:10:33 [ ] --- Processing Sales Order ---
+2026-03-30 14:10:33 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 14:10:33 [ ] Extracting text from: Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:10:33 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 14:10:34 [+]   Native PDF parser: 2344 chars extracted
+2026-03-30 14:10:34 [+] Step 1/5 done: 2344 chars of text ready
+2026-03-30 14:10:34 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 14:10:34 [+]   Line 1 : 17069-10-P06  Rev=3  Qty=4.00  Desc=UPPER DRAW BAR
+2026-03-30 14:10:34 [+]   Line 2 : 17069-10-P22  Rev=3  Qty=8.00  Desc=BUSHING DRAW BAR, 76.9
+2026-03-30 14:10:34 [+]   Line 3 : 17069-10-P23  Rev=3  Qty=8.00  Desc=BUSHING DRAW BAR, 64
+2026-03-30 14:10:34 [+]   Line 4 : 17069-10-A07  Rev=1  Qty=4.00  Desc=PIN, DRAW BAR, 64 X 165
+2026-03-30 14:10:34 [+]   Line 5 : 17069-10-P27  Rev=3  Qty=3.00  Desc=LOWER DRAWBAR
+2026-03-30 14:10:34 [+]   Line 6 : 17069-10-P28  Rev=3  Qty=6.00  Desc=BUSHING DRAWBAR
+2026-03-30 14:10:34 [+]   Line 7 : 17069-10-P29  Rev=2  Qty=6.00  Desc=BUSHING DRAWBAR
+2026-03-30 14:10:34 [+]   Line 8 : 17069-10-A08  Rev=1  Qty=3.00  Desc=PIN, DRAWBAR 64 X 103
+2026-03-30 14:10:34 [ ] Order number from filename: 27131
+2026-03-30 14:10:34 [ ] Order 27131 : 8 parts found, Client: 
+2026-03-30 14:10:34 [+] Step 2/5 done: 8 parts extracted from order 27131
+2026-03-30 14:10:34 [ ] Step 3/5: Validating 8 parts  [Epicor API + Drawing Index]...
+2026-03-30 14:10:34 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 14:10:34 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 14:10:34 [+]   [IN EPICOR] 17069-10-P06  Latest approved rev: 3
+2026-03-30 14:10:34 [+]   [OK] 17069-10-P06  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:10:34 [+]   [IN EPICOR] 17069-10-P22  Latest approved rev: 3
+2026-03-30 14:10:34 [+]   [OK] 17069-10-P22  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:10:34 [+]   [IN EPICOR] 17069-10-P23  Latest approved rev: 3
+2026-03-30 14:10:34 [+]   [OK] 17069-10-P23  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:10:35 [+]   [IN EPICOR] 17069-10-A07  Latest approved rev: 1
+2026-03-30 14:10:35 [+]   [OK] 17069-10-A07  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:10:35 [+]   [IN EPICOR] 17069-10-P27  Latest approved rev: 3
+2026-03-30 14:10:35 [+]   [OK] 17069-10-P27  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:10:35 [+]   [IN EPICOR] 17069-10-P28  Latest approved rev: 3
+2026-03-30 14:10:35 [+]   [OK] 17069-10-P28  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:10:35 [+]   [IN EPICOR] 17069-10-P29  Latest approved rev: 2
+2026-03-30 14:10:35 [+]   [OK] 17069-10-P29  Rev 2 - Epicor rev matches order (no drawing file)
+2026-03-30 14:10:35 [+]   [IN EPICOR] 17069-10-A08  Latest approved rev: 1
+2026-03-30 14:10:35 [+]   [OK] 17069-10-A08  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:10:35 [+] Step 3/5 done: 0 with drawings in index, 0 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 14:10:35 [ ] Step 4/5: Collecting drawings for 8 part(s) (sending all to SimpleCollector)...
+2026-03-30 14:10:35 [+] Drawing collection complete
+2026-03-30 14:10:35 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27131
+2026-03-30 14:10:35 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 14:10:35 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 14:10:35 [ ] Transmittal number: T01
+2026-03-30 14:10:35 [ ] F02 template populated with job 27131, transmittal T01
+2026-03-30 14:10:35 [+] Transmittal T01 draft saved for SO 27131 -> To: NMT Transmittal Group (0 PDFs, 0 DXFs)
+2026-03-30 14:10:36 [+] Order 27131 done - 8 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 14:20:34 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 14:20:34 [ ] Mode: PRODUCTION  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 14:20:34 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27131 - Alamos Gold YD - Upper and Lower Drawbars and Pins\50 - Sales\Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:20:34 [ ] --- Processing Sales Order ---
+2026-03-30 14:20:34 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 14:20:34 [ ] Extracting text from: Sales Order Acknowledgment_27131_REV_0.pdf
+2026-03-30 14:20:34 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 14:20:34 [+]   Native PDF parser: 2344 chars extracted
+2026-03-30 14:20:34 [+] Step 1/5 done: 2344 chars of text ready
+2026-03-30 14:20:34 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 14:20:34 [+]   Line 1 : 17069-10-P06  Rev=3  Qty=4.00  Desc=UPPER DRAW BAR
+2026-03-30 14:20:34 [+]   Line 2 : 17069-10-P22  Rev=3  Qty=8.00  Desc=BUSHING DRAW BAR, 76.9
+2026-03-30 14:20:34 [+]   Line 3 : 17069-10-P23  Rev=3  Qty=8.00  Desc=BUSHING DRAW BAR, 64
+2026-03-30 14:20:34 [+]   Line 4 : 17069-10-A07  Rev=1  Qty=4.00  Desc=PIN, DRAW BAR, 64 X 165
+2026-03-30 14:20:34 [+]   Line 5 : 17069-10-P27  Rev=3  Qty=3.00  Desc=LOWER DRAWBAR
+2026-03-30 14:20:34 [+]   Line 6 : 17069-10-P28  Rev=3  Qty=6.00  Desc=BUSHING DRAWBAR
+2026-03-30 14:20:34 [+]   Line 7 : 17069-10-P29  Rev=2  Qty=6.00  Desc=BUSHING DRAWBAR
+2026-03-30 14:20:34 [+]   Line 8 : 17069-10-A08  Rev=1  Qty=3.00  Desc=PIN, DRAWBAR 64 X 103
+2026-03-30 14:20:34 [ ] Order number from filename: 27131
+2026-03-30 14:20:34 [ ] Order 27131 : 8 parts found, Client: 
+2026-03-30 14:20:34 [+] Step 2/5 done: 8 parts extracted from order 27131
+2026-03-30 14:20:35 [ ] Step 3/5: Validating 8 parts  [Epicor API + Drawing Index]...
+2026-03-30 14:20:35 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 14:20:35 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 14:20:35 [+]   [IN EPICOR] 17069-10-P06  Latest approved rev: 3
+2026-03-30 14:20:35 [+]   [OK] 17069-10-P06  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:20:35 [+]   [IN EPICOR] 17069-10-P22  Latest approved rev: 3
+2026-03-30 14:20:35 [+]   [OK] 17069-10-P22  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:20:35 [+]   [IN EPICOR] 17069-10-P23  Latest approved rev: 3
+2026-03-30 14:20:35 [+]   [OK] 17069-10-P23  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:20:36 [+]   [IN EPICOR] 17069-10-A07  Latest approved rev: 1
+2026-03-30 14:20:36 [+]   [OK] 17069-10-A07  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:20:36 [+]   [IN EPICOR] 17069-10-P27  Latest approved rev: 3
+2026-03-30 14:20:36 [+]   [OK] 17069-10-P27  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:20:36 [+]   [IN EPICOR] 17069-10-P28  Latest approved rev: 3
+2026-03-30 14:20:36 [+]   [OK] 17069-10-P28  Rev 3 - Epicor rev matches order (no drawing file)
+2026-03-30 14:20:36 [+]   [IN EPICOR] 17069-10-P29  Latest approved rev: 2
+2026-03-30 14:20:36 [+]   [OK] 17069-10-P29  Rev 2 - Epicor rev matches order (no drawing file)
+2026-03-30 14:20:36 [+]   [IN EPICOR] 17069-10-A08  Latest approved rev: 1
+2026-03-30 14:20:36 [+]   [OK] 17069-10-A08  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 14:20:36 [+] Step 3/5 done: 0 with drawings in index, 0 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 14:20:36 [ ] Step 4/5: Collecting drawings for 8 part(s) (sending all to SimpleCollector)...
+2026-03-30 14:20:36 [+] Drawing collection complete
+2026-03-30 14:20:36 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27131
+2026-03-30 14:20:36 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 14:20:37 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 14:20:37 [ ] Transmittal number: T01
+2026-03-30 14:20:37 [ ] F02 template populated with job 27131, transmittal T01
+2026-03-30 14:20:37 [+] Transmittal T01 draft saved for SO 27131 -> To: NMT Transmittal Group (0 PDFs, 0 DXFs)
+2026-03-30 14:20:37 [+] Order 27131 done - 8 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 15:26:13 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 15:26:13 [ ] Mode: TEST  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 15:26:13 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27129 - PTFI - Side Wear Shoes Qty 12 & Eye Rod End Qty 3\50 - Sales\Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:26:13 [ ] --- Processing Sales Order ---
+2026-03-30 15:26:13 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 15:26:13 [ ] Extracting text from: Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:26:13 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 15:26:13 [+]   Native PDF parser: 1481 chars extracted
+2026-03-30 15:26:13 [+] Step 1/5 done: 1481 chars of text ready
+2026-03-30 15:26:13 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 15:26:13 [+]   Cross-ref Our Part -> 4823-P2-03
+2026-03-30 15:26:13 [+]   Line 2 : MFL4825-28  Rev=NA  Qty=3.00  Desc=MFL4825-28
+2026-03-30 15:26:13 [ ] Order UNKNOWN : 1 parts found, Client: Freeport-McMoran/P.T. Freeport Indonesia
+2026-03-30 15:26:13 [+] Step 2/5 done: 1 parts extracted from order UNKNOWN
+2026-03-30 15:26:13 [ ] Step 3/5: Validating 1 parts  [Epicor API + Drawing Index]...
+2026-03-30 15:26:13 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 15:26:13 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 15:26:14 [+]   [IN EPICOR] MFL4825-28  Latest approved rev: 
+2026-03-30 15:26:14 [ ]   [NO DRAWING] MFL4825-28 - no drawing file in index
+2026-03-30 15:26:14 [+] Step 3/5 done: 0 with drawings in index, 1 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 15:26:14 [ ] Step 4/5: Collecting drawings for 1 part(s) (sending all to SimpleCollector)...
+2026-03-30 15:26:14 [+] Drawing collection complete
+2026-03-30 15:26:14 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_UNKNOWN
+2026-03-30 15:26:14 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 15:26:14 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 15:26:14 [ ] Transmittal number: T01
+2026-03-30 15:26:14 [ ] F02 template populated with job UNKNOWN, transmittal T01
+2026-03-30 15:26:14 [+] Transmittal T01 draft saved for SO UNKNOWN -> To: dlebel@nmtech.com (0 PDFs, 0 DXFs)
+2026-03-30 15:26:14 [+] Order UNKNOWN done - 1 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 15:27:27 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 15:27:27 [ ] Mode: TEST  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 15:27:27 [!] Outlook connection error: Retrieving the COM class factory for component with CLSID {0006F03A-0000-0000-C000-000000000046} failed due to the following error: 80070520 A specified logon session does not exist. It may already have been terminated. (Exception from HRESULT: 0x80070520).
+2026-03-30 15:27:27 [ ] No new sales order emails found
+2026-03-30 15:27:41 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 15:27:42 [ ] Mode: TEST  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 15:27:42 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27129 - PTFI - Side Wear Shoes Qty 12 & Eye Rod End Qty 3\50 - Sales\Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:27:42 [ ] --- Processing Sales Order ---
+2026-03-30 15:27:42 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 15:27:42 [ ] Extracting text from: Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:27:42 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 15:27:42 [+]   Native PDF parser: 1481 chars extracted
+2026-03-30 15:27:42 [+] Step 1/5 done: 1481 chars of text ready
+2026-03-30 15:27:42 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 15:27:42 [+]   Cross-ref Our Part -> 4823-P2-03
+2026-03-30 15:27:42 [+]   Line 2 : MFL4825-28  Rev=NA  Qty=3.00  Desc=MFL4825-28
+2026-03-30 15:27:42 [ ] Order UNKNOWN : 1 parts found, Client: Freeport-McMoran/P.T. Freeport Indonesia
+2026-03-30 15:27:42 [+] Step 2/5 done: 1 parts extracted from order UNKNOWN
+2026-03-30 15:27:42 [ ] Step 3/5: Validating 1 parts  [Epicor API + Drawing Index]...
+2026-03-30 15:27:42 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 15:27:42 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 15:27:42 [+]   [IN EPICOR] MFL4825-28  Latest approved rev: 
+2026-03-30 15:27:42 [ ]   [NO DRAWING] MFL4825-28 - no drawing file in index
+2026-03-30 15:27:42 [+] Step 3/5 done: 0 with drawings in index, 1 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 15:27:42 [ ] Step 4/5: Collecting drawings for 1 part(s) (sending all to SimpleCollector)...
+2026-03-30 15:27:42 [+] Drawing collection complete
+2026-03-30 15:27:42 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_UNKNOWN
+2026-03-30 15:27:42 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 15:27:42 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 15:27:42 [ ] Transmittal number: T01
+2026-03-30 15:27:42 [ ] F02 template populated with job UNKNOWN, transmittal T01
+2026-03-30 15:27:42 [+] Transmittal T01 draft saved for SO UNKNOWN -> To: dlebel@nmtech.com (0 PDFs, 0 DXFs)
+2026-03-30 15:27:42 [+] Order UNKNOWN done - 1 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 15:31:34 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 15:31:34 [ ] Mode: TEST  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 15:31:34 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27129 - PTFI - Side Wear Shoes Qty 12 & Eye Rod End Qty 3\50 - Sales\Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:31:34 [ ] --- Processing Sales Order ---
+2026-03-30 15:31:34 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 15:31:34 [ ] Extracting text from: Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:31:34 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 15:31:35 [+]   Native PDF parser: 1481 chars extracted
+2026-03-30 15:31:35 [+] Step 1/5 done: 1481 chars of text ready
+2026-03-30 15:31:35 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 15:31:35 [+]   Cross-ref Our Part -> 4823-P2-03
+2026-03-30 15:31:35 [+]   Line 1 : 4823-P2-03  Rev=4  Qty=12.00  Desc=
+2026-03-30 15:31:35 [+]   Line 2 : MFL4825-28  Rev=NA  Qty=3.00  Desc=MFL4825-28
+2026-03-30 15:31:35 [+]   Line 3 : BAC014PB  Rev=1  Qty=24.00  Desc=BAC014PB-A
+2026-03-30 15:31:35 [ ] Order number from filename fallback: 27129
+2026-03-30 15:31:35 [ ] Order 27129 : 3 parts found, Client: Freeport-McMoran/P.T. Freeport Indonesia
+2026-03-30 15:31:35 [+] Step 2/5 done: 3 parts extracted from order 27129
+2026-03-30 15:31:35 [ ] Step 3/5: Validating 3 parts  [Epicor API + Drawing Index]...
+2026-03-30 15:31:35 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 15:31:35 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 15:31:35 [+]   [IN EPICOR] 4823-P2-03  Latest approved rev: 4
+2026-03-30 15:31:35 [+]   [OK] 4823-P2-03  Rev 4 - Epicor rev matches order (no drawing file)
+2026-03-30 15:31:35 [+]   [IN EPICOR] MFL4825-28  Latest approved rev: 
+2026-03-30 15:31:35 [ ]   [NO DRAWING] MFL4825-28 - no drawing file in index
+2026-03-30 15:31:36 [+]   [IN EPICOR] BAC014PB  Latest approved rev: 1
+2026-03-30 15:31:36 [+]   [OK] BAC014PB  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 15:31:36 [+] Step 3/5 done: 0 with drawings in index, 1 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 15:31:36 [ ] Step 4/5: Collecting drawings for 3 part(s) (sending all to SimpleCollector)...
+2026-03-30 15:31:36 [+] Drawing collection complete
+2026-03-30 15:31:36 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27129
+2026-03-30 15:31:36 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 15:31:36 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 15:31:36 [ ] Transmittal number: T01
+2026-03-30 15:31:36 [ ] F02 template populated with job 27129, transmittal T01
+2026-03-30 15:31:36 [+] Transmittal T01 draft saved for SO 27129 -> To: dlebel@nmtech.com (0 PDFs, 0 DXFs)
+2026-03-30 15:31:36 [+] Order 27129 done - 3 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 15:32:43 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 15:32:43 [ ] Mode: TEST  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 15:32:43 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27129 - PTFI - Side Wear Shoes Qty 12 & Eye Rod End Qty 3\50 - Sales\Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:32:43 [ ] --- Processing Sales Order ---
+2026-03-30 15:32:43 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 15:32:43 [ ] Extracting text from: Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:32:43 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 15:32:43 [+]   Native PDF parser: 1481 chars extracted
+2026-03-30 15:32:43 [+] Step 1/5 done: 1481 chars of text ready
+2026-03-30 15:32:43 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 15:32:43 [+]   Cross-ref Our Part -> 4823-P2-03
+2026-03-30 15:32:43 [+]   Line 1 : 4823-P2-03  Rev=4  Qty=12.00  Desc=
+2026-03-30 15:32:43 [+]   Line 2 : MFL4825-28  Rev=NA  Qty=3.00  Desc=MFL4825-28
+2026-03-30 15:32:43 [+]   Line 3 : BAC014PB  Rev=1  Qty=24.00  Desc=BAC014PB-A
+2026-03-30 15:32:43 [ ] Order number from filename fallback: 27129
+2026-03-30 15:32:43 [ ] Order 27129 : 3 parts found, Client: Freeport-McMoran/P.T. Freeport Indonesia
+2026-03-30 15:32:43 [+] Step 2/5 done: 3 parts extracted from order 27129
+2026-03-30 15:32:43 [ ] Step 3/5: Validating 3 parts  [Epicor API + Drawing Index]...
+2026-03-30 15:32:43 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 15:32:43 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 15:32:44 [+]   [IN EPICOR] 4823-P2-03  Latest approved rev: 4
+2026-03-30 15:32:44 [+]   [OK] 4823-P2-03  Rev 4 - Epicor rev matches order (no drawing file)
+2026-03-30 15:32:44 [+]   [IN EPICOR] MFL4825-28  Latest approved rev: 
+2026-03-30 15:32:44 [ ]   [NO DRAWING] MFL4825-28 - no drawing file in index
+2026-03-30 15:32:44 [+]   [IN EPICOR] BAC014PB  Latest approved rev: 1
+2026-03-30 15:32:44 [+]   [OK] BAC014PB  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 15:32:44 [+] Step 3/5 done: 0 with drawings in index, 1 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 15:32:44 [ ] Step 4/5: Collecting drawings for 3 part(s) (sending all to SimpleCollector)...
+2026-03-30 15:32:44 [+] Drawing collection complete
+2026-03-30 15:32:44 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27129
+2026-03-30 15:32:44 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 15:32:44 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 15:32:44 [ ] Transmittal number: T01
+2026-03-30 15:32:44 [ ] F02 template populated with job 27129, transmittal T01
+2026-03-30 15:32:44 [+] Transmittal T01 draft saved for SO 27129 -> To: dlebel@nmtech.com (0 PDFs, 0 DXFs)
+2026-03-30 15:32:44 [+] Order 27129 done - 3 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 15:33:32 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 15:33:32 [ ] Mode: TEST  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 15:33:32 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27129 - PTFI - Side Wear Shoes Qty 12 & Eye Rod End Qty 3\50 - Sales\Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:33:32 [ ] --- Processing Sales Order ---
+2026-03-30 15:33:32 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 15:33:32 [ ] Extracting text from: Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:33:32 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 15:33:32 [+]   Native PDF parser: 1481 chars extracted
+2026-03-30 15:33:32 [+] Step 1/5 done: 1481 chars of text ready
+2026-03-30 15:33:32 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 15:33:32 [+]   Cross-ref Our Part -> 4823-P2-03
+2026-03-30 15:33:32 [+]   Line 1 : 4823-P2-03  Rev=4  Qty=12.00  Desc=
+2026-03-30 15:33:32 [+]   Line 2 : MFL4825-28  Rev=1  Qty=3.00  Desc=MFL4825-28
+2026-03-30 15:33:32 [+]   Line 3 : BAC014PB  Rev=1  Qty=24.00  Desc=BAC014PB-A
+2026-03-30 15:33:32 [ ] Order number from filename fallback: 27129
+2026-03-30 15:33:32 [ ] Order 27129 : 3 parts found, Client: Freeport-McMoran/P.T. Freeport Indonesia
+2026-03-30 15:33:32 [+] Step 2/5 done: 3 parts extracted from order 27129
+2026-03-30 15:33:32 [ ] Step 3/5: Validating 3 parts  [Epicor API + Drawing Index]...
+2026-03-30 15:33:32 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 15:33:32 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 15:33:32 [+]   [IN EPICOR] 4823-P2-03  Latest approved rev: 4
+2026-03-30 15:33:32 [+]   [OK] 4823-P2-03  Rev 4 - Epicor rev matches order (no drawing file)
+2026-03-30 15:33:33 [+]   [IN EPICOR] MFL4825-28  Latest approved rev: 
+2026-03-30 15:33:33 [ ]   [NO DRAWING] MFL4825-28 - no drawing file in index
+2026-03-30 15:33:33 [+]   [IN EPICOR] BAC014PB  Latest approved rev: 1
+2026-03-30 15:33:33 [+]   [OK] BAC014PB  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 15:33:33 [+] Step 3/5 done: 0 with drawings in index, 1 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 15:33:33 [ ] Step 4/5: Collecting drawings for 3 part(s) (sending all to SimpleCollector)...
+2026-03-30 15:33:33 [+] Drawing collection complete
+2026-03-30 15:33:33 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27129
+2026-03-30 15:33:33 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 15:33:33 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 15:33:33 [ ] Transmittal number: T01
+2026-03-30 15:33:33 [ ] F02 template populated with job 27129, transmittal T01
+2026-03-30 15:33:33 [+] Transmittal T01 draft saved for SO 27129 -> To: dlebel@nmtech.com (0 PDFs, 0 DXFs)
+2026-03-30 15:33:33 [+] Order 27129 done - 3 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 15:34:11 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 15:34:11 [ ] Mode: TEST  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 15:34:11 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27129 - PTFI - Side Wear Shoes Qty 12 & Eye Rod End Qty 3\50 - Sales\Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:34:11 [ ] --- Processing Sales Order ---
+2026-03-30 15:34:11 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 15:34:11 [ ] Extracting text from: Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:34:11 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 15:34:11 [+]   Native PDF parser: 1481 chars extracted
+2026-03-30 15:34:11 [+] Step 1/5 done: 1481 chars of text ready
+2026-03-30 15:34:11 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 15:34:11 [+]   Cross-ref Our Part -> 4823-P2-03
+2026-03-30 15:34:11 [+]   Line 1 : 4823-P2-03  Rev=4  Qty=12.00  Desc=
+2026-03-30 15:34:11 [+]   Line 2 : MFL4825-28  Rev=1  Qty=3.00  Desc=MFL4825-28
+2026-03-30 15:34:11 [+]   Line 3 : BAC014PB  Rev=1  Qty=24.00  Desc=BAC014PB-A
+2026-03-30 15:34:11 [ ] Order number from filename fallback: 27129
+2026-03-30 15:34:11 [ ] Order 27129 : 3 parts found, Client: Freeport-McMoran/P.T. Freeport Indonesia
+2026-03-30 15:34:11 [+] Step 2/5 done: 3 parts extracted from order 27129
+2026-03-30 15:34:11 [ ] Step 3/5: Validating 3 parts  [Epicor API + Drawing Index]...
+2026-03-30 15:34:11 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 15:34:11 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 15:34:12 [+]   [IN EPICOR] 4823-P2-03  Latest approved rev: 4
+2026-03-30 15:34:12 [+]   [OK] 4823-P2-03  Rev 4 - Epicor rev matches order (no drawing file)
+2026-03-30 15:34:12 [+]   [IN EPICOR] MFL4825-28  Latest approved rev: 
+2026-03-30 15:34:12 [ ]   [NO DRAWING] MFL4825-28 - no drawing file in index
+2026-03-30 15:34:12 [+]   [IN EPICOR] BAC014PB  Latest approved rev: 1
+2026-03-30 15:34:12 [+]   [OK] BAC014PB  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 15:34:12 [+] Step 3/5 done: 0 with drawings in index, 1 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 15:34:12 [ ] Step 4/5: Collecting drawings for 3 part(s) (sending all to SimpleCollector)...
+2026-03-30 15:34:12 [+] Drawing collection complete
+2026-03-30 15:34:12 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27129
+2026-03-30 15:34:12 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 15:34:12 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 15:34:12 [ ] Transmittal number: T01
+2026-03-30 15:34:12 [ ] F02 template populated with job 27129, transmittal T01
+2026-03-30 15:34:12 [+] Transmittal T01 draft saved for SO 27129 -> To: dlebel@nmtech.com (0 PDFs, 0 DXFs)
+2026-03-30 15:34:12 [+] Order 27129 done - 3 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags
+2026-03-30 15:34:51 [ ] === EpicorOrderMonitor v1.0 starting ===
+2026-03-30 15:34:51 [ ] Mode: TEST  Config: C:\Users\dlebel\Downloads\feb13\v2_ServiceHub\EpicorOrderExtractor\drawing-collector-v3\config.json
+2026-03-30 15:34:51 [ ] Direct PDF mode: J:\Epicor\Orders\Spare Parts\27000-27199\27129 - PTFI - Side Wear Shoes Qty 12 & Eye Rod End Qty 3\50 - Sales\Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:34:51 [ ] --- Processing Sales Order ---
+2026-03-30 15:34:51 [ ] Step 1/5: Extracting text from PDF...
+2026-03-30 15:34:51 [ ] Extracting text from: Sales Order Acknowledgment 27129_REV_2.pdf
+2026-03-30 15:34:51 [ ]   [1/4] Native PDF parser (no tools needed)...
+2026-03-30 15:34:51 [+]   Native PDF parser: 1481 chars extracted
+2026-03-30 15:34:51 [+] Step 1/5 done: 1481 chars of text ready
+2026-03-30 15:34:51 [ ] Step 2/5: Parsing parts list from order text...
+2026-03-30 15:34:51 [+]   Cross-ref Our Part -> 4823-P2-03
+2026-03-30 15:34:51 [+]   Line 1 : 4823-P2-03  Rev=4  Qty=12.00  Desc=
+2026-03-30 15:34:51 [+]   Line 2 : MFL4825-28  Rev=NA  Qty=3.00  Desc=MFL4825-28
+2026-03-30 15:34:51 [+]   Line 3 : BAC014PB  Rev=1  Qty=24.00  Desc=BAC014PB-A
+2026-03-30 15:34:51 [ ] Order number from filename fallback: 27129
+2026-03-30 15:34:51 [ ] Order 27129 : 3 parts found, Client: Freeport-McMoran/P.T. Freeport Indonesia
+2026-03-30 15:34:51 [+] Step 2/5 done: 3 parts extracted from order 27129
+2026-03-30 15:34:51 [ ] Step 3/5: Validating 3 parts  [Epicor API + Drawing Index]...
+2026-03-30 15:34:51 [~] PDF index not found at .\PDFIndex\pdf_index_clean.csv
+2026-03-30 15:34:51 [~] DXF index not found at .\PDFIndex\dxf_index_clean.csv
+2026-03-30 15:34:51 [+]   [IN EPICOR] 4823-P2-03  Latest approved rev: 4
+2026-03-30 15:34:51 [+]   [OK] 4823-P2-03  Rev 4 - Epicor rev matches order (no drawing file)
+2026-03-30 15:34:52 [+]   [IN EPICOR] MFL4825-28  Latest approved rev: 
+2026-03-30 15:34:52 [ ]   [NO DRAWING] MFL4825-28 - no drawing file in index
+2026-03-30 15:34:52 [+]   [IN EPICOR] BAC014PB  Latest approved rev: 1
+2026-03-30 15:34:52 [+]   [OK] BAC014PB  Rev 1 - Epicor rev matches order (no drawing file)
+2026-03-30 15:34:52 [+] Step 3/5 done: 0 with drawings in index, 1 no drawing, 0 rev flags [Epicor API OK]
+2026-03-30 15:34:52 [ ] Step 4/5: Collecting drawings for 3 part(s) (sending all to SimpleCollector)...
+2026-03-30 15:34:52 [+] Drawing collection complete
+2026-03-30 15:34:52 [+] Step 4/5 done: 0 PDFs, 0 DXFs collected to .\Output\SO_27129
+2026-03-30 15:34:52 [ ] Step 5/5: Creating Outlook transmittal draft...
+2026-03-30 15:34:52 [ ] Loaded F02 Document Transmittal template from U:\30-Common\Forms\NMT Blank Forms\F02 Document Transmittal v4.0.oft
+2026-03-30 15:34:52 [ ] Transmittal number: T01
+2026-03-30 15:34:52 [ ] F02 template populated with job 27129, transmittal T01
+2026-03-30 15:34:52 [+] Transmittal T01 draft saved for SO 27129 -> To: dlebel@nmtech.com (0 PDFs, 0 DXFs)
+2026-03-30 15:34:52 [+] Order 27129 done - 3 parts, 0 PDFs, 0 DXFs, T01, 0 rev flags

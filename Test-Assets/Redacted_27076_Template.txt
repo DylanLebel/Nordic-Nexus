@@ -1,0 +1,186 @@
+Corporate Office 18 Legault Street North Bay, ON, P1B 8Z4 P: 705.474.2777
+
+Operations Office 4530 Highway 11N North Bay, ON P1B 8G3
+
+ORDER REVIEW
+Spare Parts
+The purpose of this document is to provide a summary and clarify the scope of work for the project and identify source material to be used in the design and fabrication of the project.
+
+It does not replace the proposal but it should capture deviations from the original proposal, additional client requests, any negotiations or promises that were made, etc.
+
+This document shall be referenced by all parties throughout the project; it shall be used by the designers and detailers during engineering, it shall be appended to the Work Order issued to Operations and shall be referenced by purchasing and QA/QC departments.
+
+Order Review Information
+Date Quote Number Project Number
+Project Name Order Review Author
+
+09-Feb-2026 12394 27076 Goderich #3 Cage Spare Doors DM
+
+Engineering Order Intake Information
+
+Date Received Received by
+Project/Design Lead
+
+10-Feb-2026 Mike Jackson
+
+Page 1 of 8
+
+F80a Spares Order Review V1.0
+
+Contract Information
+Client Client Contact(s)
+Project Location Currency
+PO Received Date OR Creation Date Estimated Delivery Date
+Payment Terms Freight Terms
+
+Compass Minerals Suzanne Oakley oakleys@compassminerals.com Goderich CAD 30-Jan-2026 09-Feb-2026 04-May-2026 Net 60 Ex Works
+
+Engineering Kick-Off (If Required)
+
+Date Attendees
+
+CLICK OR TAP TO ENTER A DATE.
+
+Operations Kick-Off (If Required)
+
+Date Attendees
+
+CLICK OR TAP TO ENTER A DATE.
+
+Page 2 of 8
+
+F80a Spares Order Review V1.0
+
+Key Dates and Milestones
+Final Shipment First Shipment (If multiple)
+Begin Fabrication Receive Materials Start Procurement Engineering Release
+
+24-Apr-2026
+CLICK OR TAP TO ENTER A DATE. CLICK OR TAP TO ENTER A DATE. CLICK OR TAP TO ENTER A DATE. CLICK OR TAP TO ENTER A DATE. CLICK OR TAP TO ENTER A DATE.
+
+Project Overview Project Location Goderich
+
+Customer-Driven Changes
+
+Initials
+
+Date
+
+Change Notes
+
+Coatings Hardware
+
+Paint
+
+SSPC-SP16 PRIME-SIGMAFAST 278 2-3 MILS TOP- AMERLOK2 2-3-MILS COLOUR GRAY
+
+Other
+
+Shipping Information Destination 393 CAMBRIDGE ST
+
+Page 3 of 8
+
+F80a Spares Order Review V1.0
+
+Packaging Requirements
+Other Info
+
+GODERICH ON N7A 2Y9 Canada
+
+Sales Checklist
+
+N/A
+
+    
+  
+Other  
+
+Review RFQ in detail Review proposal Review PO and confirm with shop schedule and engineering schedule Clearly define project scope Set order up in Epicor and have ops set up a production folder and open job pending transmittal if required Confirm customer contact information Confirm customer document submission process Schedule engineering kick-off
+
+ Notes
+
+Date 09-Feb-26 09-Feb-26 09-Feb-26 09-Feb-26 09-Feb-26
+
+Initials DM DM DM DM DM
+
+09-Feb-26 DM 09-Feb-26 DM 09-Feb-26 DM
+
+Page 4 of 8
+
+F80a Spares Order Review V1.0
+
+Engineering and Design
+N/A General   Review sales order
+Detail Drawing Items   BOM in order ­ all items called out, all fields present   Presentation to NMT standards   All parts fully and accurately dimensioned   Weld callouts complete and accurate   Title block completed, including sensible drawing name and description   Proper revisions including revision descriptions and callouts   Fabrication notes present, complete, and accurate   ALL NDE required identified in form F107   Burn profiles created and saved appropriately   Drawing and burn profile revisions synchronized to model revisions   CADLink and final review of parts   Transmittal created for release and a copy saved in the job folder
+
+Notes
+
+Operations Checklist
+
+N/A
+
+ 
+Other  
+Notes
+
+All drawings reviewed and are correct revision, as per transmittal All signed transmittals are in the job folder
+
+Date 10-Feb-26
+
+Initials MJ
+
+10-Feb-26 MJ 10-Feb-26 MJ
+
+Date 02-10-2026 02-10-2026
+
+Initials DF DF
+
+Page 5 of 8
+
+F80a Spares Order Review V1.0
+
+Procurement and Expediting
+N/A   Store all quotes in job folder (if applicable)   Store all POs in job folder   All material substitutions submitted in ECRs (F73)  
+Other   
+Notes
+Manufacturing & Assembly Checklist
+N/A        
+Notes
+
+Date Initials
+
+Date
+
+Initials
+
+Page 6 of 8
+
+F80a Spares Order Review V1.0
+
+Quality Control/Assurance Checklist
+N/A
+  Dimensional verification drawings available (as built/plumb test report etc.)   All required welding procedures available   Aluminum Op Control Procedure required (F104)   ITP complete, approved, and stored in job folder (F102C)   NDE requirements list complete (F107)   Completed dimension checks for incoming part inspection stored in job folder   Clear and comprehensive photos taken and stored in job folder prior to shipping   Links to NCRs generated are in job folder   Verify all ECRs generated are in job folder and closed.   Approved external test reports stored in job folder  
+Other   
+Notes
+
+Date
+
+Initials
+
+Page 7 of 8
+
+F80a Spares Order Review V1.0
+
+Shipping and Logistics Checklist
+N/A   Freight quotes for sales department   Pack list, customs documents and Pre-ship inspection form generated   Items packed and pre-ship inspection form completed   Create BOL and schedule freight pickup   All ship documents scanned and saved in job folder   
+Notes
+
+Date
+
+Initials
+
+Page 8 of 8
+
+F80a Spares Order Review V1.0
+
+
