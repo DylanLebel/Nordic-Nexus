@@ -1,0 +1,13 @@
+﻿{
+    "Name":  "27129",
+    "JobNumber":  "27129",
+    "Description":  "Customer part cross-reference and split revision parsing",
+    "RequestedParts":  [
+                           "40393469",
+                           "4823-P2-03",
+                           "MFL4825-28",
+                           "BAC014PB-A"
+                       ],
+    "PdfIndexRows":  0,
+    "DxfIndexRows":  0
+}

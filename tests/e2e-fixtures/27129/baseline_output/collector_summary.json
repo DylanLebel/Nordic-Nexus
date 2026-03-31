@@ -1,0 +1,152 @@
+﻿{
+    "Timestamp":  "2026-03-31 14:57:13",
+    "BomFile":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27129\\order_bom.txt",
+    "OutputFolder":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27129\\baseline_output",
+    "CollectMode":  "BOTH",
+    "ConfigPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27129\\config.fixture.json",
+    "StrictMatching":  true,
+    "CopyChildVariants":  false,
+    "RequestedParts":  [
+                           "40393469",
+                           "4823-P2-03",
+                           "MFL4825-28",
+                           "BAC014PB-A"
+                       ],
+    "pdfsFound":  0,
+    "dxfsFound":  0,
+    "notFound":  [
+                     "40393469",
+                     "4823-P2-03",
+                     "MFL4825-28",
+                     "BAC014PB-A"
+                 ],
+    "extraPdfs":  [
+
+                  ],
+    "extraDxfs":  [
+
+                  ],
+    "partResults":  [
+                        {
+                            "Part":  "40393469",
+                            "CanonicalPart":  "40393469",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "4823-P2-03",
+                            "CanonicalPart":  "4823-P2-03",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "MFL4825-28",
+                            "CanonicalPart":  "MFL4825-28",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "BAC014PB-A",
+                            "CanonicalPart":  "BAC014PB-A",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        }
+                    ],
+    "warnings":  [
+
+                 ],
+    "indexInfo":  {
+                      "PdfIndex":  {
+                                       "Path":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27129\\pdf_index_clean.csv",
+                                       "Exists":  true,
+                                       "LastWriteTime":  "2026-03-31 14:57:13",
+                                       "AgeHours":  0,
+                                       "IsStale":  false
+                                   },
+                      "DxfIndex":  {
+                                       "Path":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27129\\dxf_index_clean.csv",
+                                       "Exists":  true,
+                                       "LastWriteTime":  "2026-03-31 14:57:13",
+                                       "AgeHours":  0,
+                                       "IsStale":  false
+                                   },
+                      "WarningHours":  24,
+                      "IsStale":  false
+                  }
+}

@@ -1,0 +1,15 @@
+Sales Order: 26905
+Line Part Number/Description Rev                    Order Qty        Unit Price                    United States Dollar
+3 1201-A600             19                                                                                Ext. Price
+PROPULSION UNIT (LH)
+Rel Need By Ship By                       Quantity
+1 04-Mar-2026 20-Feb-2026                 2.00
+4 1201-A601             10                             3.00EA      42,836.550                      128,509.65
+PROPULSION UNIT (RH)
+Rel Need By Ship By                       Quantity
+1 04-Mar-2026 20-Feb-2026                 3.00
+5 JOB CHARGES           add                            1.00EA                   0.000              0.00
+oper
+JOB/ ORDER ADDITIONAL CHARGES
+Rel Need By Ship By                       Quantity
+1 04-Mar-2026 20-Feb-2026                 1.00

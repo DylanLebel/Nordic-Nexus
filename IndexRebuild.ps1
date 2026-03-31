@@ -29,11 +29,23 @@ if ($null -ne $pathFiltersCfg.obsoleteFolderNames) {
     $tmp = @($pathFiltersCfg.obsoleteFolderNames | ForEach-Object { [string]$_ } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
     if ($tmp.Count -gt 0) { $script:obsoleteFolderNames = $tmp }
 }
+$script:skipCrawlFolderNames = @("QA","20 - QA")
+if ($null -ne $pathFiltersCfg.skipCrawlFolderNames) {
+    $tmpSkip = @($pathFiltersCfg.skipCrawlFolderNames | ForEach-Object { [string]$_ } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    if ($tmpSkip.Count -gt 0) { $script:skipCrawlFolderNames = @((@($script:skipCrawlFolderNames) + @($tmpSkip)) | Select-Object -Unique) }
+}
 $script:obsoletePathRegex = $null
 if ($script:obsoleteFolderNames.Count -gt 0) {
     $escaped = @($script:obsoleteFolderNames | ForEach-Object { [regex]::Escape($_.Trim()) } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
     if ($escaped.Count -gt 0) {
         $script:obsoletePathRegex = '(?i)\\(' + ($escaped -join '|') + ')\\'
+    }
+}
+$script:skipCrawlPathRegex = $null
+if ($script:skipCrawlFolderNames.Count -gt 0) {
+    $escapedSkip = @($script:skipCrawlFolderNames | ForEach-Object { [regex]::Escape($_.Trim()) } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    if ($escapedSkip.Count -gt 0) {
+        $script:skipCrawlPathRegex = '(?i)\\(' + ($escapedSkip -join '|') + ')\\'
     }
 }
 
@@ -122,6 +134,13 @@ function Test-ObsoletePath {
     return ($FilePath -match $script:obsoletePathRegex)
 }
 
+function Test-SkipCrawlPath {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path)) { return $false }
+    if ([string]::IsNullOrWhiteSpace($script:skipCrawlPathRegex)) { return $false }
+    return ($Path -match $script:skipCrawlPathRegex)
+}
+
 # ==============================================================================
 #  Generic Parallel Crawl Engine (PDF, DXF, Models)
 # ==============================================================================
@@ -141,7 +160,7 @@ function Start-ParallelCrawl {
     $scanUnits = [System.Collections.Generic.List[pscustomobject]]::new()
     $expandQueue = [System.Collections.Generic.Queue[pscustomobject]]::new()
     foreach ($root in $crawlRoots) {
-        if (Test-Path $root) { $expandQueue.Enqueue([pscustomobject]@{ Path=$root; Depth=0 }) }
+        if ((Test-Path $root) -and -not (Test-SkipCrawlPath $root)) { $expandQueue.Enqueue([pscustomobject]@{ Path=$root; Depth=0 }) }
     }
     
     $cpuCount   = [Environment]::ProcessorCount
@@ -151,6 +170,7 @@ function Start-ParallelCrawl {
     
     while ($expandQueue.Count -gt 0) {
         $item = $expandQueue.Dequeue()
+        if (Test-SkipCrawlPath $item.Path) { continue }
         $shouldExpand = $false
         if ($item.Depth -lt $maxExpandDepth) {
             $norm = $item.Path.TrimEnd('\') + '\'
@@ -162,7 +182,10 @@ function Start-ParallelCrawl {
             try {
                 $subs = [System.IO.Directory]::GetDirectories($item.Path)
                 if ($subs.Count -gt 0) {
-                    foreach ($s in $subs) { $expandQueue.Enqueue([pscustomobject]@{ Path=$s; Depth=($item.Depth+1) }) }
+                    foreach ($s in $subs) {
+                        if (Test-SkipCrawlPath $s) { continue }
+                        $expandQueue.Enqueue([pscustomobject]@{ Path=$s; Depth=($item.Depth+1) })
+                    }
                     $norm = $item.Path.TrimEnd('\') + '\'
                     if ($norm -notmatch '^[A-Za-z]:\\$') { $scanUnits.Add([pscustomobject]@{ Path=$item.Path; ShallowOnly=$true }) }
                 } else { $scanUnits.Add([pscustomobject]@{ Path=$item.Path; ShallowOnly=$false }) }
@@ -187,7 +210,7 @@ function Start-ParallelCrawl {
     $workers  = [System.Collections.Generic.List[object]]::new()
 
     $workerScript = {
-        param($ScanRoot, $ShallowOnly, $ChunkFile, $Counters, $Patterns, $Label)
+        param($ScanRoot, $ShallowOnly, $ChunkFile, $Counters, $Patterns, $Label, $SkipPathRegex)
         $localCount=0; $localErrors=0
         $rootEsc=$ScanRoot.Replace('"','""')
         $buf=[System.Text.StringBuilder]::new(16384); $bufLines=0; $stream=$null
@@ -197,6 +220,7 @@ function Start-ParallelCrawl {
             
             while($stack.Count-gt 0){
                 $cur=$stack.Pop()
+                if ($SkipPathRegex -and $cur -match $SkipPathRegex) { continue }
                 try {
                     foreach ($pat in $Patterns) {
                         foreach($fp in [System.IO.Directory]::EnumerateFiles($cur,$pat)){
@@ -222,7 +246,10 @@ function Start-ParallelCrawl {
                         }
                     }
                     if (-not $ShallowOnly) {
-                        foreach($sd in [System.IO.Directory]::EnumerateDirectories($cur)){$stack.Push($sd)}
+                        foreach($sd in [System.IO.Directory]::EnumerateDirectories($cur)){
+                            if ($SkipPathRegex -and $sd -match $SkipPathRegex) { continue }
+                            $stack.Push($sd)
+                        }
                     }
                 }catch{$localErrors++}
                 if ($ShallowOnly) { break }
@@ -245,7 +272,7 @@ function Start-ParallelCrawl {
         $wPs = [PowerShell]::Create(); $wPs.RunspacePool = $pool
         [void]$wPs.AddScript($workerScript)
         [void]$wPs.AddArgument($unit.Path); [void]$wPs.AddArgument($unit.ShallowOnly)
-        [void]$wPs.AddArgument($chunkFile); [void]$wPs.AddArgument($counters); [void]$wPs.AddArgument($Patterns); [void]$wPs.AddArgument($Label)
+        [void]$wPs.AddArgument($chunkFile); [void]$wPs.AddArgument($counters); [void]$wPs.AddArgument($Patterns); [void]$wPs.AddArgument($Label); [void]$wPs.AddArgument($script:skipCrawlPathRegex)
         $wHandle = $wPs.BeginInvoke()
         $workers.Add([pscustomobject]@{ PS=$wPs; Handle=$wHandle; Chunk=$chunkFile; Root=$unit.Path; ShallowOnly=$unit.ShallowOnly })
     }

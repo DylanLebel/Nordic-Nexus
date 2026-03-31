@@ -1,0 +1,17 @@
+﻿{
+    "Name":  "27131",
+    "JobNumber":  "27131",
+    "Description":  "Multi-line order with straightforward collected drawings",
+    "RequestedParts":  [
+                           "17069-10-P06",
+                           "17069-10-P22",
+                           "17069-10-P23",
+                           "17069-10-A07",
+                           "17069-10-P27",
+                           "17069-10-P28",
+                           "17069-10-P29",
+                           "17069-10-A08"
+                       ],
+    "PdfIndexRows":  8,
+    "DxfIndexRows":  2
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "Part": "40393469",
+    "Order": "27129",
+    "Line": "1",
+    "Rev": "4",
+    "Qty": "12",
+    "Description": "SIDE WEAR SHOE",
+    "InternalPart": "4823-P2-03"
+  },
+  {
+    "Part": "MFL4825-28",
+    "Order": "27129",
+    "Line": "2",
+    "Rev": "",
+    "Qty": "3",
+    "Description": "ROD END, EYE",
+    "InternalPart": ""
+  },
+  {
+    "Part": "BAC014PB-A",
+    "Order": "27129",
+    "Line": "3",
+    "Rev": "1",
+    "Qty": "24",
+    "Description": "1/2\"-NC x 1 3/4\" Lg FHCS Bolt Ass'y",
+    "InternalPart": ""
+  }
+]

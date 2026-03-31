@@ -1,252 +1,1079 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NMT Service Hub - Control Center</title>
+    <title>NMT Service Hub</title>
     <style>
         :root {
-            --bg: #0b0e14;
-            --card: #151921;
+            --bg: #0a0d12;
+            --bg-raised: #111620;
+            --bg-surface: #161d2a;
+            --bg-hover: #1c2436;
+            --border: rgba(255,255,255,0.06);
+            --border-focus: rgba(59,130,246,0.5);
             --primary: #3b82f6;
+            --primary-dim: rgba(59,130,246,0.15);
             --success: #10b981;
+            --success-dim: rgba(16,185,129,0.12);
             --warn: #f59e0b;
+            --warn-dim: rgba(245,158,11,0.12);
             --error: #ef4444;
-            --text: #f3f4f6;
-            --text-dim: #9ca3af;
+            --error-dim: rgba(239,68,68,0.1);
+            --text: #e8eaed;
+            --text-secondary: #8b95a5;
+            --text-dim: #5f6b7a;
+            --radius: 0.625rem;
+            --radius-lg: 0.875rem;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
-            padding: 2rem;
             line-height: 1.5;
+            min-height: 100vh;
         }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .brand h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
-        .status-badge { padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
-        .status-online { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
-        .status-offline { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid rgba(239, 68, 68, 0.2); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .card { background: var(--card); border-radius: 0.75rem; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); }
-        .card h2 { font-size: 0.875rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; letter-spacing: 0.05em; }
-        
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .stat-item .label { display: block; font-size: 0.75rem; color: var(--text-dim); }
-        .stat-item .value { font-size: 1.125rem; font-weight: 600; }
-
-        .actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
-        .btn { 
-            padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.875rem;
-            cursor: pointer; border: none; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;
+        /* === TOP BAR === */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-raised);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { filter: brightness(1.1); }
-        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--text); }
-        .btn-outline:hover { background: rgba(255,255,255,0.05); }
-        .btn.active-mode { border-color: rgba(59,130,246,0.6); background: rgba(59,130,246,0.18); }
-
-        .log-area { 
-            background: #000; border-radius: 0.5rem; padding: 1rem; font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 0.8125rem; height: 300px; overflow-y: auto; color: #a6accd; border: 1px solid #1a1b26;
+        .topbar-left { display: flex; align-items: center; gap: 1rem; }
+        .topbar-brand {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.04em;
         }
-        .log-entry { margin-bottom: 0.25rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .log-ts { color: var(--text-dim); margin-right: 0.75rem; }
+        .topbar-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .topbar-right { display: flex; align-items: center; gap: 1rem; }
+        .topbar-stat {
+            font-size: 0.6875rem;
+            color: var(--text-dim);
+        }
+        .topbar-stat strong { color: var(--text-secondary); font-weight: 600; }
+        .status-pill {
+            display: flex; align-items: center; gap: 0.375rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-pill.online {
+            background: var(--success-dim);
+            color: var(--success);
+            border: 1px solid rgba(16,185,129,0.25);
+        }
+        .status-pill.offline {
+            background: var(--error-dim);
+            color: var(--error);
+            border: 1px solid rgba(239,68,68,0.25);
+        }
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        .status-pill.online .status-dot { animation: blink 2s ease-in-out infinite; }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* === TEST BANNER === */
+        .test-banner {
+            display: none;
+            background: var(--warn-dim);
+            border-bottom: 1px solid rgba(245,158,11,0.3);
+            padding: 0.5rem 1.5rem;
+            color: var(--warn);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        /* === MAIN LAYOUT === */
+        .main { padding: 1.25rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+
+        /* === SEARCH === */
+        .search-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .search-input {
+            flex: 1;
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.6rem 0.875rem;
+            color: var(--text);
+            font-size: 0.8125rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--border-focus); }
+        .search-input::placeholder { color: var(--text-dim); }
+        .search-results-panel {
+            display: none;
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .search-results-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .search-results-list { max-height: 220px; overflow-y: auto; }
+        .search-result-item {
+            padding: 0.5rem 0.625rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-part { font-weight: 700; color: var(--primary); font-size: 0.8125rem; }
+        .search-result-rev { font-size: 0.7rem; color: var(--text-dim); }
+        .search-result-desc { font-size: 0.8rem; color: var(--text-secondary); }
+        .search-result-path { font-size: 0.675rem; color: var(--text-dim); word-break: break-all; margin-top: 0.125rem; }
+
+        /* === PROGRESS BANNERS === */
+        .progress-banner {
+            display: none;
+            background: var(--primary-dim);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: var(--radius);
+            padding: 0.875rem 1rem;
+            margin-bottom: 1rem;
+        }
+        .progress-banner.active { display: block; animation: pulse-border 2s infinite ease-in-out; }
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(59,130,246,0.3); }
+            50% { border-color: rgba(59,130,246,0.7); }
+        }
+        .progress-label {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+        .progress-message { font-size: 0.875rem; font-weight: 500; }
+        .progress-sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.125rem; }
+
+        /* === STATS ROW === */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .stat-card {
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem 0.875rem;
+        }
+        .stat-label {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.25rem;
+        }
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .stat-sub {
+            font-size: 0.6875rem;
+            color: var(--text-dim);
+            margin-top: 0.125rem;
+        }
+
+        /* === CONTROLS ROW === */
+        .controls-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.625rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+        .control-group-label {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+        .control-group .actions { display: flex; gap: 0.375rem; }
+
+        /* === INTERVAL CONTROL === */
+        .interval-input {
+            width: 3.5rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.3rem;
+            padding: 0.25rem 0.4rem;
+            color: var(--text);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .interval-input:focus { border-color: var(--border-focus); }
+        .interval-unit { font-size: 0.75rem; color: var(--text-dim); }
+
+        /* === BUTTONS === */
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .btn:hover { background: var(--bg-hover); color: var(--text); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { filter: brightness(1.15); background: var(--primary); }
+        .btn.active-mode {
+            border-color: rgba(59,130,246,0.6);
+            background: rgba(59,130,246,0.15);
+            color: var(--primary);
+        }
+        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.6875rem; }
+        .btn-danger { color: var(--error); border-color: rgba(239,68,68,0.3); }
+        .btn-danger:hover { background: var(--error-dim); }
+        .btn-ghost { border-color: transparent; }
+        .btn-ghost:hover { border-color: var(--border); }
+
+        /* === TOOLTIP === */
+        [data-tooltip] {
+            position: relative;
+        }
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: var(--text);
+            padding: 0.375rem 0.625rem;
+            border-radius: 0.375rem;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 200;
+            pointer-events: none;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        /* === KEYBOARD HINT === */
+        .kbd {
+            display: inline-block;
+            padding: 0.05rem 0.3rem;
+            font-size: 0.6rem;
+            font-family: 'Consolas', 'SF Mono', monospace;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 0.2rem;
+            color: var(--text-dim);
+            margin-left: 0.25rem;
+            vertical-align: middle;
+        }
+
+        /* === ERROR BOX === */
+        .error-box {
+            display: none;
+            background: var(--error-dim);
+            border: 1px solid rgba(239,68,68,0.25);
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            font-family: 'Consolas', 'SF Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--error);
+        }
+        .error-box-title {
+            font-weight: 700;
+            margin-bottom: 0.375rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-size: 0.8rem;
+        }
+
+        /* === EMAIL SUMMARY === */
+        .email-summary {
+            display: none;
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .email-summary-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 0.875rem;
+        }
+        .section-title {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .email-summary .mini-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+        }
+
+        /* === ORDER HISTORY (MAIN CONTENT) === */
+        .history-panel {
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.25rem;
+            overflow: hidden;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.875rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .history-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .history-header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .history-body {
+            display: flex;
+            min-height: 380px;
+        }
+        .history-sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+        .history-filter {
+            padding: 0.5rem 0.625rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .history-filter-input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.3rem;
+            padding: 0.3rem 0.5rem;
+            color: var(--text);
+            font-size: 0.75rem;
+            outline: none;
+        }
+        .history-filter-input:focus { border-color: var(--border-focus); }
+        .history-filter-input::placeholder { color: var(--text-dim); }
+        .history-filter-tags {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.375rem;
+            flex-wrap: wrap;
+        }
+        .filter-tag {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.375rem;
+            border-radius: 0.2rem;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            transition: all 0.12s;
+        }
+        .filter-tag:hover { background: var(--bg-hover); color: var(--text-secondary); }
+        .filter-tag.active { background: var(--primary-dim); color: var(--primary); border-color: rgba(59,130,246,0.4); }
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 460px;
+        }
+        .history-detail {
+            flex: 1;
+            min-width: 0;
+            padding: 1.25rem;
+            overflow-y: auto;
+            max-height: 520px;
+        }
+        .run-list-item {
+            padding: 0.625rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            border-left: 3px solid transparent;
+            transition: all 0.12s;
+        }
+        .run-list-item:hover { background: var(--bg-hover); }
+        .run-list-item.selected {
+            background: rgba(59,130,246,0.08);
+            border-left-color: var(--primary);
+        }
+        .run-list-item.new-pulse {
+            animation: new-order-pulse 1.5s ease-out;
+        }
+        @keyframes new-order-pulse {
+            0% { background: rgba(59,130,246,0.2); }
+            100% { background: transparent; }
+        }
+        .run-item-job { font-weight: 700; font-size: 0.8125rem; }
+        .run-item-client {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .run-item-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 0.2rem;
+            font-size: 0.675rem;
+        }
+        .run-item-status { font-weight: 600; }
+        .run-item-time { color: var(--text-dim); }
+        .run-item-counts {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 0.1rem;
+        }
+        .detail-empty {
+            display: flex; align-items: center; justify-content: center;
+            height: 100%; color: var(--text-dim); font-size: 0.8125rem;
+        }
+        .detail-order-name {
+            font-size: 1.0625rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        .detail-timestamp {
+            font-size: 0.6875rem;
+            color: var(--text-dim);
+            margin-bottom: 0.25rem;
+        }
+        .detail-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .detail-stat .label { display: block; font-size: 0.6875rem; color: var(--text-dim); font-weight: 500; }
+        .detail-stat .value { font-size: 0.9375rem; font-weight: 700; }
+        .not-found-box {
+            margin-top: 0.75rem;
+            padding: 0.625rem 0.75rem;
+            background: var(--warn-dim);
+            border: 1px solid rgba(245,158,11,0.25);
+            border-radius: 0.375rem;
+        }
+        .not-found-title { font-size: 0.6875rem; color: var(--warn); font-weight: 700; margin-bottom: 0.25rem; }
+        .not-found-parts { font-size: 0.8rem; color: var(--text); }
+        .detail-paths {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            word-break: break-word;
+        }
+        .detail-path-row {
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        .detail-path-label { color: var(--text-dim); }
+        .detail-path-main { min-width: 0; flex: 1; }
+        .detail-path-actions { display: flex; gap: 0.35rem; flex-shrink: 0; }
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.65rem;
+        }
+        .metric-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.03);
+            font-size: 0.64rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        .detail-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+        .detail-section-card {
+            margin-top: 0.9rem;
+            padding: 0.75rem 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background: rgba(255,255,255,0.02);
+        }
+        .detail-section-title {
+            font-size: 0.6875rem;
+            color: var(--text-dim);
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 0.45rem;
+        }
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.6rem;
+        }
+        .compare-cell {
+            padding: 0.55rem 0.65rem;
+            border-radius: 0.45rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .compare-cell-label {
+            display: block;
+            font-size: 0.64rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.2rem;
+        }
+        .compare-cell-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .problem-card {
+            display: none;
+            padding: 0.875rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(245,158,11,0.07), rgba(239,68,68,0.03));
+        }
+        .problem-card.active { display: block; }
+        .problem-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .problem-card-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--warn);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .problem-card-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-top: 0.2rem;
+        }
+        .problem-card-sub {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+        }
+        .severity-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            margin-top: 0.35rem;
+        }
+        .severity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.08rem 0.32rem;
+            font-size: 0.58rem;
+            font-weight: 700;
+            border-radius: 0.25rem;
+            border: 1px solid currentColor;
+            opacity: 0.95;
+        }
+        .file-list {
+            display: grid;
+            gap: 0.45rem;
+        }
+        .file-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.55rem 0.65rem;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 0.45rem;
+            background: rgba(255,255,255,0.02);
+        }
+        .file-list-meta {
+            min-width: 0;
+            flex: 1;
+        }
+        .file-list-name {
+            font-family: 'Consolas', 'SF Mono', monospace;
+            font-size: 0.74rem;
+            font-weight: 700;
+            word-break: break-word;
+        }
+        .file-list-sub {
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            margin-top: 0.12rem;
+            word-break: break-word;
+        }
+
+        /* === PARTS TABLE === */
+        .parts-section { margin-top: 1rem; }
+        .parts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .parts-title {
+            font-size: 0.6875rem;
+            color: var(--text-dim);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .parts-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+        .parts-table thead th {
+            padding: 0.375rem 0.5rem;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: 500;
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            border-bottom: 1px solid var(--border);
+        }
+        .parts-table thead th.center { text-align: center; }
+        .parts-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .parts-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .parts-table td { padding: 0.375rem 0.5rem; }
+        .parts-table td.mono { font-family: 'Consolas', 'SF Mono', monospace; font-size: 0.78rem; white-space: nowrap; }
+        .parts-table td.center { text-align: center; }
+        .parts-table td.desc { max-width: 200px; overflow: hidden; text-overflow: ellipsis; font-size: 0.75rem; color: var(--text-secondary); }
+        .parts-table td.status { text-align: center; font-weight: 600; white-space: nowrap; }
+
+        /* === LOG PANEL === */
+        .log-panel {
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+        .log-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+        }
+        .log-header:hover { background: var(--bg-hover); }
+        .log-toggle {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            transition: transform 0.2s;
+        }
+        .log-toggle.collapsed { transform: rotate(-90deg); }
+        .log-area {
+            background: #06080c;
+            font-family: 'Consolas', 'SF Mono', 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            height: 180px;
+            overflow-y: auto;
+            color: #8b95a5;
+            padding: 0.625rem 0.875rem;
+            transition: height 0.25s ease;
+        }
+        .log-area.collapsed { height: 0; padding: 0 0.875rem; overflow: hidden; }
+        .log-entry { padding: 0.15rem 0; }
+        .log-ts { color: var(--text-dim); margin-right: 0.5rem; }
         .log-info { color: var(--primary); }
         .log-success { color: var(--success); }
         .log-error { color: var(--error); }
+        .log-warn { color: var(--warn); }
 
-        .test-banner {
-            display: none;
-            background: rgba(245, 158, 11, 0.12);
-            border: 1px solid rgba(245, 158, 11, 0.4);
-            border-radius: 0.5rem;
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 1.5rem;
-            color: var(--warn);
-            font-weight: 600;
-            font-size: 0.875rem;
-            letter-spacing: 0.03em;
+        /* === DISPATCH HELP === */
+        .dispatch-help {
+            font-size: 0.6875rem;
+            color: var(--text-dim);
         }
 
-        .progress-box {
+        /* === TOAST NOTIFICATION === */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            font-size: 0.8125rem;
+            color: var(--text);
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 350px;
+        }
+        .toast.visible { transform: translateY(0); opacity: 1; }
+        .toast.success { border-left: 3px solid var(--success); }
+        .toast.warn { border-left: 3px solid var(--warn); }
+        .toast.error { border-left: 3px solid var(--error); }
+
+        /* === CONFIRM DIALOG === */
+        .confirm-overlay {
             display: none;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 0.75rem;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-            animation: pulse 2s infinite ease-in-out;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
         }
-        @keyframes pulse {
-            0% { border-color: rgba(59, 130, 246, 0.3); }
-            50% { border-color: rgba(59, 130, 246, 0.8); }
-            100% { border-color: rgba(59, 130, 246, 0.3); }
+        .confirm-overlay.active { display: flex; }
+        .confirm-box {
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            max-width: 380px;
+            text-align: center;
         }
-        .progress-title { font-size: 0.75rem; text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem; font-weight: 700; }
-        .progress-msg { font-size: 1rem; font-weight: 500; }
-        .progress-count { font-size: 0.875rem; color: var(--text-dim); margin-top: 0.25rem; }
-        .run-list-item {
-            padding: 0.65rem 0.75rem; border-radius: 0.375rem; cursor: pointer;
-            margin-bottom: 0.25rem; border: 1px solid transparent;
-            transition: background 0.15s, border-color 0.15s;
-        }
-        .run-list-item:hover { background: rgba(255,255,255,0.04); }
-        .run-list-item.selected {
-            background: rgba(59,130,246,0.14);
-            border-color: rgba(59,130,246,0.4);
-        }
-        .run-detail-empty {
-            display: flex; align-items: center; justify-content: center;
-            height: 100%; color: var(--text-dim); font-size: 0.875rem;
-        }
+        .confirm-box p { margin-bottom: 1rem; font-size: 0.875rem; }
+        .confirm-box .actions { display: flex; gap: 0.5rem; justify-content: center; }
     </style>
 </head>
 <body>
     <div id="testBanner" class="test-banner">
-        &#9888; TEST MODE ACTIVE &mdash; Safe paths only. Emails route to you, not the transmittal group. No production data is touched.
+        &#9888; TEST MODE &mdash; Safe paths only. Emails route to you, not the transmittal group.
     </div>
 
-    <div class="header">
-        <div class="brand">
-            <div id="hubVersion" style="color: var(--primary); font-size: 0.75rem; font-weight: 800;">NMT HUB v2.10</div>
-            <h1>Control Center</h1>
+    <div class="topbar">
+        <div class="topbar-left">
+            <span id="hubVersion" class="topbar-brand">NMT HUB v2.10</span>
+            <span class="topbar-title">Control Center</span>
         </div>
-        <div id="statusBadge" class="status-badge status-offline">
-            <span id="statusText">Service Offline</span>
+        <div class="topbar-right">
+            <span id="dispatchModeHelp" class="dispatch-help"></span>
+            <span id="todayStat" class="topbar-stat"></span>
+            <div id="statusBadge" class="status-pill offline" title="Hub service connection status">
+                <span class="status-dot"></span>
+                <span id="statusText">Offline</span>
+            </div>
         </div>
     </div>
 
-    <div class="card" style="margin-bottom: 1.5rem; padding: 1rem;">
-        <div style="display: flex; gap: 0.75rem;">
-            <input type="text" id="searchInput" placeholder="Search drawing index (part # or description)..." 
-                style="flex: 1; background: #0b0e14; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.75rem 1rem; color: white; outline: none;"
+    <div class="main">
+        <!-- Search -->
+        <div class="search-row">
+            <input type="text" id="searchInput" class="search-input"
+                placeholder="Search drawing index &mdash; part number or description..."
                 onkeyup="if(event.key==='Enter') performSearch()">
-            <button class="btn btn-primary" onclick="performSearch()">Search Index</button>
+            <button class="btn btn-primary" onclick="performSearch()" data-tooltip="Search PDF and DXF indexes">Search</button>
         </div>
-        <div id="searchResults" style="display: none; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <h3 style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Search Results</h3>
-                <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.7rem;" onclick="document.getElementById('searchResults').style.display='none'">Close</button>
+        <div id="searchResults" class="search-results-panel">
+            <div class="search-results-header">
+                <span class="section-title">Search Results</span>
+                <button class="btn btn-sm" onclick="document.getElementById('searchResults').style.display='none'">Close</button>
             </div>
-            <div id="searchList" style="max-height: 200px; overflow-y: auto;"></div>
+            <div id="searchList" class="search-results-list"></div>
         </div>
-    </div>
 
-    <div id="progressBox" class="progress-box">
-        <div class="progress-title">Active Task Progress</div>
-        <div id="progressMsg" class="progress-msg">Initializing...</div>
-        <div id="progressCount" class="progress-count">Waiting for first heartbeat...</div>
-    </div>
+        <!-- Progress banners -->
+        <div id="progressBox" class="progress-banner">
+            <div class="progress-label">Active Task</div>
+            <div id="progressMsg" class="progress-message">Initializing...</div>
+            <div id="progressCount" class="progress-sub"></div>
+        </div>
+        <div id="emailProgressBox" class="progress-banner">
+            <div id="emailProgressLabel" class="progress-label">Email Status</div>
+            <div id="emailProgressOrder" class="progress-message"></div>
+            <div id="emailProgressDetail" class="progress-sub"></div>
+            <div id="emailProgressTime" style="font-size:0.675rem; color:var(--text-dim); margin-top:0.25rem;"></div>
+        </div>
 
-    <div id="emailProgressBox" style="display:none; border-radius:0.75rem; padding:1.25rem; margin-bottom:1.5rem; border:1px solid rgba(59,130,246,0.3); background:rgba(59,130,246,0.1);">
-        <div id="emailProgressLabel" style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--primary); margin-bottom:0.5rem; letter-spacing:0.05em;">Email Status</div>
-        <div id="emailProgressOrder" style="font-size:1rem; font-weight:600; margin-bottom:0.25rem;"></div>
-        <div id="emailProgressDetail" style="font-size:0.875rem; color:var(--text-dim);"></div>
-        <div id="emailProgressTime" style="font-size:0.75rem; color:var(--text-dim); margin-top:0.5rem;"></div>
-    </div>
+        <!-- Error box -->
+        <div id="errorBox" class="error-box">
+            <div class="error-box-title">Recent Errors</div>
+            <div id="errorList"></div>
+        </div>
 
-    <div class="grid">
-        <div class="card">
-            <h2>System Health</h2>
-            <div class="stat-grid">
-                <div class="stat-item">
-                    <span class="label">Up Time</span>
-                    <span id="statUptime" class="value">-</span>
+        <!-- Stats row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Uptime</div>
+                <div id="statUptime" class="stat-value">-</div>
+                <div id="statUptimeRel" class="stat-sub"></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Task</div>
+                <div id="statTask" class="stat-value" style="color: var(--text-secondary);">None</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Email Monitor</div>
+                <div id="statEmail" class="stat-value">-</div>
+                <div id="statNextEmail" class="stat-sub"></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Index Crawl</div>
+                <div id="statCrawl" class="stat-value">-</div>
+                <div id="statCrawlRel" class="stat-sub"></div>
+            </div>
+            <div class="stat-card" style="display:flex; flex-direction:column; justify-content:center;">
+                <div class="stat-label">Quick Actions</div>
+                <div style="display:flex; gap:0.375rem; margin-top:0.25rem; flex-wrap:wrap;">
+                    <button id="btnEmail" class="btn btn-sm" onclick="triggerTask('check-emails')" data-tooltip="Scan Outlook inbox for new orders (Ctrl+E)">&#128231; Emails</button>
+                    <button id="btnCrawl" class="btn btn-sm" onclick="triggerTask('trigger-crawl')" data-tooltip="Rebuild PDF, DXF, and model indexes from network drives">&#128640; Rebuild</button>
+                    <button id="btnClean" class="btn btn-sm" onclick="triggerTask('clean-index')" data-tooltip="Remove duplicate and obsolete entries from the index">&#129529; Clean Index</button>
                 </div>
-                <div class="stat-item">
-                    <span class="label">Active Task</span>
-                    <span id="statTask" class="value" style="color: var(--warn);">None</span>
+            </div>
+        </div>
+
+        <!-- Controls row: dispatch mode + monitor interval -->
+        <div class="controls-row">
+            <div class="control-group">
+                <span class="control-group-label">Transmittal</span>
+                <div class="actions">
+                    <button id="modeAuto" class="btn btn-sm" onclick="setDispatchMode('Auto')" data-tooltip="Send transmittal email immediately after collection">Auto</button>
+                    <button id="modeManual" class="btn btn-sm" onclick="setDispatchMode('Manual')" data-tooltip="Create Outlook draft for review before sending">Manual</button>
+                    <button id="modeHold" class="btn btn-sm" onclick="setDispatchMode('Hold')" data-tooltip="Save draft only, send manually later">Hold</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <span class="control-group-label">Check Every</span>
+                <input type="number" id="intervalInput" class="interval-input" min="1" max="120" value="30"
+                    title="Email check interval in minutes (1-120)"
+                    onchange="setEmailInterval(this.value)"
+                    onkeyup="if(event.key==='Enter') setEmailInterval(this.value)">
+                <span class="interval-unit">min</span>
+            </div>
+            <button id="btnSendDraft" class="btn btn-primary btn-sm" style="display:none;" onclick="sendLastDraft()" data-tooltip="Send the last saved Outlook draft">&#9993; Send Last Draft</button>
+        </div>
+
+        <!-- Email summary -->
+        <div id="emailSummaryBox" class="email-summary">
+            <div class="email-summary-header">
+                <span class="section-title">Last Email Check Result</span>
+                <button class="btn btn-sm" onclick="triggerTask('clear-last-summary')">Clear</button>
+            </div>
+            <div id="emailSummaryContent"></div>
+        </div>
+
+        <!-- Order History (hero section) -->
+        <div id="runLogSection" class="history-panel" style="display:none;">
+            <div class="history-header">
+                <div class="history-header-left">
+                    <span class="section-title">Order History</span>
+                    <span id="historyCount" style="font-size:0.675rem; color:var(--text-dim);"></span>
+                </div>
+                <div class="history-header-right">
+                    <button class="btn btn-sm btn-danger" onclick="confirmClearAll()">Clear All</button>
+                </div>
+            </div>
+            <div id="problemRunCard" class="problem-card"></div>
+            <div class="history-body">
+                <div class="history-sidebar">
+                    <div class="history-filter">
+                        <input type="text" id="historyFilterInput" class="history-filter-input"
+                            placeholder="Filter by job # or client..."
+                            oninput="applyHistoryFilter()">
+                        <div class="history-filter-tags">
+                            <button class="filter-tag active" data-filter="all" onclick="setFilterTag(this)">All</button>
+                            <button class="filter-tag" data-filter="sent" onclick="setFilterTag(this)" style="color:var(--success);">Sent</button>
+                            <button class="filter-tag" data-filter="draft" onclick="setFilterTag(this)" style="color:var(--warn);">Drafts</button>
+                            <button class="filter-tag" data-filter="nodrw" onclick="setFilterTag(this)" style="color:var(--primary);">No Drawings</button>
+                            <button class="filter-tag" data-filter="failed" onclick="setFilterTag(this)" style="color:var(--error);">Failed</button>
+                        </div>
+                    </div>
+                    <div id="runList" class="history-list"></div>
+                </div>
+                <div id="runDetail" class="history-detail">
+                    <div class="detail-empty">Select an order to view details<br><span style="font-size:0.7rem; color:var(--text-dim);">Use &#9650;&#9660; arrow keys to navigate</span></div>
                 </div>
             </div>
         </div>
-        <div class="card">
-            <h2>Last Operations</h2>
-            <div class="stat-grid">
-                <div class="stat-item">
-                    <span class="label">Email Monitor</span>
-                    <span id="statEmail" class="value">-</span>
-                    <span id="statNextEmail" style="font-size:0.75rem; color:#888; display:block;"></span>
-                </div>
-                <div class="stat-item">
-                    <span class="label">Index Crawl</span>
-                    <span id="statCrawl" class="value">-</span>
-                </div>
+
+        <!-- Log stream (collapsible) -->
+        <div class="log-panel">
+            <div class="log-header" onclick="toggleLog()">
+                <span class="section-title">Event Stream</span>
+                <span id="logToggle" class="log-toggle">&#9660;</span>
+            </div>
+            <div id="logArea" class="log-area"></div>
+        </div>
+    </div>
+
+    <!-- Confirm dialog -->
+    <div id="confirmOverlay" class="confirm-overlay" onclick="if(event.target===this)closeConfirm()">
+        <div class="confirm-box">
+            <p id="confirmMsg">Are you sure?</p>
+            <div class="actions">
+                <button class="btn btn-sm" onclick="closeConfirm()">Cancel</button>
+                <button class="btn btn-sm btn-danger" id="confirmYes" onclick="closeConfirm(true)">Confirm</button>
             </div>
         </div>
     </div>
 
-    <div id="emailSummaryBox" class="card" style="margin-bottom: 2rem; display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <h2 style="margin-bottom: 0;">Last Email Check Result</h2>
-            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="triggerTask('clear-last-summary')">Clear</button>
-        </div>
-        <div id="emailSummaryContent"></div>
-    </div>
-
-    <div class="card section" style="margin-bottom: 2rem;">
-        <h2>Transmittal Mode</h2>
-        <div class="actions">
-            <button id="modeAuto" class="btn btn-outline" onclick="setDispatchMode('Auto')">Auto</button>
-            <button id="modeManual" class="btn btn-outline" onclick="setDispatchMode('Manual')">Manual</button>
-            <button id="modeHold" class="btn btn-outline" onclick="setDispatchMode('Hold')">Hold</button>
-            <button id="btnSendDraft" class="btn btn-primary" style="display:none;" onclick="sendLastDraft()">Send Last Draft</button>
-        </div>
-        <div id="dispatchModeHelp" style="margin-top:0.75rem; font-size:0.82rem; color:var(--text-dim);"></div>
-    </div>
-
-    <div id="errorBox" class="card" style="margin-bottom: 2rem; display: none; border: 1px solid rgba(239, 68, 68, 0.3);">
-        <h2 style="color: var(--error);">Recent Errors</h2>
-        <div id="errorList" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--error);"></div>
-    </div>
-
-    <div id="runLogSection" class="card" style="margin-bottom: 2rem; display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <div>
-                <h2 style="margin-bottom: 0;">Order History</h2>
-                <div id="lastCheckNote" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem; display: none;"></div>
-            </div>
-            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; color: var(--error);" onclick="triggerTask('clear-history-all')">Clear All</button>
-        </div>
-        <div style="display: flex; gap: 0; min-height: 300px;">
-            <div id="runList" style="width: 240px; flex-shrink: 0; overflow-y: auto; max-height: 440px;
-                border-right: 1px solid rgba(255,255,255,0.06); padding-right: 1rem; margin-right: 1.25rem;"></div>
-            <div id="runDetail" style="flex: 1; min-width: 0; padding-left: 0.25rem;">
-                <div class="run-detail-empty">Select a run to view details</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card section" style="margin-bottom: 2rem;">
-        <h2>Command Palette</h2>
-        <div class="actions">
-            <button id="btnCrawl" class="btn btn-primary" onclick="triggerTask('trigger-crawl')">
-                &#128640; Force Index Rebuild
-            </button>
-            <button id="btnEmail" class="btn btn-outline" onclick="triggerTask('check-emails')">
-                &#128231; Check Emails Now
-            </button>
-            <button id="btnClean" class="btn btn-outline" onclick="triggerTask('clean-index')">
-                &#129529; Run De-duplicator
-            </button>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Live Event Stream</h2>
-        <div id="logArea" class="log-area"></div>
-    </div>
+    <!-- Toast container -->
+    <div id="toastContainer" style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:1000; display:flex; flex-direction:column-reverse; gap:0.5rem;"></div>
 
     <script>
-        const API_BASE = window.location.origin.includes('http') 
-            ? window.location.origin 
+        const API_BASE = window.location.origin.includes('http')
+            ? window.location.origin
             : "http://localhost:8000";
-            
+
         let lastTask = "None";
         let currentHistory = [];
+        let filteredIndices = [];
         let selectedRunIndex = -1;
+        let activeFilterTag = 'all';
+        let filterText = '';
+        let lastHistoryCount = 0;
+        let offlineSince = null;
+        let confirmCallback = null;
+        let notificationsEnabled = ('Notification' in window && Notification.permission === 'granted');
+
+        // Request notification permission on first interaction
+        document.addEventListener('click', () => {
+            if (notificationsEnabled) return;
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then(p => { notificationsEnabled = (p === 'granted'); });
+            } else if ('Notification' in window && Notification.permission === 'granted') {
+                notificationsEnabled = true;
+            }
+        }, { once: true });
+
+        function showDesktopNotification(title, body) {
+            if (!notificationsEnabled || document.hasFocus()) return;
+            try { new Notification(title, { body, icon: '🏭' }); } catch(e) {}
+        }
+
+        // === Toast ===
+        function showToast(msg, type = 'success', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('visible'));
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // === Confirm Dialog ===
+        function confirmClearAll() {
+            showConfirm('Clear all order history? This cannot be undone.', () => {
+                triggerTask('clear-history-all');
+            });
+        }
+        function showConfirm(msg, onYes) {
+            document.getElementById('confirmMsg').innerText = msg;
+            document.getElementById('confirmOverlay').classList.add('active');
+            confirmCallback = onYes;
+        }
+        function closeConfirm(yes) {
+            document.getElementById('confirmOverlay').classList.remove('active');
+            if (yes && confirmCallback) confirmCallback();
+            confirmCallback = null;
+        }
+
+        // === Log Toggle ===
+        function toggleLog() {
+            const area = document.getElementById('logArea');
+            const icon = document.getElementById('logToggle');
+            area.classList.toggle('collapsed');
+            icon.classList.toggle('collapsed');
+        }
+
+        // === Relative Time ===
+        function relativeTime(dateStr) {
+            if (!dateStr || dateStr === 'Never' || dateStr === '-') return '';
+            try {
+                const d = new Date(dateStr.replace(' ', 'T'));
+                if (isNaN(d.getTime())) return '';
+                const secs = Math.floor((Date.now() - d.getTime()) / 1000);
+                if (secs < 0) return '';
+                if (secs < 60) return 'just now';
+                const mins = Math.floor(secs / 60);
+                if (mins < 60) return `${mins}m ago`;
+                const hrs = Math.floor(mins / 60);
+                if (hrs < 24) return `${hrs}h ${mins % 60}m ago`;
+                const days = Math.floor(hrs / 24);
+                return `${days}d ago`;
+            } catch(e) { return ''; }
+        }
+
+        function formatRelativePrimary(dateStr) {
+            const rel = relativeTime(dateStr);
+            if (!rel) return dateStr || '-';
+            return rel;
+        }
 
         function isDraftHistory(h) {
             const status = (h?.Status || '').toLowerCase();
@@ -264,14 +1091,319 @@
         }
 
         function getHistoryOutcome(h) {
-            if (!h) return { color: 'var(--text-dim)', text: 'Unknown', icon: '?' };
+            if (!h) return { color: 'var(--text-dim)', text: 'Unknown', icon: '?', reason: '', tag: 'failed' };
             const mode = h.DispatchMode || '';
-            if (isDraftHistory(h)) {
-                if (h.DraftCreated || (h.Status || '').toLowerCase().includes('draft')) return { color: 'var(--warn)', text: h.Status || (mode === 'Hold' ? 'Draft Saved' : 'Draft Ready'), icon: '&#9998;' };
-                return { color: 'var(--error)', text: h.Status || 'Draft Failed', icon: '&#10007;' };
+            const status = (h?.Status || '');
+            const statusLower = status.toLowerCase();
+            if (h?.TransmittalRequired === false || statusLower.includes('epicor check only') || statusLower.includes('no drawings found')) {
+                let reason = 'No matching drawings were found in the index for this order.';
+                if (statusLower.includes('epicor check only')) reason = 'This was an Epicor data check only \u2014 no transmittal was requested.';
+                else if (statusLower.includes('no drawings found')) reason = 'No PDF or DXF drawings matched the parts on this order.';
+                return { color: 'var(--primary)', text: status || 'Epicor Check Only', icon: '&#9432;', reason, tag: 'nodrw' };
             }
-            if (h.TransmittalSent) return { color: 'var(--success)', text: h.Status || 'Transmittal Sent', icon: '&#10003;' };
-            return { color: 'var(--error)', text: h.Status || 'Transmittal Failed', icon: '&#10007;' };
+            if (isDraftHistory(h)) {
+                if (h.DraftCreated || statusLower.includes('draft')) {
+                    const draftReason = mode === 'Hold' ? 'Transmittal mode was set to Hold \u2014 draft saved but not sent.' : 'Transmittal mode was set to Manual \u2014 draft ready for review.';
+                    return { color: 'var(--warn)', text: status || (mode === 'Hold' ? 'Draft Saved' : 'Draft Ready'), icon: '&#9998;', reason: draftReason, tag: 'draft' };
+                }
+                return { color: 'var(--error)', text: status || 'Draft Failed', icon: '&#10007;', reason: 'Failed to create the Outlook draft.', tag: 'failed' };
+            }
+            if (h.TransmittalSent) return { color: 'var(--success)', text: h.Status || 'Transmittal Sent', icon: '&#10003;', reason: 'Transmittal email was sent successfully.', tag: 'sent' };
+            return { color: 'var(--error)', text: h.Status || 'Transmittal Failed', icon: '&#10007;', reason: 'The transmittal could not be sent.', tag: 'failed' };
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatDurationSeconds(totalSeconds) {
+            const secs = Math.round(Number(totalSeconds));
+            if (!Number.isFinite(secs) || secs < 0) return '';
+            if (secs < 60) return `${secs}s`;
+            const mins = Math.floor(secs / 60);
+            const remSecs = secs % 60;
+            if (mins < 60) return remSecs ? `${mins}m ${remSecs}s` : `${mins}m`;
+            const hrs = Math.floor(mins / 60);
+            const remMins = mins % 60;
+            return remMins ? `${hrs}h ${remMins}m` : `${hrs}h`;
+        }
+
+        function formatPhaseDuration(label, seconds) {
+            const formatted = formatDurationSeconds(seconds);
+            return formatted ? `${label} ${formatted}` : '';
+        }
+
+        function copyTextToClipboard(text, successMessage = 'Copied to clipboard') {
+            if (!text) return;
+            const fallbackCopy = () => {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    const ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    showToast(ok ? successMessage : 'Copy failed', ok ? 'success' : 'error', 2200);
+                } catch (_) {
+                    showToast('Copy failed', 'error', 2200);
+                }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(successMessage, 'success', 2200);
+                }).catch(() => fallbackCopy());
+            } else {
+                fallbackCopy();
+            }
+        }
+
+        async function openLocalPath(path) {
+            if (!path) return;
+            try {
+                const res = await fetch(`${API_BASE}/open-path?path=${encodeURIComponent(path)}`, { method: 'POST' });
+                let data = {};
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Open path failed');
+                addLog(`Opened path: ${path}`, 'success');
+            } catch (err) {
+                addLog(`Open path error: ${err.message}`, 'error');
+                showToast(`Could not open path: ${err.message}`, 'error', 3200);
+            }
+        }
+
+        async function runHistoryAction(endpoint, index, label) {
+            try {
+                const res = await fetch(`${API_BASE}/${endpoint}?index=${index}`, { method: 'POST' });
+                let data = {};
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) data = await res.json();
+                if (!res.ok) throw new Error(data.message || `${label} failed`);
+                const msg = data.message || `${label} started`;
+                addLog(`${msg}${data.OutputFolder ? ` -> ${data.OutputFolder}` : ''}`, 'success');
+                showToast(msg, 'success', 2500);
+                if (data.OutputFolder) {
+                    copyTextToClipboard(data.OutputFolder, `${label} output path copied`);
+                }
+                updateStatus();
+            } catch (err) {
+                addLog(`${label} error: ${err.message}`, 'error');
+                showToast(`${label} failed: ${err.message}`, 'error', 3500);
+            }
+        }
+
+        function getMainParts(h) {
+            return Array.isArray(h?.Parts) ? h.Parts : [];
+        }
+
+        function getExpandedOnlyParts(h) {
+            const expandedParts = Array.isArray(h?.CollectionPartDetails) ? h.CollectionPartDetails : [];
+            const mainPartSet = new Set(getMainParts(h).map(p => String(p?.Part || '').trim().toUpperCase()).filter(Boolean));
+            return expandedParts.filter(p => !mainPartSet.has(String(p?.Part || '').trim().toUpperCase()));
+        }
+
+        function getCollectedFiles(h, kind) {
+            return kind === 'DXF'
+                ? (Array.isArray(h?.CollectedDxfFiles) ? h.CollectedDxfFiles : [])
+                : (Array.isArray(h?.CollectedPdfFiles) ? h.CollectedPdfFiles : []);
+        }
+
+        function getOrderMismatchCount(h) {
+            if (Number.isFinite(Number(h?.OrderRevMismatchCount))) return Number(h.OrderRevMismatchCount);
+            return getMainParts(h).filter(p => String(p?.RevMatch || '').includes('Mismatch')).length;
+        }
+
+        function getExpandedMismatchSummary(h) {
+            const parts = getExpandedOnlyParts(h);
+            let mismatch = 0;
+            let partial = 0;
+            for (const p of parts) {
+                const er = String(p?.EpicorRev || '').trim();
+                const ir = String(p?.IndexRev || '').trim();
+                if (er && ir) {
+                    if (er !== ir) mismatch++;
+                } else if (er || ir) {
+                    partial++;
+                }
+            }
+            return {
+                mismatch: Number.isFinite(Number(h?.ExpandedRevMismatchCount)) ? Number(h.ExpandedRevMismatchCount) : mismatch,
+                partial: Number.isFinite(Number(h?.ExpandedPartialCount)) ? Number(h.ExpandedPartialCount) : partial
+            };
+        }
+
+        function getRunIssueSummary(h) {
+            const outcome = getHistoryOutcome(h);
+            const orderMismatchCount = getOrderMismatchCount(h);
+            const expanded = getExpandedMismatchSummary(h);
+            const missingCount = Number(h?.CollectorMissingCount || (Array.isArray(h?.NotFoundParts) ? h.NotFoundParts.length : 0));
+            const extraCount = Number(h?.CollectorExtraPdfCount || 0) + Number(h?.CollectorExtraDxfCount || 0);
+            const stale = !!(h?.CollectorIndexStale || h?.CollectorIndexInfo?.IsStale);
+            const noDrawings = (h?.TransmittalRequired === false) || String(h?.Status || '').toLowerCase().includes('no drawings') || String(h?.Status || '').toLowerCase().includes('epicor check only');
+            const items = [];
+            if (outcome.tag === 'failed') items.push({ key: 'status-failed', label: outcome.text, count: null, color: 'var(--error)', weight: 5 });
+            if (outcome.tag === 'draft') items.push({ key: 'status-draft', label: outcome.text, count: null, color: 'var(--warn)', weight: 2 });
+            if (orderMismatchCount > 0) items.push({ key: 'order-mismatch', label: 'Order rev mismatch', count: orderMismatchCount, color: 'var(--error)', weight: 4 });
+            if (expanded.mismatch > 0) items.push({ key: 'expanded-mismatch', label: 'Expanded rev drift', count: expanded.mismatch, color: 'var(--warn)', weight: 3 });
+            if (expanded.partial > 0) items.push({ key: 'expanded-partial', label: 'Partial revision data', count: expanded.partial, color: 'var(--primary)', weight: 1 });
+            if (missingCount > 0) items.push({ key: 'missing', label: 'Missing drawings', count: missingCount, color: 'var(--warn)', weight: 3 });
+            if (extraCount > 0) items.push({ key: 'extra', label: 'Extras blocked', count: extraCount, color: 'var(--primary)', weight: 2 });
+            if (stale) items.push({ key: 'stale', label: 'Index stale', count: null, color: 'var(--warn)', weight: 2 });
+            if (noDrawings) items.push({ key: 'no-drawings', label: 'No drawings', count: null, color: 'var(--primary)', weight: 1 });
+            return {
+                outcome,
+                orderMismatchCount,
+                expandedMismatchCount: expanded.mismatch,
+                expandedPartialCount: expanded.partial,
+                missingCount,
+                extraCount,
+                stale,
+                noDrawings,
+                items,
+                score: items.reduce((sum, item) => sum + Number(item.weight || 0), 0)
+            };
+        }
+
+        function renderSeverityBadges(issueSummary, compact = false) {
+            if (!issueSummary || !Array.isArray(issueSummary.items) || issueSummary.items.length === 0) return '';
+            const maxItems = compact ? 3 : issueSummary.items.length;
+            const badges = issueSummary.items.slice(0, maxItems).map(item => {
+                const countText = Number.isFinite(item.count) ? ` ${item.count}` : '';
+                return `<span class="severity-badge" style="color:${item.color};">${escapeHtml(item.label)}${countText}</span>`;
+            }).join('');
+            return `<div class="severity-row">${badges}</div>`;
+        }
+
+        function renderMetricChips(chips) {
+            if (!Array.isArray(chips) || chips.length === 0) return '';
+            return `<div class="chip-row">${chips.map(chip => `<span class="metric-chip" style="${chip.color ? `color:${chip.color}; border-color:${chip.border || chip.color};` : ''}">${escapeHtml(chip.label)}</span>`).join('')}</div>`;
+        }
+
+        function renderActionStrip(h) {
+            const issueSummary = getRunIssueSummary(h);
+            if (!issueSummary.items.length) return '';
+            return `<div class="detail-section-card" style="border-color:rgba(245,158,11,0.22); background:rgba(245,158,11,0.05);">
+                <div class="detail-section-title" style="color:var(--warn);">Action Needed</div>
+                ${renderMetricChips(issueSummary.items.map(item => ({ label: `${item.label}${Number.isFinite(item.count) ? ` ${item.count}` : ''}`, color: item.color, border: item.color })))}
+            </div>`;
+        }
+
+        function renderHealthBadges(h) {
+            const chips = [];
+            const idx = h?.CollectorIndexInfo || {};
+            if (idx?.IsStale) {
+                const age = Number(idx?.PdfIndex?.AgeHours || idx?.DxfIndex?.AgeHours || 0);
+                chips.push({ label: `Index stale ${age ? age.toFixed(1) + 'h' : ''}`.trim(), color: 'var(--warn)' });
+            } else if (idx?.PdfIndex?.Exists || idx?.DxfIndex?.Exists) {
+                chips.push({ label: 'Index current', color: 'var(--success)' });
+            }
+            if (h?.CollectorStrictMatching === true) chips.push({ label: 'Strict matching on', color: 'var(--primary)' });
+            if (h?.CollectorStrictMatching === false) chips.push({ label: 'Strict matching off', color: 'var(--warn)' });
+            if (h?.AssemblyExpansionEnabled) {
+                const added = Number(h?.AssemblyExpansionAddedCount || 0);
+                chips.push({ label: added > 0 ? `Assembly BOM +${added}` : 'Assembly BOM on', color: added > 0 ? 'var(--success)' : 'var(--primary)' });
+            } else {
+                chips.push({ label: 'Assembly BOM off', color: 'var(--text-dim)' });
+            }
+            if (h?.TransmittalRequired === false) chips.push({ label: 'Epicor check only', color: 'var(--primary)' });
+            return renderMetricChips(chips);
+        }
+
+        function renderCompareSummary(h) {
+            const issueSummary = getRunIssueSummary(h);
+            const revDrift = issueSummary.orderMismatchCount + issueSummary.expandedMismatchCount;
+            const pdfFiles = getCollectedFiles(h, 'PDF').length || Number(h?.PdfsCollected || 0);
+            const dxfFiles = getCollectedFiles(h, 'DXF').length || Number(h?.DxfsCollected || 0);
+            return `<div class="detail-section-card">
+                <div class="detail-section-title">Compare Summary</div>
+                <div class="compare-grid">
+                    <div class="compare-cell"><span class="compare-cell-label">Missing</span><span class="compare-cell-value" style="color:${issueSummary.missingCount ? 'var(--warn)' : 'var(--success)'};">${issueSummary.missingCount || 0}</span></div>
+                    <div class="compare-cell"><span class="compare-cell-label">Extras Blocked</span><span class="compare-cell-value" style="color:${issueSummary.extraCount ? 'var(--primary)' : 'var(--text)'};">${issueSummary.extraCount || 0}</span></div>
+                    <div class="compare-cell"><span class="compare-cell-label">Rev Drift</span><span class="compare-cell-value" style="color:${revDrift ? 'var(--error)' : 'var(--success)'};">${revDrift}</span></div>
+                    <div class="compare-cell"><span class="compare-cell-label">Partial Data</span><span class="compare-cell-value" style="color:${issueSummary.expandedPartialCount ? 'var(--warn)' : 'var(--text)'};">${issueSummary.expandedPartialCount || 0}</span></div>
+                    <div class="compare-cell"><span class="compare-cell-label">Collected Files</span><span class="compare-cell-value">${pdfFiles + dxfFiles}</span></div>
+                </div>
+            </div>`;
+        }
+
+        function renderTimingSummary(h) {
+            const total = formatDurationSeconds(h?.RunDurationSeconds);
+            if (!total) return '';
+            const phases = [
+                formatPhaseDuration('BOM', h?.BomExpansionSeconds),
+                formatPhaseDuration('Collect', h?.CollectorSeconds),
+                formatPhaseDuration('Transmittal', h?.TransmittalSeconds)
+            ].filter(Boolean);
+            return `<div class="detail-section-card">
+                <div class="detail-section-title">Run Timing</div>
+                <div style="font-size:1rem; font-weight:700;">${total}</div>
+                ${phases.length ? `<div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.2rem;">${phases.join(' | ')}</div>` : ''}
+            </div>`;
+        }
+
+        function renderPathRow(label, path) {
+            if (!path) return '';
+            const pathJson = JSON.stringify(String(path));
+            return `<div class="detail-path-row">
+                <div class="detail-path-main"><span class="detail-path-label">${escapeHtml(label)}:</span> ${escapeHtml(path)}</div>
+                <div class="detail-path-actions">
+                    <button class="btn btn-sm btn-ghost" onclick='openLocalPath(${pathJson})'>Open</button>
+                    <button class="btn btn-sm btn-ghost" onclick='copyTextToClipboard(${pathJson},"Path copied")'>Copy</button>
+                </div>
+            </div>`;
+        }
+
+        function renderCollectedFiles(h) {
+            const pdfFiles = getCollectedFiles(h, 'PDF');
+            const dxfFiles = getCollectedFiles(h, 'DXF');
+            if (pdfFiles.length === 0 && dxfFiles.length === 0) return '';
+
+            const renderFileItems = (files, kind) => {
+                if (!files.length) return `<div style="font-size:0.74rem; color:var(--text-dim);">None</div>`;
+                return `<div class="file-list">${files.slice(0, 60).map(file => {
+                    const destPath = String(file?.DestPath || '');
+                    const sourcePath = String(file?.SourcePath || '');
+                    const destJson = JSON.stringify(destPath);
+                    const sourceJson = JSON.stringify(sourcePath);
+                    const metaBits = [
+                        file?.RequestedPart ? `Part ${file.RequestedPart}` : '',
+                        file?.Rev ? `Rev ${file.Rev}` : '',
+                        file?.Strategy ? file.Strategy : ''
+                    ].filter(Boolean).join(' | ');
+                    return `<div class="file-list-item">
+                        <div class="file-list-meta">
+                            <div class="file-list-name">${escapeHtml(file?.FileName || '')}</div>
+                            ${metaBits ? `<div class="file-list-sub">${escapeHtml(metaBits)}</div>` : ''}
+                            ${destPath ? `<div class="file-list-sub">Dest: ${escapeHtml(destPath)}</div>` : ''}
+                            ${sourcePath ? `<div class="file-list-sub">Source: ${escapeHtml(sourcePath)}</div>` : ''}
+                        </div>
+                        <div class="detail-path-actions">
+                            ${destPath ? `<button class="btn btn-sm btn-ghost" onclick='openLocalPath(${destJson})'>Open</button>` : ''}
+                            ${sourcePath ? `<button class="btn btn-sm btn-ghost" onclick='openLocalPath(${sourceJson})'>Source</button>` : ''}
+                        </div>
+                    </div>`;
+                }).join('')}</div>${files.length > 60 ? `<div style="font-size:0.68rem; color:var(--text-dim); margin-top:0.45rem;">Showing first 60 ${kind} files.</div>` : ''}`;
+            };
+
+            return `<div class="detail-section-card">
+                <div class="detail-section-title">Collected Files</div>
+                <details ${pdfFiles.length <= 8 ? 'open' : ''}>
+                    <summary style="cursor:pointer; font-weight:700; font-size:0.78rem; margin-bottom:0.5rem;">PDFs (${pdfFiles.length})</summary>
+                    ${renderFileItems(pdfFiles, 'PDF')}
+                </details>
+                <details style="margin-top:0.75rem;" ${dxfFiles.length <= 8 ? 'open' : ''}>
+                    <summary style="cursor:pointer; font-weight:700; font-size:0.78rem; margin-bottom:0.5rem;">DXFs (${dxfFiles.length})</summary>
+                    ${renderFileItems(dxfFiles, 'DXF')}
+                </details>
+            </div>`;
         }
 
         function renderDispatchMode(mode) {
@@ -280,9 +1412,9 @@
             document.getElementById('modeManual').classList.toggle('active-mode', effective === 'Manual');
             document.getElementById('modeHold').classList.toggle('active-mode', effective === 'Hold');
             const help = {
-                Auto: 'Auto sends the transmittal immediately after processing.',
-                Manual: 'Manual creates a draft and lets you send it from the dashboard.',
-                Hold: 'Hold saves the draft only and does not pop it open.'
+                Auto: 'Sends transmittal immediately after collection.',
+                Manual: 'Creates draft for review before sending.',
+                Hold: 'Saves draft only.'
             };
             document.getElementById('dispatchModeHelp').innerText = help[effective] || '';
         }
@@ -294,8 +1426,41 @@
                 if (!res.ok) throw new Error(data.message || 'Mode update failed');
                 renderDispatchMode(data.DispatchMode || mode);
                 addLog(data.message || `Dispatch mode set to ${mode}`, 'success');
+                showToast(`Dispatch mode: ${mode}`);
             } catch (err) {
                 addLog(`Dispatch mode error: ${err.message}`, 'error');
+            }
+        }
+
+        async function setEmailInterval(val) {
+            const input = document.getElementById('intervalInput');
+            const serverValue = parseInt(input.dataset.serverValue || input.value, 10);
+            const mins = parseInt(val, 10);
+            if (isNaN(mins) || mins < 1 || mins > 120) {
+                addLog('Interval must be between 1 and 120 minutes.', 'error');
+                showToast('Interval must be between 1 and 120 minutes.', 'error', 2500);
+                if (!isNaN(serverValue)) input.value = serverValue;
+                return;
+            }
+            try {
+                const res = await fetch(`${API_BASE}/set-email-interval?minutes=${mins}`, { method: 'POST' });
+                let data = {};
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
+                    data = await res.json();
+                }
+                if (res.status === 404) {
+                    throw new Error('Hub restart required - running service is missing the interval endpoint');
+                }
+                if (!res.ok) throw new Error(data.message || `Interval update failed (HTTP ${res.status})`);
+                input.value = mins;
+                input.dataset.serverValue = String(data.EmailIntervalMinutes || mins);
+                addLog(data.message || `Email check interval set to ${mins}m`, 'success');
+                showToast(`Check interval: ${mins} min`);
+            } catch (err) {
+                addLog(`Interval error: ${err.message}`, 'error');
+                showToast(`Could not save check interval: ${err.message}`, 'error', 3500);
+                if (!isNaN(serverValue)) input.value = serverValue;
             }
         }
 
@@ -305,85 +1470,211 @@
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.message || 'Draft send failed');
                 addLog(data.message || 'Draft sent', 'success');
+                showToast('Draft sent successfully', 'success');
                 updateStatus();
             } catch (err) {
                 addLog(`Draft send error: ${err.message}`, 'error');
             }
         }
 
-        function renderPartsTable(h) {
-            const parts = Array.isArray(h?.Parts) ? h.Parts : [];
+        // === History Filtering ===
+        function setFilterTag(el) {
+            document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            activeFilterTag = el.dataset.filter;
+            applyHistoryFilter();
+        }
+
+        function applyHistoryFilter() {
+            filterText = (document.getElementById('historyFilterInput').value || '').trim().toLowerCase();
+            computeFilteredIndices();
+            renderFilteredList();
+        }
+
+        function computeFilteredIndices() {
+            filteredIndices = [];
+            for (let i = 0; i < currentHistory.length; i++) {
+                const h = currentHistory[i];
+                const outcome = getHistoryOutcome(h);
+                // Tag filter
+                if (activeFilterTag !== 'all' && outcome.tag !== activeFilterTag) continue;
+                // Text filter
+                if (filterText) {
+                    const haystack = [h.JobNumber, h.Client, h.OrderName, h.EmailSubject].filter(Boolean).join(' ').toLowerCase();
+                    if (!haystack.includes(filterText)) continue;
+                }
+                filteredIndices.push(i);
+            }
+        }
+
+        function renderFilteredList() {
+            const listEl = document.getElementById('runList');
+            if (filteredIndices.length === 0) {
+                listEl.innerHTML = '<div style="color:var(--text-dim); font-size:0.78rem; padding:1rem;">No matching orders.</div>';
+                document.getElementById('runDetail').innerHTML = '<div class="detail-empty">No orders match the filter.</div>';
+                return;
+            }
+            // If current selection isn't in filtered set, select first
+            if (!filteredIndices.includes(selectedRunIndex)) {
+                selectedRunIndex = filteredIndices[0];
+            }
+            listEl.innerHTML = filteredIndices.map(i => {
+                const h = currentHistory[i];
+                const isSelected = i === selectedRunIndex;
+                const outcome = getHistoryOutcome(h);
+                const issueSummary = getRunIssueSummary(h);
+                const parts = (h.Timestamp || '').split(' ');
+                const timePart = parts[1] || '';
+                const datePart = parts[0] || '';
+                const tNo = h.TransmittalNo ? `<span style="color:var(--text-dim);">${h.TransmittalNo}</span>` : '';
+                const pdfCount = h.PdfsCollected ?? 0;
+                const dxfCount = h.DxfsCollected ?? 0;
+                const countsStr = (pdfCount || dxfCount) ? `${pdfCount} PDF, ${dxfCount} DXF` : '';
+                const duration = formatDurationSeconds(h.RunDurationSeconds);
+                return `<div class="run-list-item${isSelected ? ' selected' : ''}" data-idx="${i}" onclick="selectRun(${i})" title="${outcome.reason || outcome.text}">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="run-item-job">${h.JobNumber || '(no job #)'}</span>
+                        <span class="run-item-time">${timePart}</span>
+                    </div>
+                    <div class="run-item-client">${h.Client || '&mdash;'}</div>
+                    <div class="run-item-meta">
+                        <span class="run-item-status" style="color:${outcome.color};">${outcome.icon} ${outcome.text}</span>
+                        <span>${datePart} ${tNo}</span>
+                    </div>
+                    ${renderSeverityBadges(issueSummary, true)}
+                    ${duration ? `<div class="run-item-counts">Duration ${duration}</div>` : ''}
+                    ${countsStr ? `<div class="run-item-counts">${countsStr}</div>` : ''}
+                </div>`;
+            }).join('');
+            renderRunDetail(selectedRunIndex);
+        }
+
+        // === Copy Parts to Clipboard ===
+        function copyPartsList(partsArray, label) {
+            if (!partsArray || partsArray.length === 0) return;
+            const text = partsArray.map(p => {
+                const rev = p.Rev || p.OrderRev || '';
+                const desc = p.Desc || p.Description || '';
+                return [p.Part, rev, desc].filter(Boolean).join('\t');
+            }).join('\n');
+            const fallbackCopy = () => {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    const ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    if (ok) showToast(`${partsArray.length} parts copied to clipboard`, 'success', 2000);
+                    else showToast('Copy failed', 'error', 2000);
+                } catch (_) {
+                    showToast('Copy failed', 'error', 2000);
+                }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(`${partsArray.length} parts copied to clipboard`, 'success', 2000);
+                }).catch(() => fallbackCopy());
+            } else {
+                fallbackCopy();
+            }
+        }
+
+        function renderPartsTable(h, options = {}) {
+            const parts = Array.isArray(options.parts) ? options.parts : (Array.isArray(h?.Parts) ? h.Parts : []);
             if (parts.length === 0) return '';
-            // Format qty: strip trailing .00
-            const fmtQty = (q) => {
-                if (!q || q === '0') return '&mdash;';
-                return String(q).replace(/\.0+$/, '');
-            };
-            // Title-case description
-            const fmtDesc = (d) => {
-                if (!d) return '';
-                return d.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            };
+            const title = options.title || 'Parts & Revision Check';
+            const compareMode = options.compareMode || 'order';
+            const tableId = options.tableId || ('tbl_' + Math.random().toString(36).slice(2,8));
+            const fmtQty = (q) => { if (!q || q === '0') return '&mdash;'; return String(q).replace(/\.0+$/, ''); };
+            const fmtDesc = (d) => { if (!d) return ''; return d.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()); };
             const hasRevisionFields = parts.some(p => p && (Object.prototype.hasOwnProperty.call(p, 'EpicorRev') || Object.prototype.hasOwnProperty.call(p, 'IndexRev') || Object.prototype.hasOwnProperty.call(p, 'RevMatch')));
+
+            // Store parts data for copy
+            const partsJson = JSON.stringify(parts).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+
+            const copyBtn = `<button class="btn btn-sm btn-ghost" onclick='copyPartsList(${JSON.stringify(parts).replace(/'/g, "\\'")},"${title}")' title="Copy parts list to clipboard">&#128203; Copy</button>`;
+
             if (hasRevisionFields) {
                 const rows = parts.map(p => {
                     const orderRev = p.Rev || p.OrderRev || '&mdash;';
                     const epicorRev = p.EpicorRev || '&mdash;';
                     const indexRev = p.IndexRev || '&mdash;';
-                    const match = p.RevMatch || 'Unknown';
+                    const desc = fmtDesc(p.Desc || p.Description || '');
+                    let match = p.RevMatch || 'Unknown';
+                    if (compareMode === 'expanded') {
+                        const er = String(p.EpicorRev || '').trim();
+                        const ir = String(p.IndexRev || '').trim();
+                        if (er && ir) { match = er === ir ? 'Epicor = Index' : 'Epicor vs Index Mismatch'; }
+                        else if (er || ir) { match = 'Partial Data'; }
+                        else { match = 'Unknown'; }
+                    }
                     const matchColor =
-                        match === 'Match' ? 'var(--success)' :
-                        match === 'Index Mismatch' ? 'var(--warn)' :
+                        (match === 'Match' || match === 'Epicor = Index') ? 'var(--success)' :
+                        (match === 'Index Mismatch' || match === 'Partial Data') ? 'var(--warn)' :
                         (match.includes('Mismatch') ? 'var(--error)' : 'var(--text-dim)');
                     const matchIcon =
-                        match === 'Match' ? '&#10003;' :
-                        match === 'Index Mismatch' ? '&#9888;' :
+                        (match === 'Match' || match === 'Epicor = Index') ? '&#10003;' :
+                        (match === 'Index Mismatch' || match === 'Partial Data') ? '&#9888;' :
                         (match.includes('Mismatch') ? '&#10007;' : '?');
-                    return `<tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
-                        <td style="padding:0.4rem 0.5rem; font-family:monospace; font-size:0.82rem; white-space:nowrap;">${p.Part || ''}</td>
-                        <td style="padding:0.4rem 0.5rem; font-size:0.8rem; max-width:180px; overflow:hidden; text-overflow:ellipsis;">${fmtDesc(p.Desc)}</td>
-                        <td style="padding:0.4rem 0.5rem; text-align:center;">${orderRev}</td>
-                        <td style="padding:0.4rem 0.5rem; text-align:center;">${epicorRev}</td>
-                        <td style="padding:0.4rem 0.5rem; text-align:center;">${indexRev}</td>
-                        <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:500;">${fmtQty(p.Qty)}</td>
-                        <td style="padding:0.4rem 0.5rem; text-align:center; color:${matchColor}; font-weight:600; white-space:nowrap;">${matchIcon} ${match}</td>
+                    const matchTooltip =
+                        (match === 'Match') ? 'Order rev matches both Epicor and index' :
+                        (match === 'Epicor = Index') ? 'Epicor revision matches index revision' :
+                        (match === 'Index Mismatch') ? 'Order rev differs from what is in the drawing index' :
+                        (match === 'Partial Data') ? 'Only partial revision data available' :
+                        (match.includes('Mismatch')) ? 'Revision conflict detected between sources' : 'Revision data not available';
+                    const orderRevCell = compareMode === 'expanded' ? '&mdash;' : orderRev;
+                    const qtyCell = compareMode === 'expanded' ? '&mdash;' : fmtQty(p.Qty);
+                    return `<tr>
+                        <td class="mono">${p.Part || ''}</td>
+                        <td class="desc">${desc}</td>
+                        <td class="center">${orderRevCell}</td>
+                        <td class="center">${epicorRev}</td>
+                        <td class="center">${indexRev}</td>
+                        <td class="center">${qtyCell}</td>
+                        <td class="status" style="color:${matchColor};" title="${matchTooltip}">${matchIcon} ${match}</td>
                     </tr>`;
                 }).join('');
-                return `<div style="margin-top:1rem;">
-                    <div style="font-size:0.75rem; color:var(--text-dim); font-weight:600; margin-bottom:0.4rem;">Parts &amp; Revision Check</div>
+                return `<div class="parts-section">
+                    <div class="parts-header">
+                        <span class="parts-title">${title} (${parts.length})</span>
+                        ${copyBtn}
+                    </div>
                     <div style="overflow-x:auto;">
-                        <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
-                            <thead><tr style="border-bottom:2px solid rgba(255,255,255,0.1);">
-                                <th style="padding:0.4rem 0.5rem; text-align:left; color:var(--text-dim); font-weight:500;">Part</th>
-                                <th style="padding:0.4rem 0.5rem; text-align:left; color:var(--text-dim); font-weight:500;">Description</th>
-                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Order Rev</th>
-                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Epicor Rev</th>
-                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Index Rev</th>
-                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Qty</th>
-                                <th style="padding:0.4rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Status</th>
+                        <table class="parts-table">
+                            <thead><tr>
+                                <th>Part</th><th>Description</th>
+                                <th class="center">Order Rev</th><th class="center">Epicor Rev</th>
+                                <th class="center">Index Rev</th><th class="center">Qty</th>
+                                <th class="center">Status</th>
                             </tr></thead>
                             <tbody>${rows}</tbody>
                         </table>
                     </div>
                 </div>`;
             }
+
             const rows = parts.map(p => `
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
-                    <td style="padding:0.4rem 0.5rem; font-family:monospace; font-size:0.82rem; white-space:nowrap;">${p.Part || ''}</td>
-                    <td style="padding:0.4rem 0.5rem; text-align:center;">${p.Rev || '&mdash;'}</td>
-                    <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:500;">${fmtQty(p.Qty)}</td>
-                    <td style="padding:0.4rem 0.5rem; font-size:0.8rem;">${fmtDesc(p.Desc || p.Description || '')}</td>
+                <tr>
+                    <td class="mono">${p.Part || ''}</td>
+                    <td class="center">${p.Rev || '&mdash;'}</td>
+                    <td class="center">${fmtQty(p.Qty)}</td>
+                    <td class="desc">${fmtDesc(p.Desc || p.Description || '')}</td>
                 </tr>
             `).join('');
-            return `<div style="margin-top:1rem;">
-                <div style="font-size:0.75rem; color:var(--text-dim); font-weight:600; margin-bottom:0.4rem;">Extracted Order Lines</div>
+            return `<div class="parts-section">
+                <div class="parts-header">
+                    <span class="parts-title">${title} (${parts.length})</span>
+                    ${copyBtn}
+                </div>
                 <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
-                        <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
-                            <th style="padding:0.35rem 0.5rem; text-align:left; color:var(--text-dim); font-weight:500;">Part</th>
-                            <th style="padding:0.35rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Rev</th>
-                            <th style="padding:0.35rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:500;">Qty</th>
-                            <th style="padding:0.35rem 0.5rem; text-align:left; color:var(--text-dim); font-weight:500;">Description</th>
+                    <table class="parts-table">
+                        <thead><tr>
+                            <th>Part</th><th class="center">Rev</th>
+                            <th class="center">Qty</th><th>Description</th>
                         </tr></thead>
                         <tbody>${rows}</tbody>
                     </table>
@@ -392,8 +1683,53 @@
         }
 
         function renderSummaryPartsTable(h) {
-            const html = renderPartsTable(h);
-            return html ? `<div style="margin-top:1rem;">${html}</div>` : '';
+            const mainHtml = renderPartsTable(h, { parts: Array.isArray(h?.Parts) ? h.Parts : [], title: 'Order Line Parts' });
+            const expandedParts = Array.isArray(h?.CollectionPartDetails) ? h.CollectionPartDetails : [];
+            const mainPartSet = new Set((Array.isArray(h?.Parts) ? h.Parts : []).map(p => String(p?.Part || '').trim().toUpperCase()).filter(Boolean));
+            const extraExpandedParts = expandedParts.filter(p => !mainPartSet.has(String(p?.Part || '').trim().toUpperCase()));
+            const expandedHtml = extraExpandedParts.length > 0
+                ? renderPartsTable(h, { parts: extraExpandedParts, title: 'Expanded BOM &mdash; Sub-components from Assembly Models', compareMode: 'expanded' })
+                : '';
+            return [mainHtml, expandedHtml].filter(Boolean).join('');
+        }
+
+        function renderCollectorDiagnostics(h) {
+            const warnings = Array.isArray(h?.CollectorWarnings) ? h.CollectorWarnings : [];
+            const extraPdfs = Array.isArray(h?.CollectorExtraPdfs) ? h.CollectorExtraPdfs : [];
+            const extraDxfs = Array.isArray(h?.CollectorExtraDxfs) ? h.CollectorExtraDxfs : [];
+            const extraPdfCount = Number(h?.CollectorExtraPdfCount || 0);
+            const extraDxfCount = Number(h?.CollectorExtraDxfCount || 0);
+            let html = '';
+
+            if (warnings.length > 0) {
+                html += `<div class="not-found-box" style="margin-top:0.75rem; background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.25);">
+                    <div class="not-found-title">Collector Warnings</div>
+                    <div class="not-found-parts">${warnings.join('<br>')}</div>
+                </div>`;
+            }
+
+            if (extraPdfCount > 0 || extraDxfCount > 0) {
+                const rows = [
+                    ...extraPdfs.map(x => `PDF: ${(x?.RequestedPart || '')} -> ${(x?.FileName || '')} (${x?.Strategy || ''})`),
+                    ...extraDxfs.map(x => `DXF: ${(x?.RequestedPart || '')} -> ${(x?.FileName || '')} (${x?.Strategy || ''})`)
+                ].slice(0, 12);
+                html += `<div class="not-found-box" style="margin-top:0.75rem; background:rgba(59,130,246,0.08); border-color:rgba(59,130,246,0.22);">
+                    <div class="not-found-title" style="color:var(--primary);">Strict Matching Extras</div>
+                    <div class="not-found-parts">${extraPdfCount} PDF extra(s), ${extraDxfCount} DXF extra(s) found but not copied.${rows.length ? `<br><br>${rows.join('<br>')}` : ''}</div>
+                </div>`;
+            }
+
+            return html;
+        }
+
+        function getPdfOutputFolder(h) {
+            return h?.PdfOutputFolder || h?.OutputFolder || '';
+        }
+
+        function getDxfOutputFolder(h) {
+            if (h?.DxfOutputFolder) return h.DxfOutputFolder;
+            if (h?.OutputFolder) return `${h.OutputFolder}\\DXFs`;
+            return '';
         }
 
         function renderRunDetail(index) {
@@ -401,83 +1737,153 @@
             if (!h) return;
             const detail = document.getElementById('runDetail');
             const outcome = getHistoryOutcome(h);
+            const issueSummary = getRunIssueSummary(h);
 
             let notFoundHtml = '';
             const nfParts = Array.isArray(h.NotFoundParts) ? h.NotFoundParts : [];
             if (nfParts.length > 0) {
-                notFoundHtml = `<div style="margin-top:1rem; padding:0.75rem;
-                    background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); border-radius:0.375rem;">
-                    <div style="font-size:0.75rem; color:var(--warn); font-weight:600; margin-bottom:0.35rem;">&#9888; Parts Not Found in Index</div>
-                    <div style="font-size:0.82rem; color:var(--text);">${nfParts.join(', ')}</div>
+                notFoundHtml = `<div class="not-found-box">
+                    <div class="not-found-title">&#9888; Parts Not Found in Index (${nfParts.length})</div>
+                    <div class="not-found-parts">${nfParts.join(', ')}</div>
                 </div>`;
             }
 
+            // Status explanation
+            let statusHtml = `<span class="value" style="color:${outcome.color};">${outcome.text}</span>`;
+            if (outcome.reason) {
+                statusHtml += `<div style="font-size:0.6875rem; color:var(--text-dim); margin-top:0.15rem;">${outcome.reason}</div>`;
+            }
+
             const pathRows = [];
-            if (h.SourceDocPath) pathRows.push(`<div style="margin-top:0.4rem;"><span style="color:var(--text-dim);">F80:</span> ${h.SourceDocPath}</div>`);
-            if (h.SourcePdfPath) pathRows.push(`<div style="margin-top:0.4rem;"><span style="color:var(--text-dim);">Sales Order PDF:</span> ${h.SourcePdfPath}</div>`);
-            if (h.OutputFolder) pathRows.push(`<div style="margin-top:0.4rem;"><span style="color:var(--text-dim);">Output Folder:</span> ${h.OutputFolder}</div>`);
+            if (h.SourceDocPath) pathRows.push(renderPathRow('F80', h.SourceDocPath));
+            if (h.SourcePdfPath) pathRows.push(renderPathRow('Sales Order PDF', h.SourcePdfPath));
+            if (h.OutputFolder) pathRows.push(renderPathRow('Output Folder', h.OutputFolder));
+            if (getPdfOutputFolder(h)) pathRows.push(renderPathRow('PDF Output', getPdfOutputFolder(h)));
+            if (getDxfOutputFolder(h)) pathRows.push(renderPathRow('DXF Output', getDxfOutputFolder(h)));
+            if (h.CollectorSummaryPath) pathRows.push(renderPathRow('Collector Summary', h.CollectorSummaryPath));
+
+            const relTs = relativeTime(h.Timestamp);
+            const tsDisplay = h.Timestamp ? `${h.Timestamp}${relTs ? ` (${relTs})` : ''}` : '';
+            const runDuration = formatDurationSeconds(h.RunDurationSeconds) || '&mdash;';
+            const statusWhy = outcome.reason
+                ? `<details class="detail-section-card"><summary style="cursor:pointer; font-weight:700; font-size:0.78rem;">Why this status?</summary><div style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.5rem;">${escapeHtml(outcome.reason)}</div></details>`
+                : '';
+            const rerunButtons = `
+                <button class="btn btn-sm" onclick="runHistoryAction('replay-history-item', ${index}, 'Replay')">Replay</button>
+                <button class="btn btn-sm" onclick="runHistoryAction('recheck-history-item', ${index}, 'Recheck')">Recheck</button>
+                <button class="btn btn-sm" onclick="runHistoryAction('rebuild-and-replay-history-item', ${index}, 'Rebuild + Replay')">Rebuild + Replay</button>
+            `;
 
             detail.innerHTML = `
-                <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:0.2rem;">${h.Timestamp || ''}</div>
-                <div style="font-size:1rem; font-weight:600; margin-bottom:1.25rem; line-height:1.3; color:var(--text);">${getDisplayOrderName(h)}</div>
-                <div class="stat-grid">
-                    <div class="stat-item">
+                <div class="detail-timestamp">${tsDisplay}</div>
+                <div class="detail-order-name">${getDisplayOrderName(h)}</div>
+                <div class="detail-stats">
+                    <div class="detail-stat">
                         <span class="label">Job #</span>
                         <span class="value">${h.JobNumber || '&mdash;'}</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="detail-stat">
                         <span class="label">Client</span>
-                        <span class="value" style="font-size:1rem;">${h.Client || '&mdash;'}</span>
+                        <span class="value" style="font-size:0.875rem;">${h.Client || '&mdash;'}</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="detail-stat">
                         <span class="label">Transmittal #</span>
                         <span class="value">${h.TransmittalNo || '&mdash;'}</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="detail-stat">
                         <span class="label">Status</span>
-                        <span class="value" style="color:${outcome.color};">${outcome.text}</span>
+                        ${statusHtml}
                     </div>
-                    <div class="stat-item">
+                    <div class="detail-stat">
                         <span class="label">Parts Extracted</span>
                         <span class="value">${h.PartsExtracted ?? 0}</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="detail-stat">
                         <span class="label">PDFs Collected</span>
                         <span class="value">${h.PdfsCollected ?? 0}</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="detail-stat">
                         <span class="label">DXFs Collected</span>
                         <span class="value">${h.DxfsCollected ?? 0}</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="detail-stat">
+                        <span class="label">Run Duration</span>
+                        <span class="value">${runDuration}</span>
+                    </div>
+                    <div class="detail-stat">
                         <span class="label">Source</span>
-                        <span class="value" style="font-size:0.85rem;">${h.SourcePdf || h.EmailSubject || '&mdash;'}</span>
+                        <span class="value" style="font-size:0.78rem;">${h.SourcePdfPath || h.EmailSubject || '&mdash;'}</span>
                     </div>
                 </div>
+                ${renderActionStrip(h)}
+                ${renderHealthBadges(h)}
+                ${renderCompareSummary(h)}
+                ${renderTimingSummary(h)}
                 ${notFoundHtml}
-                ${renderPartsTable(h)}
-                ${pathRows.length ? `<div style="margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.05); font-size:0.8rem; word-break:break-word;">${pathRows.join('')}</div>` : ''}
-                <div style="margin-top:1.25rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:1rem;">
-                    <button onclick="clearHistoryItem(${index})"
-                        style="background:transparent; border:1px solid rgba(239,68,68,0.3); color:var(--error);
-                            padding:0.35rem 0.75rem; border-radius:0.375rem; cursor:pointer; font-size:0.8rem;">
-                        Remove from Log
-                    </button>
+                ${statusWhy}
+                ${renderSummaryPartsTable(h)}
+                ${renderCollectedFiles(h)}
+                ${renderCollectorDiagnostics(h)}
+                ${pathRows.length ? `<div class="detail-paths">${pathRows.join('')}</div>` : ''}
+                <div class="detail-toolbar">
+                    ${h.OutputFolder ? `<button class="btn btn-sm" onclick='openLocalPath(${JSON.stringify(h.OutputFolder)})'>Open Output</button>` : ''}
+                    ${h.CollectorSummaryPath ? `<button class="btn btn-sm" onclick='openLocalPath(${JSON.stringify(h.CollectorSummaryPath)})'>Open Summary</button>` : ''}
+                    ${rerunButtons}
+                    <button class="btn btn-sm btn-danger" onclick="clearHistoryItem(${index})">Remove from Log</button>
                 </div>`;
         }
 
         function selectRun(index) {
             selectedRunIndex = index;
-            document.querySelectorAll('.run-list-item').forEach((el, i) => {
-                el.classList.toggle('selected', i === index);
+            document.querySelectorAll('.run-list-item').forEach(el => {
+                el.classList.toggle('selected', parseInt(el.dataset.idx) === index);
             });
             renderRunDetail(index);
         }
 
-        function renderRunLog(history) {
-            if (history !== null && history !== undefined && !Array.isArray(history)) {
-                history = [history];
+        function getLatestProblemRunInfo(history) {
+            for (let i = 0; i < history.length; i++) {
+                const h = history[i];
+                const issueSummary = getRunIssueSummary(h);
+                if (issueSummary.score > 0) {
+                    return { index: i, item: h, issueSummary };
+                }
             }
+            return null;
+        }
+
+        function renderProblemRunCard(history) {
+            const card = document.getElementById('problemRunCard');
+            const latest = getLatestProblemRunInfo(history || []);
+            if (!latest) {
+                card.classList.remove('active');
+                card.innerHTML = '';
+                return;
+            }
+
+            const h = latest.item;
+            const issueSummary = latest.issueSummary;
+            const duration = formatDurationSeconds(h?.RunDurationSeconds);
+            card.classList.add('active');
+            card.innerHTML = `
+                <div class="problem-card-top">
+                    <div>
+                        <div class="problem-card-title">Latest Problem Run</div>
+                        <div class="problem-card-name">${escapeHtml(getDisplayOrderName(h))}</div>
+                        <div class="problem-card-sub">${escapeHtml(h.JobNumber || 'No job #')} | ${escapeHtml(issueSummary.outcome.text)}${duration ? ` | ${escapeHtml(duration)}` : ''}</div>
+                        ${renderSeverityBadges(issueSummary)}
+                    </div>
+                    <div class="detail-path-actions">
+                        <button class="btn btn-sm" onclick="selectRun(${latest.index})">View</button>
+                        ${h?.OutputFolder ? `<button class="btn btn-sm" onclick='openLocalPath(${JSON.stringify(h.OutputFolder)})'>Open Output</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRunLog(history) {
+            if (history && !Array.isArray(history) && Array.isArray(history.value)) history = history.value;
+            if (history !== null && history !== undefined && !Array.isArray(history)) history = [history];
 
             const historyJson = JSON.stringify(history);
             const listNeedsUpdate = historyJson !== renderRunLog._lastJson;
@@ -487,71 +1893,89 @@
             const section = document.getElementById('runLogSection');
             section.style.display = 'block';
 
+            // Today count for header
+            const today = new Date().toISOString().slice(0,10);
+            const todayCount = currentHistory.filter(h => (h.Timestamp || '').startsWith(today)).length;
+            document.getElementById('historyCount').innerText = currentHistory.length ? `${currentHistory.length} total, ${todayCount} today` : '';
+            document.getElementById('todayStat').innerHTML = `<strong>${todayCount}</strong> order${todayCount !== 1 ? 's' : ''} today`;
+            renderProblemRunCard(currentHistory);
+
             if (!currentHistory.length) {
                 document.getElementById('runList').innerHTML =
-                    '<div style="color:var(--text-dim); font-size:0.8rem; padding:0.5rem 0;">No runs yet.</div>';
+                    '<div style="color:var(--text-dim); font-size:0.78rem; padding:1rem;">No orders processed yet.</div>';
                 document.getElementById('runDetail').innerHTML =
-                    '<div class="run-detail-empty">No order history yet.<br>Processed orders will appear here.</div>';
+                    '<div class="detail-empty">Processed orders will appear here.</div>';
                 return;
             }
 
-            if (selectedRunIndex < 0 || selectedRunIndex >= currentHistory.length) {
-                selectedRunIndex = 0;
-            } else if (listNeedsUpdate) {
-                selectedRunIndex = 0;
+            // Detect new order arrival
+            if (currentHistory.length > lastHistoryCount && lastHistoryCount > 0) {
+                const newest = currentHistory[0];
+                const outcome = getHistoryOutcome(newest);
+                showDesktopNotification(
+                    `Order ${newest.JobNumber || ''} processed`,
+                    `${getDisplayOrderName(newest)} \u2014 ${outcome.text}`
+                );
+                showToast(`New order: ${newest.JobNumber || 'unknown'} \u2014 ${outcome.text}`, outcome.tag === 'failed' ? 'error' : outcome.tag === 'draft' ? 'warn' : 'success');
             }
+            lastHistoryCount = currentHistory.length;
 
-            if (!listNeedsUpdate) {
-                renderRunDetail(selectedRunIndex);
-                return;
-            }
+            if (selectedRunIndex < 0 || selectedRunIndex >= currentHistory.length) selectedRunIndex = 0;
+            else if (listNeedsUpdate) selectedRunIndex = 0;
 
-            document.getElementById('runList').innerHTML = currentHistory.map((h, i) => {
-                const isSelected = i === selectedRunIndex;
-                const outcome = getHistoryOutcome(h);
-                const parts = (h.Timestamp || '').split(' ');
-                const datePart = parts[0] || '';
-                const timePart = parts[1] || '';
-                const tNo = h.TransmittalNo ? ` &nbsp;<span style="color:var(--text-dim);">${h.TransmittalNo}</span>` : '';
-                return `<div class="run-list-item${isSelected ? ' selected' : ''}" onclick="selectRun(${i})">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.15rem;">
-                        <span style="font-weight:700; font-size:0.875rem;">${h.JobNumber || '(no job #)'}</span>
-                        <span style="font-size:0.7rem; color:var(--text-dim);">${timePart}</span>
-                    </div>
-                    <div style="font-size:0.78rem; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">${h.Client || '&mdash;'}</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem;">
-                        <span style="color:${outcome.color};">${outcome.icon} ${outcome.text}</span>
-                        <span style="color:#555;">${datePart}${tNo}</span>
-                    </div>
-                </div>`;
-            }).join('');
+            computeFilteredIndices();
 
-            renderRunDetail(selectedRunIndex);
+            if (!listNeedsUpdate) { renderRunDetail(selectedRunIndex); return; }
+
+            renderFilteredList();
         }
 
         async function updateStatus() {
             try {
                 const res = await fetch(`${API_BASE}/status`);
                 const data = await res.json();
-                
-                document.getElementById('statusBadge').className = "status-badge status-online";
-                document.getElementById('statusText').innerText = "Service Online";
+
+                if (offlineSince) {
+                    addLog('Connection restored', 'success');
+                    showToast('Hub connection restored', 'success', 3000);
+                }
+                offlineSince = null;
+
+                document.getElementById('statusBadge').className = "status-pill online";
+                document.getElementById('statusText').innerText = "Online";
 
                 document.getElementById('statUptime').innerText = data.UpTime;
+                document.getElementById('statUptimeRel').innerText = relativeTime(data.UpTime) ? `Running ${relativeTime(data.UpTime).replace(' ago','')}` : '';
                 document.getElementById('statTask').innerText = data.ActiveTask;
-                document.getElementById('statEmail').innerText = data.LastEmailCheck;
-                document.getElementById('statCrawl').innerText = data.LastIndexRebuild;
+                document.getElementById('statTask').style.color = data.ActiveTask === 'None' ? 'var(--text-secondary)' : 'var(--warn)';
+                const emailRel = relativeTime(data.LastEmailCheck);
+                const crawlRel = relativeTime(data.LastIndexRebuild);
+                document.getElementById('statEmail').innerText = formatRelativePrimary(data.LastEmailCheck);
+                document.getElementById('statCrawl').innerText = formatRelativePrimary(data.LastIndexRebuild);
+                document.getElementById('statCrawlRel').innerText = data.LastIndexRebuild && data.LastIndexRebuild !== 'Never'
+                    ? `Last: ${data.LastIndexRebuild}`
+                    : '';
                 renderDispatchMode(data.DispatchMode || 'Auto');
-                const nextEl = document.getElementById('statNextEmail');
-                if (data.NextEmailCheck && data.NextEmailCheck !== 'Pending') {
-                    nextEl.innerText = 'Next check ' + data.NextEmailCheck;
-                } else {
-                    nextEl.innerText = '';
+
+                // Sync interval input from server
+                const intervalInput = document.getElementById('intervalInput');
+                if (data.EmailIntervalMinutes) {
+                    intervalInput.dataset.serverValue = String(data.EmailIntervalMinutes);
+                }
+                if (data.EmailIntervalMinutes && document.activeElement !== intervalInput) {
+                    intervalInput.value = data.EmailIntervalMinutes;
                 }
 
-                // Progress box ΓÇö task-aware so stale progress.json never shows for unrelated tasks
+                const nextEl = document.getElementById('statNextEmail');
+                const emailSubParts = [];
+                if (data.LastEmailCheck && data.LastEmailCheck !== 'Never' && emailRel) emailSubParts.push(`Last: ${data.LastEmailCheck}`);
+                if (data.NextEmailCheck && data.NextEmailCheck !== 'Pending') emailSubParts.push(`Next: ${data.NextEmailCheck}`);
+                nextEl.innerText = emailSubParts.join(' • ');
+
+                // Progress box
                 const pBox = document.getElementById('progressBox');
                 if (data.ActiveTask !== "None") {
+                    pBox.classList.add('active');
                     pBox.style.display = 'block';
                     const isCrawlTask = (data.ActiveTask === 'Index Rebuild' || data.ActiveTask === 'Cleaning Index');
                     if (isCrawlTask && data.Progress) {
@@ -568,26 +1992,28 @@
                         document.getElementById('progressCount').innerText = "";
                     }
                 } else {
+                    pBox.classList.remove('active');
                     pBox.style.display = 'none';
                 }
 
-                // --- Email progress live status ---
+                // Email progress
                 const epBox = document.getElementById('emailProgressBox');
                 const ep = data.EmailProgress;
                 if (ep && ep.Step && ep.Step !== 'idle') {
                     const stepCfg = {
-                        scanning:      { bg: 'rgba(59,130,246,0.1)',  border: 'rgba(59,130,246,0.4)',  lc: 'var(--primary)', label: 'Email Check \u2014 Scanning',       pulse: true  },
-                        found:         { bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.6)',  lc: 'var(--primary)', label: 'Email Check \u2014 Orders Found',    pulse: true  },
-                        processing:    { bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.7)',  lc: 'var(--primary)', label: 'Email Check \u2014 Processing',      pulse: true  },
-                        complete:      { bg: 'rgba(16,185,129,0.1)',  border: 'rgba(16,185,129,0.4)',  lc: 'var(--success)', label: 'Email Check \u2014 Complete',        pulse: false },
-                        failed:        { bg: 'rgba(239,68,68,0.1)',   border: 'rgba(239,68,68,0.4)',   lc: 'var(--error)',   label: 'Email Check \u2014 Failed',          pulse: false },
-                        pending_retry: { bg: 'rgba(245,158,11,0.1)',  border: 'rgba(245,158,11,0.4)',  lc: 'var(--warn)',    label: 'Email Check \u2014 Pending Retry',   pulse: false },
+                        scanning:      { bg: 'var(--primary-dim)', border: 'rgba(59,130,246,0.4)',  lc: 'var(--primary)', label: 'Scanning Inbox',        pulse: true  },
+                        found:         { bg: 'var(--primary-dim)', border: 'rgba(59,130,246,0.6)',  lc: 'var(--primary)', label: 'Orders Found',           pulse: true  },
+                        processing:    { bg: 'var(--primary-dim)', border: 'rgba(59,130,246,0.7)',  lc: 'var(--primary)', label: 'Processing Order',       pulse: true  },
+                        complete:      { bg: 'var(--success-dim)', border: 'rgba(16,185,129,0.4)',  lc: 'var(--success)', label: 'Check Complete',          pulse: false },
+                        failed:        { bg: 'var(--error-dim)',   border: 'rgba(239,68,68,0.4)',   lc: 'var(--error)',   label: 'Check Failed',            pulse: false },
+                        pending_retry: { bg: 'var(--warn-dim)',    border: 'rgba(245,158,11,0.4)',  lc: 'var(--warn)',    label: 'Pending Retry',           pulse: false },
                     };
                     const c = stepCfg[ep.Step] || stepCfg.scanning;
                     epBox.style.display = 'block';
                     epBox.style.background = c.bg;
-                    epBox.style.border = '1px solid ' + c.border;
-                    epBox.style.animation = c.pulse ? 'pulse 2s infinite ease-in-out' : 'none';
+                    epBox.style.borderColor = c.border;
+                    epBox.style.animation = c.pulse ? 'pulse-border 2s infinite ease-in-out' : 'none';
+                    if (c.pulse) epBox.classList.add('active'); else epBox.classList.remove('active');
                     document.getElementById('emailProgressLabel').style.color = c.lc;
                     document.getElementById('emailProgressLabel').innerText = c.label;
                     document.getElementById('emailProgressOrder').innerText = ep.Order || '';
@@ -597,34 +2023,79 @@
                     epBox.style.display = 'none';
                 }
 
-                // --- Email check result panel ---
+                // Email summary
                 const esBox = document.getElementById('emailSummaryBox');
                 if (data.LastEmailSummary) {
                     const s = data.LastEmailSummary;
                     esBox.style.display = 'block';
                     document.getElementById('btnSendDraft').style.display = (s.DraftCreated && s.DraftEntryId) ? 'inline-flex' : 'none';
                     const ts = s.Timestamp || '';
-                    let html = `<div style="font-size:0.8rem; color:var(--text-dim); margin-bottom:0.75rem;">${ts}</div>`;
+                    const rel = relativeTime(ts);
+                    let html = `<div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.625rem;">${ts}${rel ? ` (${rel})` : ''}</div>`;
                     if (s.Status === 'No orders found') {
-                        html += `<div style="color:var(--text-dim);">&#10003; Inbox checked &mdash; no new orders found.</div>`;
+                        html += `<div style="color:var(--text-secondary);">&#10003; Inbox checked &mdash; no new orders found.</div>`;
                     } else {
-                        html += `<div style="font-weight:600; margin-bottom:0.75rem;">${getDisplayOrderName(s)}`;
+                        html += `<div style="font-weight:600; margin-bottom:0.625rem;">${getDisplayOrderName(s)}`;
                         if (s.Client) html += ` &mdash; ${s.Client}`;
                         if (s.JobNumber) html += ` <span style="color:var(--text-dim); font-weight:400;">(Job #${s.JobNumber})</span>`;
                         html += `</div>`;
-                        html += `<div class="stat-grid">`;
-                        html += `<div class="stat-item"><span class="label">Status</span><span class="value" style="font-size:1rem;">${s.Status || '-'}</span></div>`;
-                        html += `<div class="stat-item"><span class="label">Parts Extracted</span><span class="value">${s.PartsExtracted ?? 0}</span></div>`;
-                        html += `<div class="stat-item"><span class="label">PDFs Collected</span><span class="value">${s.PdfsCollected ?? 0}</span></div>`;
-                        html += `<div class="stat-item"><span class="label">DXFs Collected</span><span class="value">${s.DxfsCollected ?? 0}</span></div>`;
-                        const sentColor = isDraftHistory(s) ? ((s.DraftCreated || (s.Status || '').toLowerCase().includes('draft')) ? 'var(--warn)' : 'var(--error)') : (s.TransmittalSent ? 'var(--success)' : 'var(--error)');
-                        const sentText  = isDraftHistory(s) ? ((s.DraftCreated || (s.Status || '').toLowerCase().includes('draft')) ? ((s.DispatchMode === 'Hold') ? 'Draft Saved &#9998;' : 'Draft Ready &#9998;') : 'Draft Failed &#10007;') : (s.TransmittalSent ? 'Yes &#10003;' : 'No &#10007;');
-                        html += `<div class="stat-item"><span class="label">${isDraftHistory(s) ? 'Draft Status' : 'Transmittal Sent'}</span><span class="value" style="color:${sentColor};">${sentText}</span></div>`;
+
+                        const summaryOutcome = getHistoryOutcome(s);
+
+                        html += `<div class="mini-stat-grid">`;
+                        html += `<div class="stat-card" style="padding:0.5rem 0.625rem;">
+                            <div class="stat-label">Status</div>
+                            <div class="stat-value" style="font-size:0.875rem; color:${summaryOutcome.color};">${summaryOutcome.text}</div>
+                            ${summaryOutcome.reason ? `<div style="font-size:0.6875rem; color:var(--text-dim); margin-top:0.15rem;">${summaryOutcome.reason}</div>` : ''}
+                        </div>`;
+                        html += `<div class="stat-card" style="padding:0.5rem 0.625rem;"><div class="stat-label">Parts</div><div class="stat-value">${s.PartsExtracted ?? 0}</div></div>`;
+                        html += `<div class="stat-card" style="padding:0.5rem 0.625rem;"><div class="stat-label">PDFs</div><div class="stat-value">${s.PdfsCollected ?? 0}</div></div>`;
+                        html += `<div class="stat-card" style="padding:0.5rem 0.625rem;"><div class="stat-label">DXFs</div><div class="stat-value">${s.DxfsCollected ?? 0}</div></div>`;
+
+                        const noTransmittalNeeded = (s.TransmittalRequired === false) || ((s.Status || '').toLowerCase().includes('epicor check only'));
+                        let sentColor, sentText;
+                        if (noTransmittalNeeded) {
+                            sentColor = 'var(--primary)';
+                            sentText = 'Not Needed';
+                        } else if (isDraftHistory(s)) {
+                            if (s.DraftCreated || (s.Status || '').toLowerCase().includes('draft')) {
+                                sentColor = 'var(--warn)';
+                                sentText = s.DispatchMode === 'Hold' ? 'Draft Saved' : 'Draft Ready';
+                            } else {
+                                sentColor = 'var(--error)';
+                                sentText = 'Draft Failed';
+                            }
+                        } else {
+                            sentColor = s.TransmittalSent ? 'var(--success)' : 'var(--error)';
+                            sentText = s.TransmittalSent ? 'Sent' : 'Failed';
+                        }
+                        html += `<div class="stat-card" style="padding:0.5rem 0.625rem;">
+                            <div class="stat-label">${isDraftHistory(s) ? 'Draft' : 'Transmittal'}</div>
+                            <div class="stat-value" style="color:${sentColor}; font-size:0.875rem;">${sentText}</div>
+                        </div>`;
                         html += `</div>`;
+                        html += renderHealthBadges(s);
+                        html += renderCompareSummary(s);
+                        html += renderTimingSummary(s);
+
                         if (s.NotFoundParts && s.NotFoundParts.length > 0) {
-                            html += `<div style="margin-top:0.75rem; font-size:0.8rem; color:var(--warn);">&#9888; Parts not found in index: ${s.NotFoundParts.join(', ')}</div>`;
+                            html += `<div class="not-found-box" style="margin-top:0.75rem;">
+                                <div class="not-found-title">&#9888; Parts not found in index (${s.NotFoundParts.length})</div>
+                                <div class="not-found-parts">${s.NotFoundParts.join(', ')}</div>
+                            </div>`;
                         }
                         html += renderSummaryPartsTable(s);
+                        html += renderCollectorDiagnostics(s);
+                        const summaryPathRows = [
+                            renderPathRow('F80', s.SourceDocPath),
+                            renderPathRow('Sales Order PDF', s.SourcePdfPath),
+                            renderPathRow('PDF Output', getPdfOutputFolder(s)),
+                            renderPathRow('DXF Output', getDxfOutputFolder(s)),
+                            renderPathRow('Collector Summary', s.CollectorSummaryPath)
+                        ].filter(Boolean);
+                        if (summaryPathRows.length) {
+                            html += `<div class="detail-paths" style="margin-top:1rem;">${summaryPathRows.join('')}</div>`;
+                        }
                     }
                     document.getElementById('emailSummaryContent').innerHTML = html;
                 } else {
@@ -635,49 +2106,47 @@
                 if (data.TestMode) {
                     document.getElementById('testBanner').style.display = 'block';
                     document.getElementById('hubVersion').style.color = 'var(--warn)';
-                    document.getElementById('hubVersion').innerText = 'NMT HUB v2.10 \u2014 TEST MODE';
+                    document.getElementById('hubVersion').innerText = 'NMT HUB v2.10 \u2014 TEST';
                 }
 
-                // --- Error panel ---
+                // Errors
                 const errBox = document.getElementById('errorBox');
                 if (data.RecentErrors && data.RecentErrors.length > 0) {
                     errBox.style.display = 'block';
                     document.getElementById('errorList').innerHTML = data.RecentErrors.map(e =>
-                        `<div style="padding: 0.25rem 0; border-bottom: 1px solid rgba(239,68,68,0.1);">${e}</div>`
+                        `<div style="padding:0.2rem 0; border-bottom:1px solid rgba(239,68,68,0.08);">${e}</div>`
                     ).join('');
                 } else {
                     errBox.style.display = 'none';
                 }
 
-                // --- History table ---
+                // History
                 renderRunLog(data.History || []);
 
                 if (data.ActiveTask !== lastTask) {
-                    if (data.ActiveTask === "None") {
-                        addLog(`Task Completed: ${lastTask}`, 'success');
-                    } else {
-                        addLog(`Task Started: ${data.ActiveTask}`, 'info');
-                    }
+                    if (data.ActiveTask === "None") addLog(`Completed: ${lastTask}`, 'success');
+                    else addLog(`Started: ${data.ActiveTask}`, 'info');
                     lastTask = data.ActiveTask;
                 }
 
                 const isBusy = data.ActiveTask !== "None";
-                document.getElementById('btnCrawl').disabled = isBusy;
-                document.getElementById('btnEmail').disabled = isBusy;
-                document.getElementById('btnClean').disabled = isBusy;
-                document.getElementById('btnCrawl').style.opacity = isBusy ? 0.5 : 1;
+                ['btnCrawl', 'btnEmail', 'btnClean'].forEach(id => {
+                    document.getElementById(id).disabled = isBusy;
+                });
 
             } catch (err) {
-                document.getElementById('statusBadge').className = "status-badge status-offline";
-                document.getElementById('statusText').innerText = "Service Offline";
+                if (!offlineSince) {
+                    offlineSince = new Date();
+                    addLog('Lost connection to Hub Service', 'error');
+                }
+                const offDuration = offlineSince ? relativeTime(offlineSince.toISOString().replace('T',' ').slice(0,19)) : '';
+                document.getElementById('statusBadge').className = "status-pill offline";
+                document.getElementById('statusText').innerText = offDuration ? `Offline (${offDuration})` : "Offline";
             }
         }
 
         async function clearHistoryItem(index) {
-            try {
-                await fetch(`${API_BASE}/clear-history-item?index=${index}`, { method: 'POST' });
-                updateStatus();
-            } catch (err) { }
+            try { await fetch(`${API_BASE}/clear-history-item?index=${index}`, { method: 'POST' }); updateStatus(); } catch (err) { }
         }
 
         async function triggerTask(endpoint) {
@@ -685,11 +2154,8 @@
             try {
                 const res = await fetch(`${API_BASE}/${endpoint}`, { method: 'POST' });
                 const data = await res.json();
-                if (res.status === 409) {
-                    addLog(data.message || 'Task already running', 'error');
-                } else {
-                    addLog(data.message, 'success');
-                }
+                if (res.status === 409) { addLog(data.message || 'Task already running', 'error'); showToast(data.message || 'Task already running', 'warn'); }
+                else addLog(data.message, 'success');
             } catch (err) {
                 addLog(`Error: ${err.message}`, 'error');
             }
@@ -698,32 +2164,29 @@
         async function performSearch() {
             const q = document.getElementById('searchInput').value.trim();
             if (!q) return;
-            
             const list = document.getElementById('searchList');
             const resBox = document.getElementById('searchResults');
-            list.innerHTML = '<div style="padding: 1rem; color: var(--text-dim);">Searching...</div>';
+            list.innerHTML = '<div style="padding:0.75rem; color:var(--text-dim);">Searching...</div>';
             resBox.style.display = 'block';
-
             try {
                 const res = await fetch(`${API_BASE}/search?q=${encodeURIComponent(q)}`);
                 const data = await res.json();
-                
                 if (data.results && data.results.length > 0) {
                     list.innerHTML = data.results.map(r => `
-                        <div style="padding: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 0.25rem;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <span style="font-weight: 700; color: var(--primary);">${r.PartNumber}</span>
-                                <span style="font-size: 0.75rem; color: var(--text-dim);">Rev ${r.Revision}</span>
+                        <div class="search-result-item">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span class="search-result-part">${r.PartNumber}</span>
+                                <span class="search-result-rev">Rev ${r.Revision}</span>
                             </div>
-                            <div style="font-size: 0.875rem;">${r.Description}</div>
-                            <div style="font-size: 0.7rem; color: #555; word-break: break-all;">${r.FullPath}</div>
+                            <div class="search-result-desc">${r.Description}</div>
+                            <div class="search-result-path">${r.FullPath}</div>
                         </div>
                     `).join('');
                 } else {
-                    list.innerHTML = '<div style="padding: 1rem; color: var(--text-dim);">No results found.</div>';
+                    list.innerHTML = '<div style="padding:0.75rem; color:var(--text-dim);">No results found.</div>';
                 }
             } catch (err) {
-                list.innerHTML = `<div style="padding: 1rem; color: var(--error);">Error: ${err.message}</div>`;
+                list.innerHTML = `<div style="padding:0.75rem; color:var(--error);">Error: ${err.message}</div>`;
             }
         }
 
@@ -732,14 +2195,63 @@
             const entry = document.createElement('div');
             entry.className = 'log-entry';
             const ts = new Date().toLocaleTimeString();
-            entry.innerHTML = `<span class="log-ts">${ts}</span> <span class="log-${type}">${msg}</span>`;
+            entry.innerHTML = `<span class="log-ts">${ts}</span><span class="log-${type}">${msg}</span>`;
             area.prepend(entry);
+            // Cap log entries at 200
+            while (area.children.length > 200) area.removeChild(area.lastChild);
         }
 
-        addLog('Dashboard initialized. Waiting for Hub Service...', 'info');
+        // === Keyboard Shortcuts ===
+        document.addEventListener('keydown', (e) => {
+            // Don't capture when typing in inputs
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                if (e.key === 'Escape') e.target.blur();
+                return;
+            }
+
+            // Ctrl+E = check emails
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                triggerTask('check-emails');
+                return;
+            }
+
+            // Arrow up/down = navigate history
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (filteredIndices.length === 0) return;
+                const currentPos = filteredIndices.indexOf(selectedRunIndex);
+                let newPos;
+                if (e.key === 'ArrowUp') {
+                    newPos = currentPos <= 0 ? filteredIndices.length - 1 : currentPos - 1;
+                } else {
+                    newPos = currentPos >= filteredIndices.length - 1 ? 0 : currentPos + 1;
+                }
+                selectRun(filteredIndices[newPos]);
+                // Scroll selected into view
+                const selectedEl = document.querySelector(`.run-list-item[data-idx="${filteredIndices[newPos]}"]`);
+                if (selectedEl) selectedEl.scrollIntoView({ block: 'nearest' });
+                return;
+            }
+
+            // / = focus search
+            if (e.key === '/') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+                return;
+            }
+
+            // Escape = close search results, close confirm
+            if (e.key === 'Escape') {
+                document.getElementById('searchResults').style.display = 'none';
+                closeConfirm();
+            }
+        });
+
+        addLog('Dashboard initialized. Connecting to Hub Service...', 'info');
+        addLog('Shortcuts: Ctrl+E check emails, \u2191\u2193 navigate history, / search', 'info');
         setInterval(updateStatus, 1500);
         updateStatus();
     </script>
 </body>
 </html>
-

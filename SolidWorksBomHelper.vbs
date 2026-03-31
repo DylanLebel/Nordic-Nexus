@@ -84,19 +84,50 @@ If rootComp Is Nothing Then
     WScript.Quit 5
 End If
 
+Function FindMacroUpTree(ByVal startDir, ByVal macroName)
+    Dim curDir, candidate, parentDir, hopCount
+    FindMacroUpTree = ""
+    curDir = Trim(startDir)
+    hopCount = 0
+
+    Do While curDir <> ""
+        candidate = gFSO.BuildPath(curDir, macroName)
+        If gFSO.FileExists(candidate) Then
+            FindMacroUpTree = candidate
+            Exit Function
+        End If
+
+        On Error Resume Next
+        parentDir = gFSO.GetParentFolderName(curDir)
+        If Err.Number <> 0 Then
+            Err.Clear
+            parentDir = ""
+        End If
+        On Error GoTo 0
+
+        If parentDir = "" Then Exit Do
+        If StrComp(parentDir, curDir, vbTextCompare) = 0 Then Exit Do
+
+        curDir = parentDir
+        hopCount = hopCount + 1
+        If hopCount > 20 Then Exit Do
+    Loop
+End Function
+
 ' ---- Try RunMacro2 via NmtBomExtract.swp first (runs inside SW with early binding) ----
 Dim macroPartCount
 macroPartCount = 0
 On Error Resume Next
 Dim vbsScriptDir, swpPath, macroShell, macroArgsPath, macroOutPath
 vbsScriptDir = gFSO.GetParentFolderName(WScript.ScriptFullName)
-swpPath      = vbsScriptDir & "\NmtBomExtract.swp"
+swpPath      = FindMacroUpTree(vbsScriptDir, "NmtBomExtract.swp")
 Set macroShell  = CreateObject("WScript.Shell")
 macroArgsPath   = macroShell.ExpandEnvironmentStrings("%TEMP%") & "\nmt_bom_args.txt"
 macroOutPath    = macroShell.ExpandEnvironmentStrings("%TEMP%") & "\nmt_bom_result_v2_" & Replace(gFSO.GetTempName, ".", "_") & ".txt"
 On Error GoTo 0
 
 If gFSO.FileExists(swpPath) Then
+    LogMsg "Using NmtBomExtract.swp from: " & swpPath
     On Error Resume Next
     Dim mafTs
     Set mafTs = gFSO.OpenTextFile(macroArgsPath, 2, True, 0)

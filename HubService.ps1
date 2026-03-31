@@ -16,6 +16,28 @@ $scriptDir  = Split-Path $PSCommandPath -Parent
 $script:hubScriptPath = if ($PSCommandPath) { $PSCommandPath } else { $MyInvocation.MyCommand.Path }
 Push-Location $scriptDir
 
+function Resolve-ConfiguredPath {
+    param(
+        [string]$PathValue,
+        [string]$BasePath,
+        [string]$DefaultValue = ""
+    )
+
+    $candidate = if (-not [string]::IsNullOrWhiteSpace($PathValue)) { $PathValue } else { $DefaultValue }
+    if ([string]::IsNullOrWhiteSpace($candidate)) { return "" }
+    if ([System.IO.Path]::IsPathRooted($candidate)) { return [System.IO.Path]::GetFullPath($candidate) }
+    if ([string]::IsNullOrWhiteSpace($BasePath)) { return [System.IO.Path]::GetFullPath($candidate) }
+    return [System.IO.Path]::GetFullPath((Join-Path $BasePath $candidate))
+}
+
+function Ensure-DirectoryExists {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path)) { return }
+    if (-not (Test-Path $Path)) {
+        [void][System.IO.Directory]::CreateDirectory($Path)
+    }
+}
+
 # --- Load Config ---
 $script:configFile = if ($TestMode) { "config.test.json" } else { "config.json" }
 $configPath = Join-Path $scriptDir $script:configFile
@@ -24,7 +46,8 @@ $emailIntervalMinutes = 30
 if (Test-Path $configPath) {
     try {
         $cfg = Get-Content $configPath -Raw | ConvertFrom-Json
-        if ($cfg.indexFolder)                { $script:indexDir             = $cfg.indexFolder }
+        $configBaseDir = Split-Path $configPath -Parent
+        if ($cfg.indexFolder)                { $script:indexDir             = Resolve-ConfiguredPath -PathValue $cfg.indexFolder -BasePath $configBaseDir -DefaultValue $script:indexDir }
         if ($cfg.emailCheckIntervalMinutes)  { $emailIntervalMinutes = [int]$cfg.emailCheckIntervalMinutes }
     } catch {
         Write-Host "[Hub] WARNING: Failed to load config from $configPath : $($_.Exception.Message)" -ForegroundColor Yellow
@@ -32,6 +55,7 @@ if (Test-Path $configPath) {
 } else {
     Write-Host "[Hub] WARNING: Config file not found at $configPath - using defaults" -ForegroundColor Yellow
 }
+Ensure-DirectoryExists -Path $script:indexDir
 
 # --- Hub Logging ---
 $script:hubLogFile = Join-Path $script:indexDir ("hub_service_{0}.log" -f (Get-Date -Format "yyyy-MM-dd"))
@@ -52,27 +76,69 @@ function Write-HubLog {
     Write-Host $line -ForegroundColor $fg
 }
 
+function Get-HubSettings {
+    if (Test-Path $script:hubSettingsPath) {
+        try {
+            $raw = Get-Content $script:hubSettingsPath -Raw
+            if (-not [string]::IsNullOrWhiteSpace($raw)) {
+                return ($raw | ConvertFrom-Json)
+            }
+        } catch {
+            Write-HubLog "Failed to read hub settings: $($_.Exception.Message)" "WARN"
+        }
+    }
+    return [pscustomobject]@{}
+}
+
+function Save-HubSettings {
+    param([hashtable]$Patch)
+
+    try {
+        $current = Get-HubSettings
+        $merged = [ordered]@{}
+        foreach ($prop in $current.PSObject.Properties) {
+            $merged[$prop.Name] = $prop.Value
+        }
+        foreach ($key in $Patch.Keys) {
+            $merged[$key] = $Patch[$key]
+        }
+        $merged | ConvertTo-Json | Set-Content -Path $script:hubSettingsPath -Encoding UTF8 -Force
+    } catch {
+        Write-HubLog "Failed to persist hub settings: $($_.Exception.Message)" "WARN"
+    }
+}
+
 function Get-HubDispatchMode {
     param([bool]$IsTestMode)
     $defaultMode = if ($IsTestMode) { "Manual" } else { "Auto" }
-    if (Test-Path $script:hubSettingsPath) {
-        try {
-            $settings = Get-Content $script:hubSettingsPath -Raw | ConvertFrom-Json
-            $mode = [string]$settings.DispatchMode
-            if (@("Auto","Manual","Hold") -contains $mode) { return $mode }
-        } catch {}
-    }
+    $settings = Get-HubSettings
+    $mode = [string]$settings.DispatchMode
+    if (@("Auto","Manual","Hold") -contains $mode) { return $mode }
     return $defaultMode
 }
 
 function Save-HubDispatchMode {
     param([string]$Mode)
-    try {
-        @{ DispatchMode = $Mode } | ConvertTo-Json | Set-Content -Path $script:hubSettingsPath -Encoding UTF8 -Force
-    } catch {
-        Write-HubLog "Failed to persist dispatch mode: $($_.Exception.Message)" "WARN"
-    }
+    Save-HubSettings @{ DispatchMode = $Mode }
 }
+
+function Get-HubEmailInterval {
+    param([int]$DefaultValue)
+
+    $settings = Get-HubSettings
+    $parsed = 0
+    if ([int]::TryParse([string]$settings.EmailIntervalMinutes, [ref]$parsed) -and $parsed -ge 1 -and $parsed -le 120) {
+        return $parsed
+    }
+    return $DefaultValue
+}
+
+function Save-HubEmailInterval {
+    param([int]$Minutes)
+    Save-HubSettings @{ EmailIntervalMinutes = $Minutes }
+}
+
+$emailIntervalMinutes = Get-HubEmailInterval -DefaultValue $emailIntervalMinutes
 
 function Send-OutlookDraftByEntryId {
     param([string]$EntryId)
@@ -128,6 +194,7 @@ $Global:HubState = [hashtable]::Synchronized(@{
     EmailIntervalMinutes  = $emailIntervalMinutes
     NextEmailCheck        = "Pending"
     DispatchMode          = (Get-HubDispatchMode -IsTestMode $TestMode.IsPresent)
+    ReplayRequest         = $null
     Errors                = [System.Collections.ArrayList]::Synchronized([System.Collections.ArrayList]::new())
 })
 
@@ -135,8 +202,87 @@ $Global:HubState = [hashtable]::Synchronized(@{
 $apiScript = {
     param($SharedState, $Dir)
 
+    function Read-SharedJsonFile {
+        param([string]$Path)
+        if (-not (Test-Path $Path)) { return $null }
+        $fs = $null
+        $sr = $null
+        try {
+            $fs = [System.IO.File]::Open($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+            $sr = [System.IO.StreamReader]::new($fs)
+            return ($sr.ReadToEnd() | ConvertFrom-Json)
+        } catch {
+            return $null
+        } finally {
+            if ($sr) { try { $sr.Dispose() } catch {} }
+            if ($fs) { try { $fs.Dispose() } catch {} }
+        }
+    }
+
+    function Get-HistoryEntriesForApi {
+        param($SharedState)
+        $hPath = Join-Path $SharedState.IndexFolder "transmittal_history.json"
+        $history = Read-SharedJsonFile -Path $hPath
+        return @($history)
+    }
+
+    function New-ReplayRequestFromHistory {
+        param(
+            $SharedState,
+            [string]$Dir,
+            [int]$HistoryIndex,
+            [string]$ModeLabel
+        )
+
+        $history = Get-HistoryEntriesForApi -SharedState $SharedState
+        if ($HistoryIndex -lt 0 -or $HistoryIndex -ge $history.Count) {
+            throw "History item not found."
+        }
+
+        $entry = $history[$HistoryIndex]
+        $outputFolder = [string]$entry.OutputFolder
+        if ([string]::IsNullOrWhiteSpace($outputFolder) -or -not (Test-Path $outputFolder)) {
+            throw "History item does not have a valid output folder."
+        }
+
+        $bomFile = Join-Path $outputFolder "order_bom.txt"
+        if (-not (Test-Path $bomFile)) {
+            throw "Replay BOM not found for this history item."
+        }
+
+        $isTest = $false
+        try { $isTest = [bool]$entry.TestMode } catch { $isTest = [bool]$SharedState.TestMode }
+        $configFileName = if ($isTest) { "config.test.json" } else { "config.json" }
+        $configPath = Join-Path $Dir $configFileName
+
+        $stamp = Get-Date -Format "yyyyMMdd_HHmmss"
+        $safeMode = ($ModeLabel -replace '[^\w-]', '_').ToLowerInvariant()
+        $replayRoot = Join-Path $outputFolder "_reruns"
+        $targetOutputFolder = Join-Path $replayRoot ("{0}_{1}" -f $safeMode, $stamp)
+
+        return [ordered]@{
+            HistoryIndex      = $HistoryIndex
+            ModeLabel         = $ModeLabel
+            BomFile           = $bomFile
+            ConfigFileName    = $configFileName
+            ConfigPath        = $configPath
+            SourceOutputFolder = $outputFolder
+            TargetOutputFolder = $targetOutputFolder
+            JobNumber         = [string]$entry.JobNumber
+        }
+    }
+
+    function Open-SharedPath {
+        param([string]$TargetPath)
+        if ([string]::IsNullOrWhiteSpace($TargetPath)) { throw "Path is blank." }
+        if (-not (Test-Path $TargetPath)) { throw "Path not found: $TargetPath" }
+        Start-Process -FilePath $TargetPath | Out-Null
+    }
+
     $listener = New-Object System.Net.HttpListener
     $listener.Prefixes.Add("http://localhost:$($SharedState.Port)/")
+    try { $listener.Prefixes.Add("http://127.0.0.1:$($SharedState.Port)/") } catch {}
+    try { $listener.Prefixes.Add("http://[::1]:$($SharedState.Port)/") } catch {}
 
     try {
         $listener.Start()
@@ -184,7 +330,8 @@ $apiScript = {
         if ($path -eq "/" -or $path -eq "/index.html") {
             $htmlPath = Join-Path $Dir "index.html"
             if (Test-Path $htmlPath) {
-                $buffer = [System.Text.Encoding]::UTF8.GetBytes((Get-Content $htmlPath -Raw))
+                $htmlText = [System.IO.File]::ReadAllText($htmlPath, [System.Text.Encoding]::UTF8)
+                $buffer = [System.Text.Encoding]::UTF8.GetBytes($htmlText)
                 $response.ContentType      = "text/html; charset=utf-8"
                 $response.ContentLength64  = $buffer.Length
                 $response.OutputStream.Write($buffer, 0, $buffer.Length)
@@ -231,6 +378,7 @@ $apiScript = {
                     $sr.Dispose(); $fs.Dispose()
                 } catch {}
             }
+            $history = @($history)
 
             $emailProgress = $null
             $epPath = Join-Path $SharedState.IndexFolder "email_progress.json"
@@ -291,6 +439,75 @@ $apiScript = {
                         $responseData = @{ message = "Email Check Started" }; $statusCode = 202
                     }
                 }
+                "/open-path" {
+                    $targetPath = [string]$request.QueryString["path"]
+                    try {
+                        Open-SharedPath -TargetPath $targetPath
+                        $responseData = @{ message = "Opened path"; Path = $targetPath }; $statusCode = 200
+                    } catch {
+                        $responseData = @{ error = "Open failed"; message = $_.Exception.Message }; $statusCode = 400
+                    }
+                }
+                "/replay-history-item" {
+                    if ($SharedState.ActiveTask -ne "None") {
+                        $responseData = @{ error = "Busy"; message = "Another task is already running: $($SharedState.ActiveTask)" }; $statusCode = 409
+                    } else {
+                        try {
+                            $targetIdx = [int]$request.QueryString["index"]
+                            $replayRequest = New-ReplayRequestFromHistory -SharedState $SharedState -Dir $Dir -HistoryIndex $targetIdx -ModeLabel "Replay"
+                            $SharedState.ReplayRequest = $replayRequest
+                            $SharedState.ActiveTask = "Replay Order"
+                            $SharedState.PendingTask = "replay"
+                            $responseData = @{ message = "Replay started"; OutputFolder = $replayRequest.TargetOutputFolder; BomFile = $replayRequest.BomFile }; $statusCode = 202
+                        } catch {
+                            $responseData = @{ error = "Replay failed"; message = $_.Exception.Message }; $statusCode = 400
+                        }
+                    }
+                }
+                "/recheck-history-item" {
+                    if ($SharedState.ActiveTask -ne "None") {
+                        $responseData = @{ error = "Busy"; message = "Another task is already running: $($SharedState.ActiveTask)" }; $statusCode = 409
+                    } else {
+                        try {
+                            $targetIdx = [int]$request.QueryString["index"]
+                            $replayRequest = New-ReplayRequestFromHistory -SharedState $SharedState -Dir $Dir -HistoryIndex $targetIdx -ModeLabel "Recheck"
+                            $SharedState.ReplayRequest = $replayRequest
+                            $SharedState.ActiveTask = "Recheck Order"
+                            $SharedState.PendingTask = "recheck"
+                            $responseData = @{ message = "Recheck started"; OutputFolder = $replayRequest.TargetOutputFolder; BomFile = $replayRequest.BomFile }; $statusCode = 202
+                        } catch {
+                            $responseData = @{ error = "Recheck failed"; message = $_.Exception.Message }; $statusCode = 400
+                        }
+                    }
+                }
+                "/rebuild-and-replay-history-item" {
+                    if ($SharedState.ActiveTask -ne "None") {
+                        $responseData = @{ error = "Busy"; message = "Another task is already running: $($SharedState.ActiveTask)" }; $statusCode = 409
+                    } else {
+                        try {
+                            $targetIdx = [int]$request.QueryString["index"]
+                            $replayRequest = New-ReplayRequestFromHistory -SharedState $SharedState -Dir $Dir -HistoryIndex $targetIdx -ModeLabel "RebuildReplay"
+                            $SharedState.ReplayRequest = $replayRequest
+                            $SharedState.ActiveTask = "Rebuild + Replay"
+                            $SharedState.PendingTask = "rebuild-replay"
+                            $responseData = @{ message = "Rebuild + replay started"; OutputFolder = $replayRequest.TargetOutputFolder; BomFile = $replayRequest.BomFile }; $statusCode = 202
+                        } catch {
+                            $responseData = @{ error = "Rebuild + replay failed"; message = $_.Exception.Message }; $statusCode = 400
+                        }
+                    }
+                }
+                "/set-email-interval" {
+                    $mins = [string]$request.QueryString["minutes"]
+                    $parsed = 0
+                    if ([int]::TryParse($mins, [ref]$parsed) -and $parsed -ge 1 -and $parsed -le 120) {
+                        $SharedState.EmailIntervalMinutes = $parsed
+                        Save-HubEmailInterval -Minutes $parsed
+                        Write-HubLog "Email check interval changed to ${parsed}m"
+                        $responseData = @{ message = "Email check interval set to ${parsed} minutes"; EmailIntervalMinutes = $parsed }; $statusCode = 200
+                    } else {
+                        $responseData = @{ error = "Bad value"; message = "Interval must be between 1 and 120 minutes." }; $statusCode = 400
+                    }
+                }
                 "/set-dispatch-mode" {
                     $mode = [string]$request.QueryString["mode"]
                     if (@("Auto","Manual","Hold") -contains $mode) {
@@ -320,6 +537,37 @@ $apiScript = {
                                 if ($summary.PSObject.Properties.Name -contains "DispatchState") { $summary.DispatchState = "Sent" }
                                 if ($summary.PSObject.Properties.Name -contains "DispatchMode") { $summary.DispatchMode = "Auto" }
                                 $summary | ConvertTo-Json -Depth 8 | Set-Content -Path $esPath -Encoding UTF8 -Force
+
+                                $hPath = Join-Path $SharedState.IndexFolder "transmittal_history.json"
+                                if (Test-Path $hPath) {
+                                    try {
+                                        $historyParsed = Get-Content $hPath -Raw | ConvertFrom-Json
+                                        $historyList = [System.Collections.Generic.List[object]]::new()
+                                        if ($historyParsed -is [System.Array]) {
+                                            foreach ($item in $historyParsed) { $historyList.Add($item) }
+                                        } elseif ($null -ne $historyParsed) {
+                                            $historyList.Add($historyParsed)
+                                        }
+
+                                        foreach ($item in $historyList) {
+                                            if ($null -eq $item) { continue }
+                                            $sameDraft = ([string]$item.DraftEntryId -eq $entryId)
+                                            $sameRun = ([string]$item.JobNumber -eq [string]$summary.JobNumber) -and ([string]$item.TransmittalNo -eq [string]$summary.TransmittalNo)
+                                            if (-not $sameDraft -and -not $sameRun) { continue }
+                                            if ($item.PSObject.Properties.Name -contains "DraftCreated") { $item.DraftCreated = $false }
+                                            if ($item.PSObject.Properties.Name -contains "TransmittalSent") { $item.TransmittalSent = $true }
+                                            if ($item.PSObject.Properties.Name -contains "Status") { $item.Status = "Transmittal Sent" }
+                                            if ($item.PSObject.Properties.Name -contains "DispatchState") { $item.DispatchState = "Sent" }
+                                            if ($item.PSObject.Properties.Name -contains "DispatchMode") { $item.DispatchMode = "Auto" }
+                                            break
+                                        }
+
+                                        @($historyList) | ConvertTo-Json -Depth 8 | Set-Content -Path $hPath -Encoding UTF8 -Force
+                                    } catch {
+                                        Write-HubLog "send-last-draft history sync failed: $($_.Exception.Message)" "WARN"
+                                    }
+                                }
+
                                 Write-HubLog "Sent Outlook draft from dashboard (EntryId=$entryId)"
                                 $responseData = @{ message = "Draft sent" }; $statusCode = 200
                             }
@@ -502,12 +750,13 @@ function Start-HubService {
         # --- Auto email check timer ---
         if ($Global:HubState.Status -eq "Running" -and $Global:HubState.ActiveTask -eq "None") {
             $elapsed = ($now - $lastEmailCheckTime).TotalMinutes
-            if ($elapsed -ge $emailIntervalMinutes) {
+            $currentInterval = $Global:HubState.EmailIntervalMinutes
+            if ($elapsed -ge $currentInterval) {
                 $Global:HubState.ActiveTask  = "Email Check"
                 $Global:HubState.PendingTask = "email"
                 $Global:HubState.NextEmailCheck = "Running now..."
             } else {
-                $secsLeft = [math]::Ceiling(($emailIntervalMinutes - $elapsed) * 60)
+                $secsLeft = [math]::Ceiling(($currentInterval - $elapsed) * 60)
                 $minsLeft = [math]::Floor($secsLeft / 60)
                 $sLeft    = $secsLeft % 60
                 $Global:HubState.NextEmailCheck = "in ${minsLeft}m ${sLeft}s"
@@ -522,6 +771,7 @@ function Start-HubService {
             $rebuildPath = Join-Path $scriptDir "IndexRebuild.ps1"
             $cleanPath   = Join-Path $scriptDir "IndexClean.ps1"
             $monitorPath = Join-Path $scriptDir "EmailOrderMonitor.ps1"
+            $replayPath  = Join-Path $scriptDir "Replay-OrderRun.ps1"
             $job = $null
             $proc = $null
 
@@ -541,7 +791,7 @@ function Start-HubService {
                     try {
                         $procArgs = @("-NoProfile", "-STA", "-ExecutionPolicy", "Bypass", "-File", $monitorPath, "-Config", $cfgPath, "-DispatchMode", $Global:HubState.DispatchMode)
                         if ($tm) { $procArgs += "-TestMode" }
-                        $proc = Start-Process -FilePath "powershell.exe" -ArgumentList $procArgs -WindowStyle Hidden -PassThru -ErrorAction Stop
+                        $proc = Start-Process -FilePath "powershell.exe" -ArgumentList $procArgs -WorkingDirectory $scriptDir -WindowStyle Hidden -PassThru -ErrorAction Stop
                     } catch {
                         Write-HubLog "Start-Process Hub_Email failed: $($_.Exception.Message)" "ERROR"
                     }
@@ -552,6 +802,47 @@ function Start-HubService {
                         & $cleanPath -Config $configFile -Clean
                     } -ArgumentList $cleanPath, $script:configFile | Out-Null
                     Write-HubLog "Dispatched job Hub_Clean using $cleanPath -Config $script:configFile -Clean"
+                }
+                "replay" {
+                    $req = $Global:HubState.ReplayRequest
+                    if ($req) {
+                        $job = Start-Job -Name "Hub_Replay" -ScriptBlock {
+                            param($replayPath, $bomFile, $configPath, $outputFolder)
+                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet
+                            if ($LASTEXITCODE -ne 0) { throw "Replay exited with code $LASTEXITCODE" }
+                        } -ArgumentList $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder
+                        Write-HubLog "Dispatched replay for job $($req.JobNumber) -> $($req.TargetOutputFolder)"
+                    } else {
+                        Write-HubLog "Replay request missing from shared state." "ERROR"
+                    }
+                }
+                "recheck" {
+                    $req = $Global:HubState.ReplayRequest
+                    if ($req) {
+                        $job = Start-Job -Name "Hub_Recheck" -ScriptBlock {
+                            param($replayPath, $bomFile, $configPath, $outputFolder)
+                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet
+                            if ($LASTEXITCODE -ne 0) { throw "Recheck exited with code $LASTEXITCODE" }
+                        } -ArgumentList $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder
+                        Write-HubLog "Dispatched recheck for job $($req.JobNumber) -> $($req.TargetOutputFolder)"
+                    } else {
+                        Write-HubLog "Recheck request missing from shared state." "ERROR"
+                    }
+                }
+                "rebuild-replay" {
+                    $req = $Global:HubState.ReplayRequest
+                    if ($req) {
+                        $job = Start-Job -Name "Hub_RebuildReplay" -ScriptBlock {
+                            param($rebuildPath, $configFile, $replayPath, $bomFile, $configPath, $outputFolder)
+                            & $rebuildPath -Config $configFile
+                            if ($LASTEXITCODE -ne 0) { throw "Index rebuild exited with code $LASTEXITCODE" }
+                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet
+                            if ($LASTEXITCODE -ne 0) { throw "Rebuild + replay exited with code $LASTEXITCODE" }
+                        } -ArgumentList $rebuildPath, $script:configFile, $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder
+                        Write-HubLog "Dispatched rebuild + replay for job $($req.JobNumber) -> $($req.TargetOutputFolder)"
+                    } else {
+                        Write-HubLog "Rebuild + replay request missing from shared state." "ERROR"
+                    }
                 }
             }
 
@@ -564,7 +855,7 @@ function Start-HubService {
                 $Global:HubState.ActiveJobId   = $null
                 $Global:HubState.ActiveJobName = "Hub_EmailProc"
                 Write-HubLog ("Dispatched process Hub_Email (Pid={0}) for task '{1}'" -f $proc.Id, $task)
-            } elseif ($task -eq "email") {
+            } elseif ($task -in @("email","replay","recheck","rebuild-replay")) {
                 Write-HubLog "Task '$task' failed to dispatch (no process object returned)." "ERROR"
                 $Global:HubState.ActiveTask    = "None"
                 $Global:HubState.ActiveJobId   = $null
@@ -608,7 +899,11 @@ function Start-HubService {
             if ($jobName -eq "Hub_Email") {
                 $Global:HubState.LastEmailCheck = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
                 $lastEmailCheckTime = Get-Date
-                $Global:HubState.NextEmailCheck = "in ${emailIntervalMinutes}m 0s"
+                $ei = $Global:HubState.EmailIntervalMinutes
+                $Global:HubState.NextEmailCheck = "in ${ei}m 0s"
+            }
+            if ($jobName -in @("Hub_Replay","Hub_Recheck","Hub_RebuildReplay")) {
+                $Global:HubState.ReplayRequest = $null
             }
             $Global:HubState.ActiveTask = "None"
             $Global:HubState.ActiveJobId = $null
@@ -638,7 +933,8 @@ function Start-HubService {
                 Write-HubLog ("Active email process exited (Pid={0}, ExitCode={1})" -f $procId, $procExitCode)
                 $Global:HubState.LastEmailCheck = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
                 $lastEmailCheckTime = Get-Date
-                $Global:HubState.NextEmailCheck = "in ${emailIntervalMinutes}m 0s"
+                $ei2 = $Global:HubState.EmailIntervalMinutes
+                $Global:HubState.NextEmailCheck = "in ${ei2}m 0s"
 
                 if ($null -eq $procExitCode -or $procExitCode -ne 0) {
                     $reason = if ($null -eq $procExitCode) {

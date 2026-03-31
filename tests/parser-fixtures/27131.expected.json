@@ -1,0 +1,74 @@
+[
+  {
+    "Part": "17069-10-P06",
+    "Order": "27131",
+    "Line": "1",
+    "Rev": "3",
+    "Qty": "4",
+    "Description": "UPPER DRAW BAR",
+    "InternalPart": ""
+  },
+  {
+    "Part": "17069-10-P22",
+    "Order": "27131",
+    "Line": "2",
+    "Rev": "3",
+    "Qty": "8",
+    "Description": "BUSHING DRAW BAR, 76.9",
+    "InternalPart": ""
+  },
+  {
+    "Part": "17069-10-P23",
+    "Order": "27131",
+    "Line": "3",
+    "Rev": "3",
+    "Qty": "8",
+    "Description": "BUSHING DRAW BAR, 64",
+    "InternalPart": ""
+  },
+  {
+    "Part": "17069-10-A07",
+    "Order": "27131",
+    "Line": "4",
+    "Rev": "1",
+    "Qty": "4",
+    "Description": "PIN, DRAW BAR, 64 X 165",
+    "InternalPart": ""
+  },
+  {
+    "Part": "17069-10-P27",
+    "Order": "27131",
+    "Line": "5",
+    "Rev": "3",
+    "Qty": "3",
+    "Description": "LOWER DRAWBAR",
+    "InternalPart": ""
+  },
+  {
+    "Part": "17069-10-P28",
+    "Order": "27131",
+    "Line": "6",
+    "Rev": "3",
+    "Qty": "6",
+    "Description": "BUSHING DRAWBAR",
+    "InternalPart": ""
+  },
+  {
+    "Part": "17069-10-P29",
+    "Order": "27131",
+    "Line": "7",
+    "Rev": "2",
+    "Qty": "6",
+    "Description": "BUSHING DRAWBAR",
+    "InternalPart": ""
+  },
+  {
+    "Part": "17069-10-A08",
+    "Order": "27131",
+    "Line": "8",
+    "Rev": "1",
+    "Qty": "3",
+    "Description": "PIN, DRAWBAR 64 X 103",
+    "InternalPart": ""
+  }
+]

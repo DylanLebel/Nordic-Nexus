@@ -1,0 +1,2638 @@
+﻿{
+    "Timestamp":  "2026-03-31 14:56:35",
+    "BomFile":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\order_bom.txt",
+    "OutputFolder":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\baseline_output",
+    "CollectMode":  "BOTH",
+    "ConfigPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\config.fixture.json",
+    "StrictMatching":  true,
+    "CopyChildVariants":  false,
+    "RequestedParts":  [
+                           "1201-A600",
+                           "1201-A601",
+                           "1201-A611",
+                           "1201-A612",
+                           "1201-A613",
+                           "1201-A614",
+                           "1201-A640",
+                           "1201-P601",
+                           "1201-P602",
+                           "1201-P604",
+                           "1201-P605",
+                           "1201-P606",
+                           "1201-P607",
+                           "1201-P608",
+                           "1201-P609",
+                           "1201-P610",
+                           "1201-P623",
+                           "1201-P624",
+                           "1201-P641",
+                           "1201-P642",
+                           "1201-P643",
+                           "1201-P644",
+                           "1201-P645",
+                           "1201-P730",
+                           "1201-P731",
+                           "1201-P901",
+                           "1201-P902",
+                           "1201-P903",
+                           "1201-P904",
+                           "1201-W601",
+                           "1201-W602",
+                           "1201-W603",
+                           "1201-W604",
+                           "1201-W605",
+                           "1201-W611",
+                           "850892CW",
+                           "90373A139",
+                           "BUTTON HEAD CAP SCREW STAINLESS STEEL",
+                           "FLAT WASHER METRIC CLASS 8.8 ZP",
+                           "GREASE NIPPLE",
+                           "HEX HEAD BOLT METRIC CLASS 8.8 ZP",
+                           "HEX NUT METRIC CLASS 8.8 ZP",
+                           "HHCA M16-2X50-C8.8-FW-NL-ZP-F",
+                           "HHCA M16-2X70-C8.8-FW-NL-ZP-F",
+                           "HHCA M16-2X80-C8.8-FW-NL-ZP-F",
+                           "HHCA M20-2.5X80-C8.8-FW-HN-ZP-F",
+                           "LOCK WASHER METRIC",
+                           "MCMASTER CARR BRASS FLAT WASHER",
+                           "NMT-PLT-A001",
+                           "NMT-PLT-P001",
+                           "NMT-PLT-P002",
+                           "NYLOCK NUTS ZINC PLATED CLASS 8",
+                           "SOCKET HEAD CAP SCREW ZINC PLATED METRIC"
+                       ],
+    "pdfsFound":  32,
+    "dxfsFound":  4,
+    "notFound":  [
+                     "1201-P641",
+                     "1201-P642",
+                     "1201-P643",
+                     "1201-P644",
+                     "90373A139",
+                     "BUTTON HEAD CAP SCREW STAINLESS STEEL",
+                     "FLAT WASHER METRIC CLASS 8.8 ZP",
+                     "GREASE NIPPLE",
+                     "HEX HEAD BOLT METRIC CLASS 8.8 ZP",
+                     "HEX NUT METRIC CLASS 8.8 ZP",
+                     "HHCA M16-2X50-C8.8-FW-NL-ZP-F",
+                     "HHCA M16-2X70-C8.8-FW-NL-ZP-F",
+                     "HHCA M16-2X80-C8.8-FW-NL-ZP-F",
+                     "HHCA M20-2.5X80-C8.8-FW-HN-ZP-F",
+                     "LOCK WASHER METRIC",
+                     "MCMASTER CARR BRASS FLAT WASHER",
+                     "NMT-PLT-A001",
+                     "NMT-PLT-P001",
+                     "NMT-PLT-P002",
+                     "NYLOCK NUTS ZINC PLATED CLASS 8",
+                     "SOCKET HEAD CAP SCREW ZINC PLATED METRIC"
+                 ],
+    "extraPdfs":  [
+                      {
+                          "RequestedPart":  "NMT-PLT-P001",
+                          "Kind":  "PDF",
+                          "Strategy":  "parent-child-base",
+                          "BasePart":  "NMT-PLT-P001-2",
+                          "CanonicalBasePart":  "NMT-PLT-P001-2",
+                          "CanonicalFileBase":  "NMT-PLT-P001-2.PDF",
+                          "FileName":  "NMT-PLT-P001-2.pdf",
+                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P001-2.pdf",
+                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                          "Rev":  "(NONE)"
+                      }
+                  ],
+    "extraDxfs":  [
+                      {
+                          "RequestedPart":  "1201-W605",
+                          "Kind":  "DXF",
+                          "Strategy":  "parent-child-base",
+                          "BasePart":  "1201-W605-01",
+                          "CanonicalBasePart":  "1201-W605-01",
+                          "CanonicalFileBase":  "1201-W605-01_REV3.DXF",
+                          "FileName":  "1201-W605-01_Rev3.dxf",
+                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W605-01_Rev3.dxf",
+                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                          "Rev":  "3"
+                      }
+                  ],
+    "partResults":  [
+                        {
+                            "Part":  "1201-A600",
+                            "CanonicalPart":  "1201-A600",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-A600_Rev20.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A600_Rev20.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "20"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-A600",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-A600",
+                                                          "CanonicalBasePart":  "1201-A600",
+                                                          "CanonicalFileBase":  "1201-A600_REV20.PDF",
+                                                          "FileName":  "1201-A600_Rev20.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A600_Rev20.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "20"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-A601",
+                            "CanonicalPart":  "1201-A601",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-A601_Rev11.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A601_Rev11.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "11"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-A601",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-A601",
+                                                          "CanonicalBasePart":  "1201-A601",
+                                                          "CanonicalFileBase":  "1201-A601_REV11.PDF",
+                                                          "FileName":  "1201-A601_Rev11.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A601_Rev11.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "11"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-A611",
+                            "CanonicalPart":  "1201-A611",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-A611_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A611_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-A611",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-A611",
+                                                          "CanonicalBasePart":  "1201-A611",
+                                                          "CanonicalFileBase":  "1201-A611_REV3.PDF",
+                                                          "FileName":  "1201-A611_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A611_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-A612",
+                            "CanonicalPart":  "1201-A612",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-A612_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A612_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-A612",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-A612",
+                                                          "CanonicalBasePart":  "1201-A612",
+                                                          "CanonicalFileBase":  "1201-A612_REV2.PDF",
+                                                          "FileName":  "1201-A612_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A612_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-A613",
+                            "CanonicalPart":  "1201-A613",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-A613_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A613_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-A613",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-A613",
+                                                          "CanonicalBasePart":  "1201-A613",
+                                                          "CanonicalFileBase":  "1201-A613_REV3.PDF",
+                                                          "FileName":  "1201-A613_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A613_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-A614",
+                            "CanonicalPart":  "1201-A614",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-A614_Rev1.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A614_Rev1.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "1"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-A614",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-A614",
+                                                          "CanonicalBasePart":  "1201-A614",
+                                                          "CanonicalFileBase":  "1201-A614_REV1.PDF",
+                                                          "FileName":  "1201-A614_Rev1.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A614_Rev1.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "1"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-A640",
+                            "CanonicalPart":  "1201-A640",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-A640_Rev7.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A640_Rev7.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "7"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-A640",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-A640",
+                                                          "CanonicalBasePart":  "1201-A640",
+                                                          "CanonicalFileBase":  "1201-A640_REV7.PDF",
+                                                          "FileName":  "1201-A640_Rev7.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-A640_Rev7.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "7"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P601",
+                            "CanonicalPart":  "1201-P601",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P601_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P601_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P601",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P601",
+                                                          "CanonicalBasePart":  "1201-P601",
+                                                          "CanonicalFileBase":  "1201-P601_REV3.PDF",
+                                                          "FileName":  "1201-P601_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P601_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P602",
+                            "CanonicalPart":  "1201-P602",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P602_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P602_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P602",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P602",
+                                                          "CanonicalBasePart":  "1201-P602",
+                                                          "CanonicalFileBase":  "1201-P602_REV3.PDF",
+                                                          "FileName":  "1201-P602_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P602_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P604",
+                            "CanonicalPart":  "1201-P604",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P604_Rev4.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P604_Rev4.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "4"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P604",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P604",
+                                                          "CanonicalBasePart":  "1201-P604",
+                                                          "CanonicalFileBase":  "1201-P604_REV4.PDF",
+                                                          "FileName":  "1201-P604_Rev4.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P604_Rev4.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "4"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P605",
+                            "CanonicalPart":  "1201-P605",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P605_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P605_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P605",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P605",
+                                                          "CanonicalBasePart":  "1201-P605",
+                                                          "CanonicalFileBase":  "1201-P605_REV2.PDF",
+                                                          "FileName":  "1201-P605_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P605_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P606",
+                            "CanonicalPart":  "1201-P606",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P606_Rev4.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P606_Rev4.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "4"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P606",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P606",
+                                                          "CanonicalBasePart":  "1201-P606",
+                                                          "CanonicalFileBase":  "1201-P606_REV4.PDF",
+                                                          "FileName":  "1201-P606_Rev4.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P606_Rev4.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "4"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P607",
+                            "CanonicalPart":  "1201-P607",
+                            "PdfFound":  true,
+                            "DxfFound":  true,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P607_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P607_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P607_Rev2.DXF",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-P607_Rev2.DXF",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P607",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P607",
+                                                          "CanonicalBasePart":  "1201-P607",
+                                                          "CanonicalFileBase":  "1201-P607_REV2.PDF",
+                                                          "FileName":  "1201-P607_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P607_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P607",
+                                                          "Kind":  "DXF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P607",
+                                                          "CanonicalBasePart":  "1201-P607",
+                                                          "CanonicalFileBase":  "1201-P607_REV2.DXF",
+                                                          "FileName":  "1201-P607_Rev2.DXF",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-P607_Rev2.DXF",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P608",
+                            "CanonicalPart":  "1201-P608",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P608_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P608_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P608",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P608",
+                                                          "CanonicalBasePart":  "1201-P608",
+                                                          "CanonicalFileBase":  "1201-P608_REV2.PDF",
+                                                          "FileName":  "1201-P608_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P608_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P609",
+                            "CanonicalPart":  "1201-P609",
+                            "PdfFound":  true,
+                            "DxfFound":  true,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P609_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P609_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P609_Rev3.DXF",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-P609_Rev3.DXF",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P609",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P609",
+                                                          "CanonicalBasePart":  "1201-P609",
+                                                          "CanonicalFileBase":  "1201-P609_REV3.PDF",
+                                                          "FileName":  "1201-P609_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P609_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P609",
+                                                          "Kind":  "DXF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P609",
+                                                          "CanonicalBasePart":  "1201-P609",
+                                                          "CanonicalFileBase":  "1201-P609_REV3.DXF",
+                                                          "FileName":  "1201-P609_Rev3.DXF",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-P609_Rev3.DXF",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P610",
+                            "CanonicalPart":  "1201-P610",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P610_Rev1.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P610_Rev1.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "1"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P610",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P610",
+                                                          "CanonicalBasePart":  "1201-P610",
+                                                          "CanonicalFileBase":  "1201-P610_REV1.PDF",
+                                                          "FileName":  "1201-P610_Rev1.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P610_Rev1.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "1"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P623",
+                            "CanonicalPart":  "1201-P623",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P623_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P623_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P623",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P623",
+                                                          "CanonicalBasePart":  "1201-P623",
+                                                          "CanonicalFileBase":  "1201-P623_REV2.PDF",
+                                                          "FileName":  "1201-P623_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P623_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P624",
+                            "CanonicalPart":  "1201-P624",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P624_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P624_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P624",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P624",
+                                                          "CanonicalBasePart":  "1201-P624",
+                                                          "CanonicalFileBase":  "1201-P624_REV3.PDF",
+                                                          "FileName":  "1201-P624_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P624_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P641",
+                            "CanonicalPart":  "1201-P641",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P642",
+                            "CanonicalPart":  "1201-P642",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P643",
+                            "CanonicalPart":  "1201-P643",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P644",
+                            "CanonicalPart":  "1201-P644",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P645",
+                            "CanonicalPart":  "1201-P645",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P645_Rev4.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P645_Rev4.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "4"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P645",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P645",
+                                                          "CanonicalBasePart":  "1201-P645",
+                                                          "CanonicalFileBase":  "1201-P645_REV4.PDF",
+                                                          "FileName":  "1201-P645_Rev4.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P645_Rev4.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "4"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P730",
+                            "CanonicalPart":  "1201-P730",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P730_Rev1.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P730_Rev1.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "1"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P730",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P730",
+                                                          "CanonicalBasePart":  "1201-P730",
+                                                          "CanonicalFileBase":  "1201-P730_REV1.PDF",
+                                                          "FileName":  "1201-P730_Rev1.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P730_Rev1.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "1"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P731",
+                            "CanonicalPart":  "1201-P731",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P731_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P731_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P731",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P731",
+                                                          "CanonicalBasePart":  "1201-P731",
+                                                          "CanonicalFileBase":  "1201-P731_REV2.PDF",
+                                                          "FileName":  "1201-P731_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P731_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P901",
+                            "CanonicalPart":  "1201-P901",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P901_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P901_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P901",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P901",
+                                                          "CanonicalBasePart":  "1201-P901",
+                                                          "CanonicalFileBase":  "1201-P901_REV3.PDF",
+                                                          "FileName":  "1201-P901_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P901_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P902",
+                            "CanonicalPart":  "1201-P902",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P902_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P902_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P902",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P902",
+                                                          "CanonicalBasePart":  "1201-P902",
+                                                          "CanonicalFileBase":  "1201-P902_REV3.PDF",
+                                                          "FileName":  "1201-P902_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P902_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P903",
+                            "CanonicalPart":  "1201-P903",
+                            "PdfFound":  true,
+                            "DxfFound":  true,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P903_Rev1.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P903_Rev1.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "1"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P903_Rev1.DXF",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-P903_Rev1.DXF",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "1"
+                                              }
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P903",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P903",
+                                                          "CanonicalBasePart":  "1201-P903",
+                                                          "CanonicalFileBase":  "1201-P903_REV1.PDF",
+                                                          "FileName":  "1201-P903_Rev1.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P903_Rev1.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "1"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P903",
+                                                          "Kind":  "DXF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P903",
+                                                          "CanonicalBasePart":  "1201-P903",
+                                                          "CanonicalFileBase":  "1201-P903_REV1.DXF",
+                                                          "FileName":  "1201-P903_Rev1.DXF",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-P903_Rev1.DXF",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                          "Rev":  "1"
+                                                      }
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-P904",
+                            "CanonicalPart":  "1201-P904",
+                            "PdfFound":  true,
+                            "DxfFound":  true,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P904_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P904_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+                                              {
+                                                  "FileName":  "1201-P904_Rev2.DXF",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-P904_Rev2.DXF",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P904",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P904",
+                                                          "CanonicalBasePart":  "1201-P904",
+                                                          "CanonicalFileBase":  "1201-P904_REV2.PDF",
+                                                          "FileName":  "1201-P904_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-P904_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-P904",
+                                                          "Kind":  "DXF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-P904",
+                                                          "CanonicalBasePart":  "1201-P904",
+                                                          "CanonicalFileBase":  "1201-P904_REV2.DXF",
+                                                          "FileName":  "1201-P904_Rev2.DXF",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-P904_Rev2.DXF",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "1201-W601",
+                            "CanonicalPart":  "1201-W601",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-W601_Rev14.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W601_Rev14.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "14"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-W601",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-W601",
+                                                          "CanonicalBasePart":  "1201-W601",
+                                                          "CanonicalFileBase":  "1201-W601_REV14.PDF",
+                                                          "FileName":  "1201-W601_Rev14.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W601_Rev14.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "14"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W601",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W601-05",
+                                                           "CanonicalBasePart":  "1201-W601-05",
+                                                           "CanonicalFileBase":  "1201-W601-05.PDF",
+                                                           "FileName":  "1201-W601-05.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W601-05.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       }
+                                                   ],
+                            "ExtraDxfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W601",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W601-01",
+                                                           "CanonicalBasePart":  "1201-W601-01",
+                                                           "CanonicalFileBase":  "1201-W601-01_REV13.DXF",
+                                                           "FileName":  "1201-W601-01_Rev13.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W601-01_Rev13.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "13"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W601",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W601-02",
+                                                           "CanonicalBasePart":  "1201-W601-02",
+                                                           "CanonicalFileBase":  "1201-W601-02_REV13.DXF",
+                                                           "FileName":  "1201-W601-02_Rev13.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W601-02_Rev13.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "13"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W601",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W601-03",
+                                                           "CanonicalBasePart":  "1201-W601-03",
+                                                           "CanonicalFileBase":  "1201-W601-03_REV13.DXF",
+                                                           "FileName":  "1201-W601-03_Rev13.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W601-03_Rev13.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "13"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W601",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W601-06",
+                                                           "CanonicalBasePart":  "1201-W601-06",
+                                                           "CanonicalFileBase":  "1201-W601-06_REV13.DXF",
+                                                           "FileName":  "1201-W601-06_Rev13.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W601-06_Rev13.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "13"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W601",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W601-08",
+                                                           "CanonicalBasePart":  "1201-W601-08",
+                                                           "CanonicalFileBase":  "1201-W601-08_REV13.DXF",
+                                                           "FileName":  "1201-W601-08_Rev13.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W601-08_Rev13.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "13"
+                                                       }
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "1201-W602",
+                            "CanonicalPart":  "1201-W602",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-W602_Rev6.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W602_Rev6.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "6"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-W602",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-W602",
+                                                          "CanonicalBasePart":  "1201-W602",
+                                                          "CanonicalFileBase":  "1201-W602_REV6.PDF",
+                                                          "FileName":  "1201-W602_Rev6.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W602_Rev6.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "6"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W602",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W602-01",
+                                                           "CanonicalBasePart":  "1201-W602-01",
+                                                           "CanonicalFileBase":  "1201-W602-01_REV6.DXF",
+                                                           "FileName":  "1201-W602-01_Rev6.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W602-01_Rev6.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "6"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W602",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W602-02",
+                                                           "CanonicalBasePart":  "1201-W602-02",
+                                                           "CanonicalFileBase":  "1201-W602-02_REV6.DXF",
+                                                           "FileName":  "1201-W602-02_Rev6.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W602-02_Rev6.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "6"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W602",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W602-03",
+                                                           "CanonicalBasePart":  "1201-W602-03",
+                                                           "CanonicalFileBase":  "1201-W602-03_REV6.DXF",
+                                                           "FileName":  "1201-W602-03_Rev6.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W602-03_Rev6.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "6"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W602",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W602-04",
+                                                           "CanonicalBasePart":  "1201-W602-04",
+                                                           "CanonicalFileBase":  "1201-W602-04_REV6.DXF",
+                                                           "FileName":  "1201-W602-04_Rev6.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W602-04_Rev6.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "6"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W602",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W602-05",
+                                                           "CanonicalBasePart":  "1201-W602-05",
+                                                           "CanonicalFileBase":  "1201-W602-05_REV6.DXF",
+                                                           "FileName":  "1201-W602-05_Rev6.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W602-05_Rev6.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "6"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W602",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W602-06",
+                                                           "CanonicalBasePart":  "1201-W602-06",
+                                                           "CanonicalFileBase":  "1201-W602-06_REV6.DXF",
+                                                           "FileName":  "1201-W602-06_Rev6.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W602-06_Rev6.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "6"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W602",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W602-07",
+                                                           "CanonicalBasePart":  "1201-W602-07",
+                                                           "CanonicalFileBase":  "1201-W602-07_REV6.DXF",
+                                                           "FileName":  "1201-W602-07_Rev6.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W602-07_Rev6.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "6"
+                                                       }
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "1201-W603",
+                            "CanonicalPart":  "1201-W603",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-W603_Rev4.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W603_Rev4.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "4"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-W603",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-W603",
+                                                          "CanonicalBasePart":  "1201-W603",
+                                                          "CanonicalFileBase":  "1201-W603_REV4.PDF",
+                                                          "FileName":  "1201-W603_Rev4.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W603_Rev4.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "4"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W603",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W603-04",
+                                                           "CanonicalBasePart":  "1201-W603-04",
+                                                           "CanonicalFileBase":  "1201-W603-04.PDF",
+                                                           "FileName":  "1201-W603-04.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W603-04.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       }
+                                                   ],
+                            "ExtraDxfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W603",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W603-01",
+                                                           "CanonicalBasePart":  "1201-W603-01",
+                                                           "CanonicalFileBase":  "1201-W603-01_REV4.DXF",
+                                                           "FileName":  "1201-W603-01_Rev4.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W603-01_Rev4.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "4"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W603",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W603-02",
+                                                           "CanonicalBasePart":  "1201-W603-02",
+                                                           "CanonicalFileBase":  "1201-W603-02_REV4.DXF",
+                                                           "FileName":  "1201-W603-02_Rev4.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W603-02_Rev4.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "4"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W603",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W603-03",
+                                                           "CanonicalBasePart":  "1201-W603-03",
+                                                           "CanonicalFileBase":  "1201-W603-03_REV4.DXF",
+                                                           "FileName":  "1201-W603-03_Rev4.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W603-03_Rev4.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "4"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W603",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W603-04",
+                                                           "CanonicalBasePart":  "1201-W603-04",
+                                                           "CanonicalFileBase":  "1201-W603-04_REV4.DXF",
+                                                           "FileName":  "1201-W603-04_Rev4.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W603-04_Rev4.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "4"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W603",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W603-05",
+                                                           "CanonicalBasePart":  "1201-W603-05",
+                                                           "CanonicalFileBase":  "1201-W603-05_REV4.DXF",
+                                                           "FileName":  "1201-W603-05_Rev4.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W603-05_Rev4.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "4"
+                                                       }
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "1201-W604",
+                            "CanonicalPart":  "1201-W604",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-W604_Rev7.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W604_Rev7.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "7"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-W604",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-W604",
+                                                          "CanonicalBasePart":  "1201-W604",
+                                                          "CanonicalFileBase":  "1201-W604_REV7.PDF",
+                                                          "FileName":  "1201-W604_Rev7.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W604_Rev7.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "7"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W604",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W604-02",
+                                                           "CanonicalBasePart":  "1201-W604-02",
+                                                           "CanonicalFileBase":  "1201-W604-02.PDF",
+                                                           "FileName":  "1201-W604-02.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W604-02.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W604",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W604-3D",
+                                                           "CanonicalBasePart":  "1201-W604-3D",
+                                                           "CanonicalFileBase":  "1201-W604-3D.PDF",
+                                                           "FileName":  "1201-W604-3D.PDF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W604-3D.PDF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       }
+                                                   ],
+                            "ExtraDxfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W604",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W604-02",
+                                                           "CanonicalBasePart":  "1201-W604-02",
+                                                           "CanonicalFileBase":  "1201-W604-02_REV7.DXF",
+                                                           "FileName":  "1201-W604-02_Rev7.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W604-02_Rev7.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "7"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W604",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W604-04",
+                                                           "CanonicalBasePart":  "1201-W604-04",
+                                                           "CanonicalFileBase":  "1201-W604-04_REV7.DXF",
+                                                           "FileName":  "1201-W604-04_Rev7.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W604-04_Rev7.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "7"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W604",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W604-05",
+                                                           "CanonicalBasePart":  "1201-W604-05",
+                                                           "CanonicalFileBase":  "1201-W604-05_REV7.DXF",
+                                                           "FileName":  "1201-W604-05_Rev7.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W604-05_Rev7.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "7"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W604",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W604-06",
+                                                           "CanonicalBasePart":  "1201-W604-06",
+                                                           "CanonicalFileBase":  "1201-W604-06_REV7.DXF",
+                                                           "FileName":  "1201-W604-06_Rev7.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W604-06_Rev7.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "7"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W604",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W604-07",
+                                                           "CanonicalBasePart":  "1201-W604-07",
+                                                           "CanonicalFileBase":  "1201-W604-07_REV7.DXF",
+                                                           "FileName":  "1201-W604-07_Rev7.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W604-07_Rev7.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "7"
+                                                       }
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "1201-W605",
+                            "CanonicalPart":  "1201-W605",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-W605_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W605_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-W605",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-W605",
+                                                          "CanonicalBasePart":  "1201-W605",
+                                                          "CanonicalFileBase":  "1201-W605_REV3.PDF",
+                                                          "FileName":  "1201-W605_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W605_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W605",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W605-01",
+                                                           "CanonicalBasePart":  "1201-W605-01",
+                                                           "CanonicalFileBase":  "1201-W605-01.PDF",
+                                                           "FileName":  "1201-W605-01.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W605-01.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W605",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W605-02",
+                                                           "CanonicalBasePart":  "1201-W605-02",
+                                                           "CanonicalFileBase":  "1201-W605-02.PDF",
+                                                           "FileName":  "1201-W605-02.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W605-02.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       }
+                                                   ],
+                            "ExtraDxfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W605",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W605-01",
+                                                           "CanonicalBasePart":  "1201-W605-01",
+                                                           "CanonicalFileBase":  "1201-W605-01_REV3.DXF",
+                                                           "FileName":  "1201-W605-01_Rev3.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W605-01_Rev3.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "3"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "1201-W605",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W605-02",
+                                                           "CanonicalBasePart":  "1201-W605-02",
+                                                           "CanonicalFileBase":  "1201-W605-02_REV3.DXF",
+                                                           "FileName":  "1201-W605-02_Rev3.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W605-02_Rev3.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "3"
+                                                       }
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "1201-W611",
+                            "CanonicalPart":  "1201-W611",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "1201-W611_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W611_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "1201-W611",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "1201-W611",
+                                                          "CanonicalBasePart":  "1201-W611",
+                                                          "CanonicalFileBase":  "1201-W611_REV3.PDF",
+                                                          "FileName":  "1201-W611_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\1201-W611_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "1201-W611",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "1201-W611-01",
+                                                           "CanonicalBasePart":  "1201-W611-01",
+                                                           "CanonicalFileBase":  "1201-W611-01_REV3.DXF",
+                                                           "FileName":  "1201-W611-01_Rev3.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\1201-W611-01_Rev3.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "3"
+                                                       }
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "850892CW",
+                            "CanonicalPart":  "850892CW",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "850892CW_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\850892CW_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "850892CW",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "850892CW",
+                                                          "CanonicalBasePart":  "850892CW",
+                                                          "CanonicalFileBase":  "850892CW_REV3.PDF",
+                                                          "FileName":  "850892CW_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\850892CW_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "90373A139",
+                            "CanonicalPart":  "90373A139",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "BUTTON HEAD CAP SCREW STAINLESS STEEL",
+                            "CanonicalPart":  "BUTTON HEAD CAP SCREW STAINLESS STEEL",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "FLAT WASHER METRIC CLASS 8.8 ZP",
+                            "CanonicalPart":  "FLAT WASHER METRIC CLASS 8.8 ZP",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "GREASE NIPPLE",
+                            "CanonicalPart":  "GREASE NIPPLE",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "HEX HEAD BOLT METRIC CLASS 8.8 ZP",
+                            "CanonicalPart":  "HEX HEAD BOLT METRIC CLASS 8.8 ZP",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "HEX NUT METRIC CLASS 8.8 ZP",
+                            "CanonicalPart":  "HEX NUT METRIC CLASS 8.8 ZP",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "HHCA M16-2X50-C8.8-FW-NL-ZP-F",
+                            "CanonicalPart":  "HHCA M16-2X50-C8.8-FW-NL-ZP-F",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "HHCA M16-2X70-C8.8-FW-NL-ZP-F",
+                            "CanonicalPart":  "HHCA M16-2X70-C8.8-FW-NL-ZP-F",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "HHCA M16-2X80-C8.8-FW-NL-ZP-F",
+                            "CanonicalPart":  "HHCA M16-2X80-C8.8-FW-NL-ZP-F",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "HHCA M20-2.5X80-C8.8-FW-HN-ZP-F",
+                            "CanonicalPart":  "HHCA M20-2.5X80-C8.8-FW-HN-ZP-F",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "LOCK WASHER METRIC",
+                            "CanonicalPart":  "LOCK WASHER METRIC",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "MCMASTER CARR BRASS FLAT WASHER",
+                            "CanonicalPart":  "MCMASTER CARR BRASS FLAT WASHER",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "NMT-PLT-A001",
+                            "CanonicalPart":  "NMT-PLT-A001",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-A001",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-A001-1",
+                                                           "CanonicalBasePart":  "NMT-PLT-A001-1",
+                                                           "CanonicalFileBase":  "NMT-PLT-A001-1_REV1.PDF",
+                                                           "FileName":  "NMT-PLT-A001-1_Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-A001-1_Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-A001",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-A001-2",
+                                                           "CanonicalBasePart":  "NMT-PLT-A001-2",
+                                                           "CanonicalFileBase":  "NMT-PLT-A001-2.PDF",
+                                                           "FileName":  "NMT-PLT-A001-2.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-A001-2.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-A001",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-A001-3",
+                                                           "CanonicalBasePart":  "NMT-PLT-A001-3",
+                                                           "CanonicalFileBase":  "NMT-PLT-A001-3_REV1.PDF",
+                                                           "FileName":  "NMT-PLT-A001-3_Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-A001-3_Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-A001",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-A001-4",
+                                                           "CanonicalBasePart":  "NMT-PLT-A001-4",
+                                                           "CanonicalFileBase":  "NMT-PLT-A001-4_REV1.PDF",
+                                                           "FileName":  "NMT-PLT-A001-4_Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-A001-4_Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       }
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "NMT-PLT-P001",
+                            "CanonicalPart":  "NMT-PLT-P001",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P001",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P001-1",
+                                                           "CanonicalBasePart":  "NMT-PLT-P001-1",
+                                                           "CanonicalFileBase":  "NMT-PLT-P001-1_REV1.PDF",
+                                                           "FileName":  "NMT-PLT-P001-1_Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P001-1_Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P001",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P001-2",
+                                                           "CanonicalBasePart":  "NMT-PLT-P001-2",
+                                                           "CanonicalFileBase":  "NMT-PLT-P001-2.PDF",
+                                                           "FileName":  "NMT-PLT-P001-2.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P001-2.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P001",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P001-3",
+                                                           "CanonicalBasePart":  "NMT-PLT-P001-3",
+                                                           "CanonicalFileBase":  "NMT-PLT-P001-3_REV1.PDF",
+                                                           "FileName":  "NMT-PLT-P001-3_Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P001-3_Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P001",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P001-4",
+                                                           "CanonicalBasePart":  "NMT-PLT-P001-4",
+                                                           "CanonicalFileBase":  "NMT-PLT-P001-4 REV1.PDF",
+                                                           "FileName":  "NMT-PLT-P001-4 Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P001-4 Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       }
+                                                   ],
+                            "ExtraDxfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P001",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P001-1",
+                                                           "CanonicalBasePart":  "NMT-PLT-P001-1",
+                                                           "CanonicalFileBase":  "NMT-PLT-P001-1.DXF",
+                                                           "FileName":  "NMT-PLT-P001-1.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\NMT-PLT-P001-1.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P001",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P001-2",
+                                                           "CanonicalBasePart":  "NMT-PLT-P001-2",
+                                                           "CanonicalFileBase":  "NMT-PLT-P001-2.DXF",
+                                                           "FileName":  "NMT-PLT-P001-2.dxf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\NMT-PLT-P001-2.dxf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P001",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P001-3",
+                                                           "CanonicalBasePart":  "NMT-PLT-P001-3",
+                                                           "CanonicalFileBase":  "NMT-PLT-P001-3.DXF",
+                                                           "FileName":  "NMT-PLT-P001-3.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\NMT-PLT-P001-3.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P001",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P001-4",
+                                                           "CanonicalBasePart":  "NMT-PLT-P001-4",
+                                                           "CanonicalFileBase":  "NMT-PLT-P001-4.DXF",
+                                                           "FileName":  "NMT-PLT-P001-4.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\NMT-PLT-P001-4.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       }
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "NMT-PLT-P002",
+                            "CanonicalPart":  "NMT-PLT-P002",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P002",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P002-1",
+                                                           "CanonicalBasePart":  "NMT-PLT-P002-1",
+                                                           "CanonicalFileBase":  "NMT-PLT-P002-1_REV1.PDF",
+                                                           "FileName":  "NMT-PLT-P002-1_Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P002-1_Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P002",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P002-2",
+                                                           "CanonicalBasePart":  "NMT-PLT-P002-2",
+                                                           "CanonicalFileBase":  "NMT-PLT-P002-2.PDF",
+                                                           "FileName":  "NMT-PLT-P002-2.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P002-2.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P002",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P002-3",
+                                                           "CanonicalBasePart":  "NMT-PLT-P002-3",
+                                                           "CanonicalFileBase":  "NMT-PLT-P002-3_REV1.PDF",
+                                                           "FileName":  "NMT-PLT-P002-3_Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P002-3_Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P002",
+                                                           "Kind":  "PDF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P002-4",
+                                                           "CanonicalBasePart":  "NMT-PLT-P002-4",
+                                                           "CanonicalFileBase":  "NMT-PLT-P002-4 REV1.PDF",
+                                                           "FileName":  "NMT-PLT-P002-4 Rev1.pdf",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001\\NMT-PLT-P002-4 Rev1.pdf",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\pdfs\\item_001",
+                                                           "Rev":  "1"
+                                                       }
+                                                   ],
+                            "ExtraDxfCandidates":  [
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P002",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P002-1",
+                                                           "CanonicalBasePart":  "NMT-PLT-P002-1",
+                                                           "CanonicalFileBase":  "NMT-PLT-P002-1.DXF",
+                                                           "FileName":  "NMT-PLT-P002-1.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\NMT-PLT-P002-1.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P002",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P002-2",
+                                                           "CanonicalBasePart":  "NMT-PLT-P002-2",
+                                                           "CanonicalFileBase":  "NMT-PLT-P002-2.DXF",
+                                                           "FileName":  "NMT-PLT-P002-2.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\NMT-PLT-P002-2.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P002",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P002-3",
+                                                           "CanonicalBasePart":  "NMT-PLT-P002-3",
+                                                           "CanonicalFileBase":  "NMT-PLT-P002-3.DXF",
+                                                           "FileName":  "NMT-PLT-P002-3.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\NMT-PLT-P002-3.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       },
+                                                       {
+                                                           "RequestedPart":  "NMT-PLT-P002",
+                                                           "Kind":  "DXF",
+                                                           "Strategy":  "parent-child-base",
+                                                           "BasePart":  "NMT-PLT-P002-4",
+                                                           "CanonicalBasePart":  "NMT-PLT-P002-4",
+                                                           "CanonicalFileBase":  "NMT-PLT-P002-4.DXF",
+                                                           "FileName":  "NMT-PLT-P002-4.DXF",
+                                                           "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001\\NMT-PLT-P002-4.DXF",
+                                                           "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\mock_store\\dxfs\\item_001",
+                                                           "Rev":  "(NONE)"
+                                                       }
+                                                   ],
+                            "VariantOnly":  true
+                        },
+                        {
+                            "Part":  "NYLOCK NUTS ZINC PLATED CLASS 8",
+                            "CanonicalPart":  "NYLOCK NUTS ZINC PLATED CLASS 8",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "SOCKET HEAD CAP SCREW ZINC PLATED METRIC",
+                            "CanonicalPart":  "SOCKET HEAD CAP SCREW ZINC PLATED METRIC",
+                            "PdfFound":  false,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        }
+                    ],
+    "warnings":  [
+                     "Extra parent-child matches were found but not copied because strict matching is enabled."
+                 ],
+    "indexInfo":  {
+                      "PdfIndex":  {
+                                       "Path":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\pdf_index_clean.csv",
+                                       "Exists":  true,
+                                       "LastWriteTime":  "2026-03-31 14:56:34",
+                                       "AgeHours":  0,
+                                       "IsStale":  false
+                                   },
+                      "DxfIndex":  {
+                                       "Path":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\26905\\dxf_index_clean.csv",
+                                       "Exists":  true,
+                                       "LastWriteTime":  "2026-03-31 14:56:34",
+                                       "AgeHours":  0,
+                                       "IsStale":  false
+                                   },
+                      "WarningHours":  24,
+                      "IsStale":  false
+                  }
+}

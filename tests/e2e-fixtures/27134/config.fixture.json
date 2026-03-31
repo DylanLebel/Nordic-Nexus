@@ -1,0 +1,24 @@
+﻿{
+    "indexFolder":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27134",
+    "outputFolder":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27134\\baseline_output",
+    "pathFilters":  {
+                        "disallowedModelFolderNames":  [
+                                                           "Obsolete",
+                                                           "Archive",
+                                                           "Old",
+                                                           "Deprecated",
+                                                           "QA",
+                                                           "20 - QA",
+                                                           "Quotes"
+                                                       ],
+                        "disallowedModelNamePatterns":  [
+                                                            "*-OBS*",
+                                                            "* OBS"
+                                                        ]
+                    },
+    "collector":  {
+                      "strictMatching":  true,
+                      "copyChildVariants":  false,
+                      "indexStaleWarningHours":  24
+                  }
+}

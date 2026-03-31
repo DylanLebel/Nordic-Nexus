@@ -1,0 +1,13 @@
+﻿{
+    "Name":  "27134",
+    "JobNumber":  "27134",
+    "Description":  "Clean hardware-heavy order",
+    "RequestedParts":  [
+                           "25671-P77",
+                           "90585A718",
+                           "97367A116",
+                           "91950A033"
+                       ],
+    "PdfIndexRows":  1,
+    "DxfIndexRows":  2
+}

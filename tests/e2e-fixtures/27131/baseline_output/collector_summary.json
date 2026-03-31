@@ -1,0 +1,413 @@
+﻿{
+    "Timestamp":  "2026-03-31 14:56:55",
+    "BomFile":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\order_bom.txt",
+    "OutputFolder":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\baseline_output",
+    "CollectMode":  "BOTH",
+    "ConfigPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\config.fixture.json",
+    "StrictMatching":  true,
+    "CopyChildVariants":  false,
+    "RequestedParts":  [
+                           "17069-10-P06",
+                           "17069-10-P22",
+                           "17069-10-P23",
+                           "17069-10-A07",
+                           "17069-10-P27",
+                           "17069-10-P28",
+                           "17069-10-P29",
+                           "17069-10-A08"
+                       ],
+    "pdfsFound":  8,
+    "dxfsFound":  2,
+    "notFound":  [
+
+                 ],
+    "extraPdfs":  [
+
+                  ],
+    "extraDxfs":  [
+
+                  ],
+    "partResults":  [
+                        {
+                            "Part":  "17069-10-P06",
+                            "CanonicalPart":  "17069-10-P06",
+                            "PdfFound":  true,
+                            "DxfFound":  true,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-P06_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P06_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-P06 REV2.dxf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\dxfs\\item_001\\17069-10-P06 REV2.dxf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-P06",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-P06",
+                                                          "CanonicalBasePart":  "17069-10-P06",
+                                                          "CanonicalFileBase":  "17069-10-P06_REV3.PDF",
+                                                          "FileName":  "17069-10-P06_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P06_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-P06",
+                                                          "Kind":  "DXF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-P06",
+                                                          "CanonicalBasePart":  "17069-10-P06",
+                                                          "CanonicalFileBase":  "17069-10-P06 REV2.DXF",
+                                                          "FileName":  "17069-10-P06 REV2.dxf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\dxfs\\item_001\\17069-10-P06 REV2.dxf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\dxfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "17069-10-P22",
+                            "CanonicalPart":  "17069-10-P22",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-P22_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P22_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-P22",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-P22",
+                                                          "CanonicalBasePart":  "17069-10-P22",
+                                                          "CanonicalFileBase":  "17069-10-P22_REV3.PDF",
+                                                          "FileName":  "17069-10-P22_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P22_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "17069-10-P23",
+                            "CanonicalPart":  "17069-10-P23",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-P23_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P23_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-P23",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-P23",
+                                                          "CanonicalBasePart":  "17069-10-P23",
+                                                          "CanonicalFileBase":  "17069-10-P23_REV2.PDF",
+                                                          "FileName":  "17069-10-P23_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P23_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "17069-10-A07",
+                            "CanonicalPart":  "17069-10-A07",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-A07_Rev1.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-A07_Rev1.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "1"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-A07",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-A07",
+                                                          "CanonicalBasePart":  "17069-10-A07",
+                                                          "CanonicalFileBase":  "17069-10-A07_REV1.PDF",
+                                                          "FileName":  "17069-10-A07_Rev1.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-A07_Rev1.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "1"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "17069-10-P27",
+                            "CanonicalPart":  "17069-10-P27",
+                            "PdfFound":  true,
+                            "DxfFound":  true,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-P27_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P27_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-P27.DXF",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\dxfs\\item_001\\17069-10-P27.DXF",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "(NONE)"
+                                              }
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-P27",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-P27",
+                                                          "CanonicalBasePart":  "17069-10-P27",
+                                                          "CanonicalFileBase":  "17069-10-P27_REV3.PDF",
+                                                          "FileName":  "17069-10-P27_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P27_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-P27",
+                                                          "Kind":  "DXF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-P27",
+                                                          "CanonicalBasePart":  "17069-10-P27",
+                                                          "CanonicalFileBase":  "17069-10-P27.DXF",
+                                                          "FileName":  "17069-10-P27.DXF",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\dxfs\\item_001\\17069-10-P27.DXF",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\dxfs\\item_001",
+                                                          "Rev":  "(NONE)"
+                                                      }
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "17069-10-P28",
+                            "CanonicalPart":  "17069-10-P28",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-P28_Rev3.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P28_Rev3.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "3"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-P28",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-P28",
+                                                          "CanonicalBasePart":  "17069-10-P28",
+                                                          "CanonicalFileBase":  "17069-10-P28_REV3.PDF",
+                                                          "FileName":  "17069-10-P28_Rev3.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P28_Rev3.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "3"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "17069-10-P29",
+                            "CanonicalPart":  "17069-10-P29",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-P29_Rev2.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P29_Rev2.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "2"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-P29",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-P29",
+                                                          "CanonicalBasePart":  "17069-10-P29",
+                                                          "CanonicalFileBase":  "17069-10-P29_REV2.PDF",
+                                                          "FileName":  "17069-10-P29_Rev2.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-P29_Rev2.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "2"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        },
+                        {
+                            "Part":  "17069-10-A08",
+                            "CanonicalPart":  "17069-10-A08",
+                            "PdfFound":  true,
+                            "DxfFound":  false,
+                            "PdfCopied":  [
+                                              {
+                                                  "FileName":  "17069-10-A08_Rev1.pdf",
+                                                  "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-A08_Rev1.pdf",
+                                                  "Strategy":  "exact-base",
+                                                  "Rev":  "1"
+                                              }
+                                          ],
+                            "DxfCopied":  [
+
+                                          ],
+                            "PrimaryPdfMatches":  [
+                                                      {
+                                                          "RequestedPart":  "17069-10-A08",
+                                                          "Kind":  "PDF",
+                                                          "Strategy":  "exact-base",
+                                                          "BasePart":  "17069-10-A08",
+                                                          "CanonicalBasePart":  "17069-10-A08",
+                                                          "CanonicalFileBase":  "17069-10-A08_REV1.PDF",
+                                                          "FileName":  "17069-10-A08_Rev1.pdf",
+                                                          "FullPath":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001\\17069-10-A08_Rev1.pdf",
+                                                          "Directory":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\mock_store\\pdfs\\item_001",
+                                                          "Rev":  "1"
+                                                      }
+                                                  ],
+                            "PrimaryDxfMatches":  [
+
+                                                  ],
+                            "ExtraPdfCandidates":  [
+
+                                                   ],
+                            "ExtraDxfCandidates":  [
+
+                                                   ],
+                            "VariantOnly":  false
+                        }
+                    ],
+    "warnings":  [
+
+                 ],
+    "indexInfo":  {
+                      "PdfIndex":  {
+                                       "Path":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\pdf_index_clean.csv",
+                                       "Exists":  true,
+                                       "LastWriteTime":  "2026-03-31 14:56:54",
+                                       "AgeHours":  0,
+                                       "IsStale":  false
+                                   },
+                      "DxfIndex":  {
+                                       "Path":  "C:\\Users\\dlebel\\Downloads\\feb13\\v2_ServiceHub\\EpicorOrderExtractor\\drawing-collector-v3\\tests\\e2e-fixtures\\27131\\dxf_index_clean.csv",
+                                       "Exists":  true,
+                                       "LastWriteTime":  "2026-03-31 14:56:54",
+                                       "AgeHours":  0,
+                                       "IsStale":  false
+                                   },
+                      "WarningHours":  24,
+                      "IsStale":  false
+                  }
+}

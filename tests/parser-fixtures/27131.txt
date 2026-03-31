@@ -1,0 +1,41 @@
+Sales Order: 27131
+Line Part Number/Description Rev                       Order Qty      Unit Price                            Canadian Dollars
+1 17069-10-P06           3                                                                                      Ext. Price
+4.00EA  2,855.500
+UPPER DRAW BAR
+Rel Need By Ship By                          Quantity
+1 22-Jun-2026 12-Jun-2026                    4.00
+2 17069-10-P22           3
+BUSHING DRAW BAR, 76.9
+Rel Need By Ship By                          Quantity
+1 22-Jun-2026 12-Jun-2026                    8.00
+3 17069-10-P23           3
+BUSHING DRAW BAR, 64
+Rel Need By Ship By                          Quantity
+1 22-Jun-2026 12-Jun-2026                    8.00
+4 17069-10-A07           1
+PIN, DRAW BAR, 64 X 165
+Rel Need By Ship By                          Quantity
+1 22-Jun-2026 12-Jun-2026                    4.00
+5 17069-10-P27         3               3.00EA             2,794.000
+6.00EA               276.170            1,657.02
+LOWER DRAWBAR                          6.00EA               251.000
+Rel Need By Ship By          Quantity
+1 22-Jun-2026 12-Jun-2026      3.00
+6 17069-10-P28         3
+BUSHING DRAWBAR
+Rel Need By Ship By          Quantity
+1 22-Jun-2026 12-Jun-2026      6.00
+7 17069-10-P29         2
+BUSHING DRAWBAR
+Rel Need By Ship By          Quantity
+1 22-Jun-2026 12-Jun-2026      6.00
+8 17069-10-A08         1
+PIN, DRAWBAR 64 X 103
+Rel Need By Ship By          Quantity
+1 22-Jun-2026 12-Jun-2026      3.00
+9 JOB CHARGES          add
+oper
+JOB/ ORDER ADDITIONAL CHARGES
+Rel Need By Ship By          Quantity
+1 22-Jun-2026 12-Jun-2026      1.00

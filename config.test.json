@@ -17,11 +17,17 @@
                                                     "Old",
                                                     "Deprecated"
                                                 ],
+                        "skipCrawlFolderNames":  [
+                                                     "QA",
+                                                     "20 - QA"
+                                                 ],
                         "disallowedModelFolderNames":  [
                                                            "Obsolete",
                                                            "Archive",
                                                            "Old",
                                                            "Deprecated",
+                                                           "QA",
+                                                           "20 - QA",
                                                            "Quotes"
                                                        ],
                         "disallowedModelNamePatterns":  [
@@ -64,8 +70,13 @@
                          "transmittalCcTest":  "",
                          "transmittalTo":  "dlebel@nmtech.com",
                          "transmittalCc":  "",
-                         "sendTransmittalWhenNoDrawings":  true,
+                         "sendTransmittalWhenNoDrawings":  false,
                          "preferVbsMacroOnly":  true,
                          "enableVbsHelperFallback":  true
-                     }
+                     },
+    "collector":  {
+                      "strictMatching":  true,
+                      "copyChildVariants":  false,
+                      "indexStaleWarningHours":  24
+                  }
 }

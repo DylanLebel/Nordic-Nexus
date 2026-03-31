@@ -53,15 +53,53 @@ function Write-Log {
     Write-Host $entry -ForegroundColor $color
 }
 
+function Resolve-ConfiguredPath {
+    param(
+        [string]$PathValue,
+        [string]$BasePath,
+        [string]$DefaultValue = ""
+    )
+
+    $candidate = if (-not [string]::IsNullOrWhiteSpace($PathValue)) { $PathValue } else { $DefaultValue }
+    if ([string]::IsNullOrWhiteSpace($candidate)) { return "" }
+    if ([System.IO.Path]::IsPathRooted($candidate)) { return [System.IO.Path]::GetFullPath($candidate) }
+    if ([string]::IsNullOrWhiteSpace($BasePath)) { return [System.IO.Path]::GetFullPath($candidate) }
+    return [System.IO.Path]::GetFullPath((Join-Path $BasePath $candidate))
+}
+
+function Ensure-DirectoryExists {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path)) { return }
+    if (-not (Test-Path $Path)) {
+        [void][System.IO.Directory]::CreateDirectory($Path)
+    }
+}
+
+function Write-JsonUtf8 {
+    param(
+        [string]$Path,
+        [object]$Value,
+        [int]$Depth = 5
+    )
+
+    $parent = Split-Path -Path $Path -Parent
+    if (-not [string]::IsNullOrWhiteSpace($parent)) {
+        Ensure-DirectoryExists -Path $parent
+    }
+    $json = $Value | ConvertTo-Json -Depth $Depth
+    [System.IO.File]::WriteAllText($Path, $json, [System.Text.Encoding]::UTF8)
+}
+
 # --- Hub Notification (drops a timestamped JSON file; HubService picks it up via its tray loop) ---
 function Push-HubNotification {
     param([string]$Title, [string]$Message, [string]$FolderPath = "")
     try {
         $stamp      = (Get-Date).ToString("yyyyMMdd_HHmmss_fff")
         $notifyFile = Join-Path $indexFolder "notify_${stamp}.json"
-        @{ Title = $Title; Message = $Message; FolderPath = $FolderPath } |
-            ConvertTo-Json | Set-Content $notifyFile -Encoding UTF8 -Force
-    } catch { }
+        Write-JsonUtf8 -Path $notifyFile -Value @{ Title = $Title; Message = $Message; FolderPath = $FolderPath }
+    } catch {
+        Write-Log "Failed to queue hub notification: $($_.Exception.Message)" "WARN"
+    }
 }
 
 function Write-EmailProgress {
@@ -71,17 +109,25 @@ function Write-EmailProgress {
         [string]$Detail = ""
     )
     try {
-        @{
+        Write-JsonUtf8 -Path (Join-Path $indexFolder "email_progress.json") -Value @{
             Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
             Step      = $Step
             Order     = $Order
             Detail    = $Detail
-        } | ConvertTo-Json | Set-Content -Path (Join-Path $indexFolder "email_progress.json") -Encoding UTF8 -Force
-    } catch { }
+        }
+    } catch {
+        Write-Log "Failed to write email progress: $($_.Exception.Message)" "WARN"
+    }
 }
 
 # --- Load config ---
 $scriptDir = Split-Path $PSCommandPath -Parent
+$salesOrderParsingPath = Join-Path $scriptDir "SalesOrderParsing.ps1"
+if (Test-Path $salesOrderParsingPath) {
+    . $salesOrderParsingPath
+} else {
+    throw "Required parser helper not found: $salesOrderParsingPath"
+}
 $configPath = if ([System.IO.Path]::IsPathRooted($Config)) { $Config } else { Join-Path $scriptDir $Config }
 Write-Log "Loading configuration from: $configPath" "INFO"
 $cfg = @{}
@@ -93,9 +139,16 @@ if (Test-Path $configPath) {
     }
 }
 
-$indexFolder  = if ($cfg.indexFolder)  { $cfg.indexFolder }  else { "C:\Users\dlebel\Documents\PDFIndex" }
-$outputRoot   = if ($cfg.outputFolder) { $cfg.outputFolder } else { "C:\Users\dlebel\Documents\AssemblyPDFs" }
-$logFolder    = if ($cfg.logFolder)    { $cfg.logFolder }    else { (Join-Path $outputRoot "MacroLogs") }
+$configBaseDir = Split-Path $configPath -Parent
+$indexFolder  = Resolve-ConfiguredPath -PathValue $cfg.indexFolder -BasePath $configBaseDir -DefaultValue "C:\Users\dlebel\Documents\PDFIndex"
+$outputRoot   = Resolve-ConfiguredPath -PathValue $cfg.outputFolder -BasePath $configBaseDir -DefaultValue "C:\Users\dlebel\Documents\AssemblyPDFs"
+$logFolder    = Resolve-ConfiguredPath -PathValue $cfg.logFolder -BasePath $configBaseDir -DefaultValue (Join-Path $outputRoot "MacroLogs")
+Ensure-DirectoryExists -Path $indexFolder
+Ensure-DirectoryExists -Path $outputRoot
+Ensure-DirectoryExists -Path $logFolder
+Write-Log "Resolved index folder: $indexFolder" "INFO"
+Write-Log "Resolved output folder: $outputRoot" "INFO"
+Write-Log "Resolved log folder: $logFolder" "INFO"
 
 # PDM vault path - the email contains paths relative to this root
 $pdmVaultPath = if ($cfg.pdmVaultPath) { $cfg.pdmVaultPath } else { "C:\NMT_PDM" }
@@ -116,6 +169,10 @@ $transmittalToProd = if ($emailCfg.transmittalToProd) { $emailCfg.transmittalToP
 $transmittalCcProd = if ($emailCfg.transmittalCcProd) { $emailCfg.transmittalCcProd } else { $transmittalCc }
 $transmittalToTest = if ($emailCfg.transmittalToTest) { $emailCfg.transmittalToTest } else { $transmittalTo }
 $transmittalCcTest = if ($emailCfg.transmittalCcTest) { $emailCfg.transmittalCcTest } else { $transmittalCc }
+$sendTransmittalWhenNoDrawings = $false
+if ($null -ne $emailCfg.sendTransmittalWhenNoDrawings) {
+    try { $sendTransmittalWhenNoDrawings = [bool]$emailCfg.sendTransmittalWhenNoDrawings } catch { $sendTransmittalWhenNoDrawings = $false }
+}
 $forceSendReceiveBeforeScan = $false
 if ($null -ne $emailCfg.forceSendReceiveBeforeScan) {
     try { $forceSendReceiveBeforeScan = [bool]$emailCfg.forceSendReceiveBeforeScan } catch { $forceSendReceiveBeforeScan = $false }
@@ -2311,6 +2368,9 @@ function Test-DisallowedModelPath {
         $up.Contains("\ARCHIVE\") -or
         $up.Contains("\OLD\") -or
         $up.Contains("\DEPRECATED\") -or
+        $up.Contains("\20 - QA\") -or
+        $up.Contains("\QA\") -or
+        $up.Contains("DIM CHECK") -or
         $up.Contains("\QUOTES\")) {
         return $true
     }
@@ -3589,7 +3649,8 @@ function Send-TransmittalEmail {
         [bool]$TestMode,
         [ValidateSet("Auto","Manual","Hold")]
         [string]$DispatchMode = "Auto",
-        [object]$OutlookApp = $null
+        [object]$OutlookApp = $null,
+        [string]$SourcePdfPath = ""
     )
 
     $f02Template = ""
@@ -3708,8 +3769,10 @@ function Send-TransmittalEmail {
     if ($effectiveJob -match '\d{4,6}') { $jobDigits = $Matches[0] }
     $spareRoot = "C:\NMT_PDM\Projects\Spare Parts"
     $docLeaf = ""
+    $sourcePdfLeaf = ""
     $docDerivedDrawingsPath = ""
     $candidateProjectDirs = [System.Collections.Generic.List[string]]::new()
+    $preferredProjectDirs = [System.Collections.Generic.List[string]]::new()
     if (-not [string]::IsNullOrWhiteSpace($OrderDocPath)) {
         try {
             $docLeaf = [System.IO.Path]::GetFileNameWithoutExtension($OrderDocPath)
@@ -3720,36 +3783,56 @@ function Send-TransmittalEmail {
             }
         } catch { }
     }
+    if (-not [string]::IsNullOrWhiteSpace($SourcePdfPath)) {
+        try {
+            $sourcePdfJobFolder = Split-Path (Split-Path $SourcePdfPath -Parent) -Parent
+            $sourcePdfLeaf = [System.IO.Path]::GetFileName($sourcePdfJobFolder)
+            $sourcePdfLeaf = ($sourcePdfLeaf -replace '\s*-\s*50\s*-\s*Sales\s*$', '').Trim()
+            foreach ($cand in @(
+                (Join-Path $spareRoot ($sourcePdfLeaf -replace '^\s*(\d{4,6})\s*-\s*', '$1 - ')),
+                (Join-Path $spareRoot ($sourcePdfLeaf -replace '^\s*(\d{4,6})-', '$1 - ')),
+                (Join-Path $spareRoot $sourcePdfLeaf)
+            )) {
+                if (-not [string]::IsNullOrWhiteSpace($cand)) { $preferredProjectDirs.Add($cand) }
+            }
+        } catch { }
+    }
     if (-not [string]::IsNullOrWhiteSpace($jobDigits) -and (Test-Path $spareRoot)) {
         Get-ChildItem -Path $spareRoot -Directory -Filter "$jobDigits*" -ErrorAction SilentlyContinue |
             Sort-Object LastWriteTime -Descending |
             ForEach-Object { $candidateProjectDirs.Add($_.FullName) }
     }
-    if (-not [string]::IsNullOrWhiteSpace($docLeaf) -and (Test-Path $spareRoot)) {
+    foreach ($seed in @($sourcePdfLeaf, $docLeaf) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) {
+        if (-not (Test-Path $spareRoot)) { continue }
         $tokens = @(
-            $docLeaf.ToUpperInvariant().Split(@(' ', '-', '_', ',', '(', ')'), [System.StringSplitOptions]::RemoveEmptyEntries) |
-            Where-Object { $_.Length -ge 3 -and $_ -notmatch '^(F80|DOCX|SPARE|PARTS|ORDER)$' }
+            $seed.ToUpperInvariant().Split(@(' ', '-', '_', ',', '(', ')'), [System.StringSplitOptions]::RemoveEmptyEntries) |
+            Where-Object { $_.Length -ge 3 -and $_ -notmatch '^(F80|DOCX|SPARE|PARTS|ORDER|SALES|ACKNOWLEDGMENT|ACKNOWLEDGEMENT|REV)$' }
         )
-        if ($tokens.Count -gt 1) {
-            $fuzzy = @(
-                Get-ChildItem -Path $spareRoot -Directory -ErrorAction SilentlyContinue |
-                ForEach-Object {
-                    $nameU = $_.Name.ToUpperInvariant()
-                    $score = 0
-                    foreach ($tk in $tokens) {
-                        if ($nameU.Contains($tk)) { $score++ }
-                    }
-                    if ($score -ge [Math]::Min(2, $tokens.Count)) {
-                        [pscustomobject]@{ Path = $_.FullName; Score = $score; LastWriteTime = $_.LastWriteTime }
-                    }
-                } |
-                Sort-Object Score, LastWriteTime -Descending
-            )
-            foreach ($m in $fuzzy) { $candidateProjectDirs.Add($m.Path) }
+        if ($tokens.Count -le 1) { continue }
+        $fuzzy = @(
+            Get-ChildItem -Path $spareRoot -Directory -ErrorAction SilentlyContinue |
+            ForEach-Object {
+                $nameU = $_.Name.ToUpperInvariant()
+                $score = 0
+                foreach ($tk in $tokens) {
+                    if ($nameU.Contains($tk)) { $score++ }
+                }
+                if ($score -ge [Math]::Min(2, $tokens.Count)) {
+                    [pscustomobject]@{ Path = $_.FullName; Score = $score; LastWriteTime = $_.LastWriteTime }
+                }
+            } |
+            Sort-Object Score, LastWriteTime -Descending
+        )
+        foreach ($m in $fuzzy) {
+            if ($seed -eq $sourcePdfLeaf) {
+                $preferredProjectDirs.Add($m.Path)
+            } else {
+                $candidateProjectDirs.Add($m.Path)
+            }
         }
     }
     $seenCandidates = @{}
-    foreach ($cand in $candidateProjectDirs) {
+    foreach ($cand in @($preferredProjectDirs + $candidateProjectDirs)) {
         if ([string]::IsNullOrWhiteSpace($cand)) { continue }
         $key = $cand.ToUpperInvariant()
         if ($seenCandidates.ContainsKey($key)) { continue }
@@ -3759,12 +3842,10 @@ function Send-TransmittalEmail {
         if (Test-Path $drawings) { $projectDrawingsPath = $drawings; break }
         if ([string]::IsNullOrWhiteSpace($projectDrawingsPath)) { $projectDrawingsPath = $cand }
     }
-    if (-not [string]::IsNullOrWhiteSpace($docDerivedDrawingsPath)) {
-        # Prefer exact order-doc project path so transmittal always references this specific order.
+    if ([string]::IsNullOrWhiteSpace($projectDrawingsPath) -and -not [string]::IsNullOrWhiteSpace($docDerivedDrawingsPath) -and (Test-Path $docDerivedDrawingsPath)) {
         $projectDrawingsPath = $docDerivedDrawingsPath
-        if (-not (Test-Path $projectDrawingsPath)) {
-            Write-Log "  Project path (doc-derived) not present on disk yet: '$projectDrawingsPath'" "WARN"
-        }
+    } elseif (-not [string]::IsNullOrWhiteSpace($docDerivedDrawingsPath) -and -not (Test-Path $docDerivedDrawingsPath)) {
+        Write-Log "  Project path (doc-derived) not present on disk yet: '$docDerivedDrawingsPath'" "WARN"
     }
     if ([string]::IsNullOrWhiteSpace($projectDrawingsPath) -and -not [string]::IsNullOrWhiteSpace($docFolder)) {
         $projectDrawingsPath = $docFolder
@@ -3791,7 +3872,7 @@ function Send-TransmittalEmail {
         try { $cadLinkReady = Test-Path $cadLinkPath } catch { }
     }
     if (-not $cadLinkReady -and $PdfsFound -gt 0) { $cadLinkReady = $true }
-    $burnProfileDisplayPath = if ($burnProfilesReady) { $burnProfilePath } else { "N/A" }
+    $burnProfileDisplayPath = if ($burnProfilePath -ne "N/A") { $burnProfilePath } else { "N/A" }
     # Always show the resolved project drawings path for CADLink when available; readiness still controls Yes/No checkbox.
     $cadLinkDisplayPath = if ($cadLinkPath -ne "N/A") { $cadLinkPath } else { "N/A" }
     Write-Log "  Project path: '$projectDrawingsPath' | BurnProfilesReady=$burnProfilesReady | CADLinkReady=$cadLinkReady" "INFO"
@@ -3815,6 +3896,13 @@ function Send-TransmittalEmail {
         ForEach-Object { $_.Group | Select-Object -First 1 } |
         Sort-Object Len -Descending
     )
+    $noteAllowedParts = @{}
+    foreach ($cand in $partCandidates) {
+        $allowedPart = ""
+        try { $allowedPart = [string]$cand.Part } catch { $allowedPart = "" }
+        if ([string]::IsNullOrWhiteSpace($allowedPart)) { continue }
+        $noteAllowedParts[$allowedPart.Trim().ToUpperInvariant()] = $true
+    }
     $extractPartRevFromFile = {
         param([string]$LeafName)
         $name = [System.IO.Path]::GetFileNameWithoutExtension($LeafName).ToUpperInvariant()
@@ -3839,7 +3927,8 @@ function Send-TransmittalEmail {
         }
         if ([string]::IsNullOrWhiteSpace($matchedPart)) {
             $fallback = ($base -replace '\s+', '' -replace '_', '-')
-            if ($fallback -match '^\d{5}-\d{2}-[A-Z]\d{2,3}(?:-[LR])?$|^\d{4,6}-[A-Z0-9]{2,10}(?:-[A-Z0-9]{1,10})*$') {
+            if ($fallback -match '^\d{5}-\d{2}-[A-Z]\d{2,3}(?:-[LR])?$|^\d{4,6}-[A-Z0-9]{2,10}(?:-[A-Z0-9]{1,10})*$' -and
+                $noteAllowedParts.ContainsKey($fallback)) {
                 $matchedPart = $fallback
             }
         }
@@ -4236,18 +4325,36 @@ function Send-TransmittalEmail {
         $pathPlaceholder = "J:\Epicor\Orders\Capital\??"
         $burnPathHtml = [System.Security.SecurityElement]::Escape($burnProfileDisplayPath)
         $cadPathHtml = [System.Security.SecurityElement]::Escape($cadLinkDisplayPath)
+        $replaceNextPathPlaceholder = {
+            param([string]$Html, [string]$Replacement)
+            foreach ($pattern in @([regex]::Escape($pathPlaceholder), '(?i)[A-Z]:\\[^<>\r\n]{0,240}\?\?')) {
+                $m = [regex]::Match($Html, $pattern)
+                if ($m.Success) {
+                    return [pscustomobject]@{
+                        Html     = ($Html.Substring(0, $m.Index) + $Replacement + $Html.Substring($m.Index + $m.Length))
+                        Replaced = $true
+                        Match    = [string]$m.Value
+                    }
+                }
+            }
+            return [pscustomobject]@{
+                Html     = $Html
+                Replaced = $false
+                Match    = ""
+            }
+        }
         Write-Log "  HTMLBody length: $($h.Length) | burnPath: '$burnProfileDisplayPath' | cadPath: '$cadLinkDisplayPath'" "INFO"
-        $idx1 = $h.IndexOf($pathPlaceholder)
-        Write-Log "  Path placeholder 1 at index: $idx1" "INFO"
-        if ($idx1 -ge 0) {
-            $h = $h.Substring(0, $idx1) + $burnPathHtml + $h.Substring($idx1 + $pathPlaceholder.Length)
+        $rep1 = & $replaceNextPathPlaceholder $h $burnPathHtml
+        $h = [string]$rep1.Html
+        if ($rep1.Replaced) {
+            Write-Log "  Burn profile path placeholder replaced: $($rep1.Match)" "INFO"
         } else {
             Write-Log "  Path placeholder 1 NOT found - burn profile path will be missing (check _debug_transmittal_htmlbody.html)" "WARN"
         }
-        $idx2 = $h.IndexOf($pathPlaceholder)
-        Write-Log "  Path placeholder 2 at index: $idx2" "INFO"
-        if ($idx2 -ge 0) {
-            $h = $h.Substring(0, $idx2) + $cadPathHtml + $h.Substring($idx2 + $pathPlaceholder.Length)
+        $rep2 = & $replaceNextPathPlaceholder $h $cadPathHtml
+        $h = [string]$rep2.Html
+        if ($rep2.Replaced) {
+            Write-Log "  CAD path placeholder replaced: $($rep2.Match)" "INFO"
         } else {
             Write-Log "  Path placeholder 2 NOT found - CADLink path will be missing" "WARN"
         }
@@ -4823,6 +4930,18 @@ function Extract-PartsFromPdf {
         if ($u -match '^\d[\d\s,\.EA]+$') { return $true }
         return $false
     }
+    $startsNewNonPartRow = {
+        param([string]$text)
+        if ([string]::IsNullOrWhiteSpace($text)) { return $false }
+        $m = [regex]::Match(
+            $text.Trim(),
+            '^(?<line>\d{1,3})\s+(?<token>[A-Z][A-Z0-9/_-]{1,})\b',
+            [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+        )
+        if (-not $m.Success) { return $false }
+        $token = [string]$m.Groups['token'].Value.Trim().ToUpperInvariant()
+        return ($token -match '^(JOB|TOTAL|SUB|TAX|NET|FREIGHT|CHARGES|LINE|ORDER)$')
+    }
     # Strip trailing price/amount noise from a line, keeping only the leading text (description)
     $stripTrailingPriceNoise = {
         param([string]$text)
@@ -4888,6 +5007,11 @@ function Extract-PartsFromPdf {
             }
 
             if ($null -ne $currentPart) {
+                if (& $startsNewNonPartRow $line) {
+                    & $flushCurrentPart
+                    $currentPart = $null
+                    continue
+                }
                 if ($line -match '^(?i)Rel\s+Need\s+By\s+Ship\s+By\s+Quantity\b') {
                     $currentPart.AwaitQty = $true
                     continue
@@ -4900,16 +5024,12 @@ function Extract-PartsFromPdf {
                         continue
                     }
                 }
-                if ($line -match '^\d{1,3}\s+\S+') {
-                    & $flushCurrentPart
-                    $currentPart = $null
-                    continue
-                }
                 # Detect "Our Part:" cross-reference to internal NMT part number
                 if ($line -match '(?i)(?:Our\s+Part|NMT\s+Part|Internal\s+Part)[:#\s]+\s*([A-Z0-9][A-Z0-9._-]{3,})') {
                     $currentPart.InternalPart = $matches[1].Trim().ToUpperInvariant()
                     continue
                 }
+                # Price noise check BEFORE the digit-start flush, so lines like "4  4,440.00" don't prematurely end a part
                 if (& $isPriceNoiseLine $line) {
                     continue
                 }
@@ -4922,6 +5042,13 @@ function Extract-PartsFromPdf {
                             $currentPart.Description += " " + $descText
                         }
                     }
+                    continue
+                }
+                # Catch-all: line starts with a number like a new row — flush current part
+                if ($line -match '^\d{1,3}\s+\S+') {
+                    & $flushCurrentPart
+                    $currentPart = $null
+                    continue
                 }
             }
         }
@@ -4933,7 +5060,57 @@ function Extract-PartsFromPdf {
     return @($parts)
 }
 
-function Get-HistoryClientName {
+ # Shared-parser override: keep PDF extraction logic here, but centralize the
+ # fragile row parsing rules in SalesOrderParsing.ps1 so fixtures can test them
+ # directly without invoking PDF tools.
+ function Extract-PartsFromPdf {
+     param([string]$PdfPath)
+     if (-not (Test-Path $PdfPath)) { return @() }
+ 
+     $pdftotext = @(
+         "C:\Program Files\poppler\bin\pdftotext.exe",
+         "C:\Program Files\Git\mingw64\bin\pdftotext.exe",
+         "C:\Program Files (x86)\poppler\bin\pdftotext.exe"
+     ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+     $ghostscript = "C:\Program Files\gs\gs9.56.1\bin\gswin64c.exe"
+     $tesseract = "C:\Program Files\Tesseract-OCR\tesseract.exe"
+     $pdfText = ""
+ 
+     if ($pdftotext -and (Test-Path $pdftotext)) {
+         try {
+             $pdfText = & $pdftotext -layout $PdfPath - 2>$null
+             if ($pdfText -is [array]) { $pdfText = $pdfText -join "`n" }
+             Write-Log "  pdftotext extracted $($pdfText.Length) chars" "INFO"
+         } catch { $pdfText = "" }
+     }
+ 
+     if ([string]::IsNullOrWhiteSpace($pdfText) -and (Test-Path $ghostscript) -and (Test-Path $tesseract)) {
+         try {
+             $tmpImg = Join-Path $env:TEMP "so_pdf_render_$(Get-Random).png"
+             & $ghostscript -q -dNOPAUSE -dBATCH -sDEVICE=png16m -r300 -dFirstPage=1 -dLastPage=5 "-sOutputFile=$tmpImg" $PdfPath 2>$null
+             if (Test-Path $tmpImg) {
+                 $ocrOut = Join-Path $env:TEMP "so_ocr_$(Get-Random)"
+                 & $tesseract $tmpImg $ocrOut --psm 6 2>$null
+                 $ocrFile = "$ocrOut.txt"
+                 if (Test-Path $ocrFile) {
+                     $pdfText = Get-Content $ocrFile -Raw
+                     Remove-Item $ocrFile -Force -ErrorAction SilentlyContinue
+                 }
+                 Remove-Item $tmpImg -Force -ErrorAction SilentlyContinue
+                 Write-Log "  Ghostscript+Tesseract extracted $($pdfText.Length) chars" "INFO"
+             }
+         } catch { }
+     }
+ 
+     if ([string]::IsNullOrWhiteSpace($pdfText)) {
+         Write-Log "  Could not extract text from PDF: $PdfPath" "ERROR"
+         return @()
+     }
+ 
+     return @(Parse-SalesOrderText -Text $pdfText -Logger ${function:Write-Log})
+ }
+ 
+ function Get-HistoryClientName {
     param(
         [string]$CurrentClientName,
         [string]$JobFolderName = "",
@@ -5232,6 +5409,11 @@ function Process-Order {
         [object]$OutlookApp = $null,
         [string]$DocxPath = ""
     )
+    $runStartedAt = Get-Date
+    $bomExpansionSeconds = $null
+    $collectorSeconds = $null
+    $transmittalSeconds = $null
+    $assemblyExpansionAddedCount = 0
     $subject = $MailItem.Subject; $sender = $MailItem.SenderName
     Write-Log ("=" * 60) "INFO"
     Write-Log "Processing Sales Order: '$subject' from $sender" "INFO"
@@ -5353,14 +5535,24 @@ function Process-Order {
         return $false 
     }
 
+    $orderPartNumbers = @(
+        $partNumbers |
+        Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+        ForEach-Object { ([string]$_).Trim().ToUpperInvariant() }
+    )
+    $collectorPartNumbers = @($orderPartNumbers)
+
     # Expand assembly trees (subassemblies/components) before collection so
     # PDF/DXF capture includes full model content, not only top-level F80 rows.
     if ($enableAssemblyBomExpansion) {
         $PdfIndexPath = Join-Path $indexFolder "pdf_index_clean.csv"
-        $ocrPartCount = $partNumbers.Count
-        $partNumbers = Expand-AssemblyBOM -PartNumbers $partNumbers -PdfIndexPath $PdfIndexPath -JobNumber $jobNumber `
+        $ocrPartCount = $collectorPartNumbers.Count
+        $bomExpansionStartedAt = Get-Date
+        $collectorPartNumbers = Expand-AssemblyBOM -PartNumbers $collectorPartNumbers -PdfIndexPath $PdfIndexPath -JobNumber $jobNumber `
             -OrderDocPath $resolvedDocPath -CrawlRoots $crawlRoots
-        Write-Log "Parts: $ocrPartCount from F80 -> $($partNumbers.Count) after BOM expansion" "INFO"
+        $bomExpansionSeconds = [int][Math]::Round(((Get-Date) - $bomExpansionStartedAt).TotalSeconds, 0)
+        $assemblyExpansionAddedCount = [Math]::Max(0, (@($collectorPartNumbers).Count - $ocrPartCount))
+        Write-Log "Collection parts: $ocrPartCount from F80/order -> $($collectorPartNumbers.Count) after BOM expansion" "INFO"
     } else {
         Write-Log "BOM expansion disabled by config (emailMonitor.enableAssemblyBomExpansion=false)." "WARN"
     }
@@ -5370,9 +5562,9 @@ function Process-Order {
     New-Item -ItemType Directory -Path $orderFolder -Force | Out-Null
 
     $bomFile = Join-Path $orderFolder "order_bom.txt"
-    $partNumbers | Set-Content -Path $bomFile -Encoding UTF8
+    $collectorPartNumbers | Set-Content -Path $bomFile -Encoding UTF8
 
-    Write-Log "Running Collector for $($partNumbers.Count) parts..." "INFO"
+    Write-Log "Running Collector for $($collectorPartNumbers.Count) part(s)..." "INFO"
     $collectorArgs = @(
         "-ExecutionPolicy", "Bypass",
         "-File", (Join-Path $scriptDir "SimpleCollector.ps1"),
@@ -5382,62 +5574,237 @@ function Process-Order {
         $configPath
     )
     $collectorTimeoutMinutes = 12
+    $collectorStartedAt = Get-Date
     $proc = Start-Process -FilePath "powershell.exe" -ArgumentList $collectorArgs -PassThru -NoNewWindow
     if (-not $proc.WaitForExit($collectorTimeoutMinutes * 60 * 1000)) {
         Write-Log "Collector timeout after $collectorTimeoutMinutes minute(s); terminating collector process (PID=$($proc.Id))." "ERROR"
         try { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue } catch { }
         throw "Collector timed out after $collectorTimeoutMinutes minute(s)."
     }
+    $collectorSeconds = [int][Math]::Round(((Get-Date) - $collectorStartedAt).TotalSeconds, 0)
     Write-Log "Collector finished with exit code: $($proc.ExitCode)" "INFO"
 
     # --- Read collector results for transmittal ---
     $summaryPath = Join-Path $env:TEMP "collector_summary.json"
-    $pdfsFound = 0; $dxfsFound = 0; $notFoundParts = @()
-    if (Test-Path $summaryPath) {
+    $collectorSummaryPath = Join-Path $orderFolder "collector_summary.json"
+    $pdfsFound = 0
+    $dxfsFound = 0
+    $notFoundParts = @()
+    $collectorWarnings = @()
+    $collectorExtraPdfs = @()
+    $collectorExtraDxfs = @()
+    $collectorCollectedPdfFiles = @()
+    $collectorCollectedDxfFiles = @()
+    $collectorIndexInfo = $null
+    $collectorStrictMatching = $null
+    $collectorMissingCount = 0
+    $collectorPdfOutputFolder = $orderFolder
+    $collectorDxfOutputFolder = (Join-Path $orderFolder "DXFs")
+    $summaryReadPath = if (Test-Path $collectorSummaryPath) { $collectorSummaryPath } else { $summaryPath }
+    if (Test-Path $summaryReadPath) {
         try {
-            $summary = Get-Content $summaryPath -Raw | ConvertFrom-Json
+            $summary = Get-Content $summaryReadPath -Raw | ConvertFrom-Json
             $pdfsFound = $summary.pdfsFound
             $dxfsFound = $summary.dxfsFound
             $notFoundParts = @($summary.notFound)
+            $collectorMissingCount = @($summary.notFound).Count
+            $collectorWarnings = @($summary.warnings)
+            $collectorExtraPdfs = @($summary.extraPdfs)
+            $collectorExtraDxfs = @($summary.extraDxfs)
+            $collectorCollectedPdfFiles = @($summary.CollectedPdfFiles)
+            $collectorCollectedDxfFiles = @($summary.CollectedDxfFiles)
+            $collectorIndexInfo = $summary.indexInfo
+            if ($summary.PSObject.Properties['PdfOutputFolder'] -and -not [string]::IsNullOrWhiteSpace([string]$summary.PdfOutputFolder)) {
+                $collectorPdfOutputFolder = [string]$summary.PdfOutputFolder
+            }
+            if ($summary.PSObject.Properties['DxfOutputFolder'] -and -not [string]::IsNullOrWhiteSpace([string]$summary.DxfOutputFolder)) {
+                $collectorDxfOutputFolder = [string]$summary.DxfOutputFolder
+            }
+            if ($summary.PSObject.Properties['StrictMatching']) {
+                $collectorStrictMatching = [bool]$summary.StrictMatching
+            }
         } catch { Write-Log "Could not read collector summary" "WARN" }
     }
 
     # --- Send Transmittal Email ---
+    $documentsAvailable = (($pdfsFound + $dxfsFound) -gt 0)
+    $transmittalRequired = ($documentsAvailable -or $sendTransmittalWhenNoDrawings)
+    $transmittalAttempted = $false
+    $processOk = $true
     $transmittalOk = $false
     $transmittalNoUsed = ""
     $draftEntryId = ""
-    $statusMsg = Get-DispatchStatusText -Mode $DispatchMode -Succeeded $true
+    $statusMsg = if ($transmittalRequired) { Get-DispatchStatusText -Mode $DispatchMode -Succeeded $true } else { "Epicor Check Only - No Drawings Found" }
     $effectiveOrderLines = if (@($orderLines).Count -gt 0) { @(Convert-OrderLinesToHashtableArray -OrderLines $orderLines) } else { @() }
-    try {
-        $transmittalMeta = Send-TransmittalEmail -Subject $subject -JobNumber $jobNumber -ClientName $clientName `
-            -PartNumbers $partNumbers -OrderLines $effectiveOrderLines `
-            -OrderFolder $orderFolder -OrderDocPath $resolvedDocPath `
-            -PdfsFound $pdfsFound -DxfsFound $dxfsFound -NotFound $notFoundParts `
-            -TestMode $TestMode -DispatchMode $DispatchMode -OutlookApp $OutlookApp
-        if ($transmittalMeta -and $transmittalMeta.PSObject.Properties['TransmittalNo']) {
-            $transmittalNoUsed = [string]$transmittalMeta.TransmittalNo
+    if ($transmittalRequired) {
+        $transmittalAttempted = $true
+        try {
+            $transmittalStartedAt = Get-Date
+            $transmittalMeta = Send-TransmittalEmail -Subject $subject -JobNumber $jobNumber -ClientName $clientName `
+                -PartNumbers $orderPartNumbers -OrderLines $effectiveOrderLines `
+                -OrderFolder $orderFolder -OrderDocPath $resolvedDocPath `
+                -PdfsFound $pdfsFound -DxfsFound $dxfsFound -NotFound $notFoundParts `
+                -TestMode $TestMode -DispatchMode $DispatchMode -OutlookApp $OutlookApp `
+                -SourcePdfPath $(if ($soPdfPath) { $soPdfPath } else { $pdfPath })
+            $transmittalSeconds = [int][Math]::Round(((Get-Date) - $transmittalStartedAt).TotalSeconds, 0)
+            if ($transmittalMeta -and $transmittalMeta.PSObject.Properties['TransmittalNo']) {
+                $transmittalNoUsed = [string]$transmittalMeta.TransmittalNo
+            }
+            if ($transmittalMeta -and $transmittalMeta.PSObject.Properties['DraftEntryId']) {
+                $draftEntryId = [string]$transmittalMeta.DraftEntryId
+            }
+            $transmittalOk = $true
+        } catch {
+            Write-Log "Failed to create transmittal email: $($_.Exception.Message)" "ERROR"
+            $statusMsg = Get-DispatchStatusText -Mode $DispatchMode -Succeeded $false
+            $processOk = $false
         }
-        if ($transmittalMeta -and $transmittalMeta.PSObject.Properties['DraftEntryId']) {
-            $draftEntryId = [string]$transmittalMeta.DraftEntryId
-        }
-        $transmittalOk = $true
-    } catch {
-        Write-Log "Failed to create transmittal email: $($_.Exception.Message)" "ERROR"
-        $statusMsg = Get-DispatchStatusText -Mode $DispatchMode -Succeeded $false
+    } else {
+        Write-Log "No PDFs or DXFs collected; skipping transmittal and recording Epicor check only." "INFO"
     }
 
     # --- Write dashboard summary so the Hub UI can show what happened ---
     try {
-        $historyClient = Get-HistoryClientName -CurrentClientName $clientName -JobFolderName $jobFolderName -DocxPath $resolvedDocPath
-        $historyOrderName = Get-HistoryOrderName -Subject $subject -JobNumber $jobNumber -ClientName $historyClient -DocxPath $resolvedDocPath -SourcePdfPath $(if ($soPdfPath) { $soPdfPath } else { $pdfPath })
-        [string[]]$nfArr = @(Get-CleanNotFoundParts -Parts @($notFoundParts) | Select-Object -First 10)
+        $historyClient = ""
+        try {
+            $historyClient = Get-HistoryClientName -CurrentClientName $clientName -JobFolderName $jobFolderName -DocxPath $resolvedDocPath
+        } catch {
+            Write-Log "History client-name derivation failed: $($_.Exception.Message)" "WARN"
+        }
+        if ([string]::IsNullOrWhiteSpace($historyClient) -and -not [string]::IsNullOrWhiteSpace($clientName)) {
+            $historyClient = $clientName
+        }
+
+        $historyOrderName = ""
+        try {
+            $historyOrderName = Get-HistoryOrderName -Subject $subject -JobNumber $jobNumber -ClientName $historyClient -DocxPath $resolvedDocPath -SourcePdfPath $(if ($soPdfPath) { $soPdfPath } else { $pdfPath })
+        } catch {
+            Write-Log "History order-name derivation failed: $($_.Exception.Message)" "WARN"
+        }
+        if ([string]::IsNullOrWhiteSpace($historyOrderName)) {
+            $historyOrderName = if (-not [string]::IsNullOrWhiteSpace($jobNumber)) { "Job $jobNumber" } elseif (-not [string]::IsNullOrWhiteSpace($subject)) { $subject } else { "Order" }
+        }
+
+        [string[]]$nfArr = @()
+        try {
+            $nfArr = @(Get-CleanNotFoundParts -Parts @($notFoundParts) | Select-Object -First 10)
+        } catch {
+            Write-Log "Not-found part cleanup failed: $($_.Exception.Message)" "WARN"
+            $nfArr = @()
+        }
         if ($null -eq $nfArr) { $nfArr = @() }
-        $historyParts = @(Get-HistoryValidatedParts -OrderLines $effectiveOrderLines -PartNumbers $partNumbers -OrderFolder $orderFolder | Select-Object -First 50)
-        $flaggedParts = @($historyParts | Where-Object { $_.RevMatch -eq "Mismatch" } | ForEach-Object {
+
+        $historyParts = @()
+        try {
+            $historyParts = @(Get-HistoryValidatedParts -OrderLines $effectiveOrderLines -PartNumbers $orderPartNumbers -OrderFolder $orderFolder | Select-Object -First 50)
+        } catch {
+            Write-Log "Detailed history validation failed; falling back to raw order-line parts: $($_.Exception.Message)" "WARN"
+        }
+        if (@($historyParts).Count -eq 0) {
+            $historyParts = @(Convert-OrderLinesToHistoryParts -OrderLines $orderLines | Select-Object -First 50)
+        }
+        if (@($historyParts).Count -eq 0 -and @($orderPartNumbers).Count -gt 0) {
+            $historyParts = @(
+                $orderPartNumbers |
+                Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+                ForEach-Object { ([string]$_).Trim().ToUpperInvariant() } |
+                Select-Object -Unique -First 50 |
+                ForEach-Object {
+                    [ordered]@{
+                        Part         = [string]$_
+                        Rev          = ""
+                        Qty          = ""
+                        Description  = ""
+                        EpicorExists = $null
+                        EpicorRev    = ""
+                        HasDrawing   = $false
+                        HasDxf       = $false
+                        IndexRev     = ""
+                        RevMatch     = "Unknown"
+                        RevNote      = ""
+                        EpicorMatch  = $false
+                        IndexMatch   = $false
+                        PdfPath      = ""
+                        DxfPath      = ""
+                    }
+                }
+            )
+        }
+
+        $collectionHistoryParts = @()
+        try {
+            $collectionHistoryParts = @(Get-HistoryValidatedParts -OrderLines $effectiveOrderLines -PartNumbers $collectorPartNumbers -OrderFolder $orderFolder | Select-Object -First 200)
+        } catch {
+            Write-Log "Collection-part validation failed; falling back to collector part numbers: $($_.Exception.Message)" "WARN"
+        }
+        if (@($collectionHistoryParts).Count -eq 0 -and @($collectorPartNumbers).Count -gt 0) {
+            $collectionHistoryParts = @(
+                $collectorPartNumbers |
+                Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+                ForEach-Object { ([string]$_).Trim().ToUpperInvariant() } |
+                Select-Object -Unique -First 200 |
+                ForEach-Object {
+                    [ordered]@{
+                        Part         = [string]$_
+                        Rev          = ""
+                        Qty          = ""
+                        Description  = ""
+                        EpicorExists = $null
+                        EpicorRev    = ""
+                        HasDrawing   = $false
+                        HasDxf       = $false
+                        IndexRev     = ""
+                        RevMatch     = "Unknown"
+                        RevNote      = ""
+                        EpicorMatch  = $false
+                        IndexMatch   = $false
+                        PdfPath      = ""
+                        DxfPath      = ""
+                    }
+                }
+            )
+        }
+
+        $flaggedParts = @($historyParts | Where-Object { [string]$_.RevMatch -like "*Mismatch*" } | ForEach-Object {
             $systemRev = if ($_.EpicorRev) { $_.EpicorRev } elseif ($_.IndexRev) { $_.IndexRev } else { "N/A" }
             "$($_.Part): Order Rev $($_.Rev) vs System Rev $systemRev"
         })
-        $dispatchState = if ($transmittalOk) {
+        $mainPartKeySet = @{}
+        foreach ($part in @($historyParts)) {
+            $partKey = [string]$part.Part
+            if (-not [string]::IsNullOrWhiteSpace($partKey)) {
+                $mainPartKeySet[$partKey.Trim().ToUpperInvariant()] = $true
+            }
+        }
+        $orderRevMismatchCount = @($historyParts | Where-Object { [string]$_.RevMatch -like "*Mismatch*" }).Count
+        $expandedRevMismatchCount = @(
+            $collectionHistoryParts |
+            Where-Object {
+                $partKey = [string]$_.Part
+                $partKey = if ([string]::IsNullOrWhiteSpace($partKey)) { "" } else { $partKey.Trim().ToUpperInvariant() }
+                -not $mainPartKeySet.ContainsKey($partKey) -and
+                (-not [string]::IsNullOrWhiteSpace([string]$_.EpicorRev)) -and
+                (-not [string]::IsNullOrWhiteSpace([string]$_.IndexRev)) -and
+                ([string]$_.EpicorRev -ne [string]$_.IndexRev)
+            }
+        ).Count
+        $expandedPartialCount = @(
+            $collectionHistoryParts |
+            Where-Object {
+                $partKey = [string]$_.Part
+                $partKey = if ([string]::IsNullOrWhiteSpace($partKey)) { "" } else { $partKey.Trim().ToUpperInvariant() }
+                -not $mainPartKeySet.ContainsKey($partKey) -and
+                (
+                    ([string]::IsNullOrWhiteSpace([string]$_.EpicorRev) -and -not [string]::IsNullOrWhiteSpace([string]$_.IndexRev)) -or
+                    (-not [string]::IsNullOrWhiteSpace([string]$_.EpicorRev) -and [string]::IsNullOrWhiteSpace([string]$_.IndexRev))
+                )
+            }
+        ).Count
+        $runCompletedAt = Get-Date
+        $runDurationSeconds = [int][Math]::Round(($runCompletedAt - $runStartedAt).TotalSeconds, 0)
+        $dispatchState = if (-not $transmittalRequired) {
+            "No Transmittal Needed"
+        } elseif ($transmittalOk) {
             switch ($DispatchMode) {
                 "Manual" { "Draft Ready" }
                 "Hold"   { "Draft Saved" }
@@ -5453,18 +5820,46 @@ function Process-Order {
 
         $dashSummary = [ordered]@{
             Timestamp       = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+            RunStartedAt    = $runStartedAt.ToString("yyyy-MM-dd HH:mm:ss")
+            RunCompletedAt  = $runCompletedAt.ToString("yyyy-MM-dd HH:mm:ss")
+            RunDurationSeconds = $runDurationSeconds
+            BomExpansionSeconds = $bomExpansionSeconds
+            CollectorSeconds = $collectorSeconds
+            TransmittalSeconds = $transmittalSeconds
             Status          = $statusMsg
             OrderName       = $historyOrderName
             EmailSubject    = $subject
             Sender          = $sender
             JobNumber       = $jobNumber
             Client          = $historyClient
-            PartsExtracted  = $partNumbers.Count
+            PartsExtracted  = $orderPartNumbers.Count
+            CollectionParts = $collectorPartNumbers.Count
             OrderLinesCount = @($effectiveOrderLines).Count
             Parts           = $historyParts
+            CollectionPartDetails = $collectionHistoryParts
             FlaggedParts    = $flaggedParts
             PdfsCollected   = $pdfsFound
             DxfsCollected   = $dxfsFound
+            CollectorSummaryPath = $summaryReadPath
+            CollectorWarnings = @($collectorWarnings | Select-Object -First 10)
+            CollectorMissingCount = $collectorMissingCount
+            CollectorExtraPdfCount = @($collectorExtraPdfs).Count
+            CollectorExtraDxfCount = @($collectorExtraDxfs).Count
+            CollectorExtraPdfs = @($collectorExtraPdfs | Select-Object -First 25)
+            CollectorExtraDxfs = @($collectorExtraDxfs | Select-Object -First 25)
+            CollectedPdfFiles = @($collectorCollectedPdfFiles | Select-Object -First 250)
+            CollectedDxfFiles = @($collectorCollectedDxfFiles | Select-Object -First 250)
+            CollectorIndexInfo = $collectorIndexInfo
+            CollectorStrictMatching = $collectorStrictMatching
+            CollectorIndexStale = [bool]($collectorIndexInfo -and $collectorIndexInfo.IsStale)
+            AssemblyExpansionEnabled = [bool]$enableAssemblyBomExpansion
+            AssemblyExpansionAddedCount = [int]$assemblyExpansionAddedCount
+            OrderRevMismatchCount = $orderRevMismatchCount
+            ExpandedRevMismatchCount = $expandedRevMismatchCount
+            ExpandedPartialCount = $expandedPartialCount
+            DocumentsAvailable = [bool]$documentsAvailable
+            TransmittalRequired = [bool]$transmittalRequired
+            TransmittalAttempted = [bool]$transmittalAttempted
             TransmittalSent = ($DispatchMode -eq "Auto" -and $transmittalOk)
             DraftCreated    = ($DispatchMode -in @("Manual","Hold") -and $transmittalOk)
             TestMode        = [bool]$TestMode
@@ -5476,13 +5871,15 @@ function Process-Order {
             SourceDocPath   = $resolvedDocPath
             SourcePdfPath   = $(if ($soPdfPath) { $soPdfPath } else { $pdfPath })
             OutputFolder    = $orderFolder
+            PdfOutputFolder = $collectorPdfOutputFolder
+            DxfOutputFolder = $collectorDxfOutputFolder
         }
 
         # Write last_email_summary.json — this single object is safe for ConvertTo-Json -Depth 5
         # because it's a flat hashtable (arrays of strings inside hashtables are fine).
         $summaryPath2 = Join-Path $indexFolder "last_email_summary.json"
         Write-Log "Writing dashboard summary to: $summaryPath2" "INFO"
-        $dashSummary | ConvertTo-Json -Depth 5 | Set-Content -Path $summaryPath2 -Encoding UTF8 -Force
+        Write-JsonUtf8 -Path $summaryPath2 -Value $dashSummary -Depth 5
         Write-Log "Dashboard summary written OK" "INFO"
 
         # ============================================================
@@ -5538,6 +5935,7 @@ function Process-Order {
         $histContent = if ($jsonLines.Count -gt 0) { "[`n" + ($jsonLines -join ",`n") + "`n]" } else { "[]" }
 
         # Write using .NET directly to avoid any PowerShell pipeline quirks
+        Ensure-DirectoryExists -Path (Split-Path -Path $historyFile -Parent)
         [System.IO.File]::WriteAllText($historyFile, $histContent, [System.Text.Encoding]::UTF8)
         Write-Log "Transmittal history updated ($($historyList.Count + 1) entries)" "INFO"
     } catch {
@@ -5546,8 +5944,16 @@ function Process-Order {
 
     # --- Push tray notification so the user sees the result immediately ---
     try {
-        $notifyTitle = if ($TestMode) { "Draft Ready: $jobNumber" } else { "Order Complete: $jobNumber" }
-        if ($transmittalOk) {
+        $notifyTitle = if (-not $transmittalRequired) {
+            "Epicor Check: $jobNumber"
+        } elseif ($TestMode) {
+            "Draft Ready: $jobNumber"
+        } else {
+            "Order Complete: $jobNumber"
+        }
+        if (-not $transmittalRequired) {
+            $notifyMsg = "No drawings found - Epicor/index check completed for $($partNumbers.Count) part(s)"
+        } elseif ($transmittalOk) {
             $notifyMsg = "$statusMsg - $pdfsFound PDF(s), $dxfsFound DXF(s) collected"
         } elseif (($pdfsFound + $dxfsFound) -gt 0) {
             $notifyMsg = "$pdfsFound PDF(s), $dxfsFound DXF(s) collected - $statusMsg"
@@ -5557,7 +5963,7 @@ function Process-Order {
         Push-HubNotification -Title $notifyTitle -Message $notifyMsg -FolderPath $orderFolder
     } catch { }
 
-    return $transmittalOk
+    return $processOk
 }
 
 function Run-OrderCheck {
@@ -5785,22 +6191,38 @@ function Run-OrderCheck {
     # --- Write "no orders" summary so dashboard shows last check was clean ---
     if ($unreadOrders -eq 0) {
         try {
-            @{
-                Timestamp       = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                Status          = "No orders found"
-                OrderName       = ""
-                JobNumber       = ""
-                Client          = ""
-                PartsExtracted  = 0
-                PdfsCollected   = 0
-                DxfsCollected   = 0
-                TransmittalSent = $false
-                DraftCreated    = $false
-                TestMode        = [bool]$TestMode
-                DispatchMode    = $DispatchMode
-                NotFoundParts   = @()
-            } | ConvertTo-Json | Set-Content -Path (Join-Path $indexFolder "last_email_summary.json") -Encoding UTF8 -Force
-        } catch { }
+            $summaryPath = Join-Path $indexFolder "last_email_summary.json"
+            $preserveLastProcessedSummary = $false
+            if (Test-Path $summaryPath) {
+                try {
+                    $existingSummary = Get-Content -Path $summaryPath -Raw | ConvertFrom-Json
+                    if ($existingSummary -and [string]$existingSummary.Status -ne "No orders found") {
+                        $preserveLastProcessedSummary = $true
+                    }
+                } catch { }
+            }
+            if ($preserveLastProcessedSummary) {
+                Write-Log "Preserving last processed order summary during no-orders scan." "INFO"
+            } else {
+                Write-JsonUtf8 -Path $summaryPath -Value @{
+                    Timestamp       = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                    Status          = "No orders found"
+                    OrderName       = ""
+                    JobNumber       = ""
+                    Client          = ""
+                    PartsExtracted  = 0
+                    PdfsCollected   = 0
+                    DxfsCollected   = 0
+                    TransmittalSent = $false
+                    DraftCreated    = $false
+                    TestMode        = [bool]$TestMode
+                    DispatchMode    = $DispatchMode
+                    NotFoundParts   = @()
+                }
+            }
+        } catch {
+            Write-Log "Failed to write no-orders dashboard summary: $($_.Exception.Message)" "WARN"
+        }
     }
 }
 
