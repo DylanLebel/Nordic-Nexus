@@ -183,6 +183,7 @@ $Global:HubState = [hashtable]::Synchronized(@{
     LastEmailCheck        = "Never"
     LastIndexRebuild      = $persistedLastRebuild
     ActiveTask            = "None"
+    ActiveTaskStartedAt   = $null
     PendingTask           = $null
     ActiveJobId           = $null
     ActiveJobName         = $null
@@ -401,6 +402,7 @@ $apiScript = {
                 LastEmailCheck       = $SharedState.LastEmailCheck
                 LastIndexRebuild     = $SharedState.LastIndexRebuild
                 ActiveTask           = $SharedState.ActiveTask
+                ActiveTaskStartedAt  = $SharedState.ActiveTaskStartedAt
                 UpTime               = $SharedState.UpTime
                 TestMode             = $SharedState.TestMode
                 Mode                 = $SharedState.Mode
@@ -666,6 +668,9 @@ $apiScript = {
     }
 }
 
+. (Join-Path $scriptDir "HubApiScript.ps1")
+$apiScript = $script:HubApiScript
+
 # --- App Tray Icon ---
 function New-AppTrayIcon {
     try {
@@ -766,12 +771,16 @@ function Start-HubService {
         if ($Global:HubState.Status -eq "Running" -and $Global:HubState.PendingTask) {
             $task = $Global:HubState.PendingTask
             $Global:HubState.PendingTask = $null
+            if ($Global:HubState.ActiveTask -ne "None") {
+                $Global:HubState.ActiveTaskStartedAt = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+            }
             Write-HubLog "Dispatching pending task '$task'"
              
             $rebuildPath = Join-Path $scriptDir "IndexRebuild.ps1"
             $cleanPath   = Join-Path $scriptDir "IndexClean.ps1"
             $monitorPath = Join-Path $scriptDir "EmailOrderMonitor.ps1"
             $replayPath  = Join-Path $scriptDir "Replay-OrderRun.ps1"
+            $progressPath = Join-Path $script:indexDir "progress.json"
             $job = $null
             $proc = $null
 
@@ -807,10 +816,16 @@ function Start-HubService {
                     $req = $Global:HubState.ReplayRequest
                     if ($req) {
                         $job = Start-Job -Name "Hub_Replay" -ScriptBlock {
-                            param($replayPath, $bomFile, $configPath, $outputFolder)
-                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet
-                            if ($LASTEXITCODE -ne 0) { throw "Replay exited with code $LASTEXITCODE" }
-                        } -ArgumentList $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder
+                            param($replayPath, $bomFile, $configPath, $outputFolder, $progressFile, $jobNumber)
+                            try {
+                                @{
+                                    Message   = ("Replaying job {0}..." -f $jobNumber)
+                                    Count     = 0
+                                    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                                } | ConvertTo-Json | Set-Content -Path $progressFile -Encoding UTF8 -Force -ErrorAction SilentlyContinue
+                            } catch {}
+                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet -HubProgressFile $progressFile
+                        } -ArgumentList $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder, $progressPath, $req.JobNumber
                         Write-HubLog "Dispatched replay for job $($req.JobNumber) -> $($req.TargetOutputFolder)"
                     } else {
                         Write-HubLog "Replay request missing from shared state." "ERROR"
@@ -820,10 +835,16 @@ function Start-HubService {
                     $req = $Global:HubState.ReplayRequest
                     if ($req) {
                         $job = Start-Job -Name "Hub_Recheck" -ScriptBlock {
-                            param($replayPath, $bomFile, $configPath, $outputFolder)
-                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet
-                            if ($LASTEXITCODE -ne 0) { throw "Recheck exited with code $LASTEXITCODE" }
-                        } -ArgumentList $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder
+                            param($replayPath, $bomFile, $configPath, $outputFolder, $progressFile, $jobNumber)
+                            try {
+                                @{
+                                    Message   = ("Rechecking job {0}..." -f $jobNumber)
+                                    Count     = 0
+                                    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                                } | ConvertTo-Json | Set-Content -Path $progressFile -Encoding UTF8 -Force -ErrorAction SilentlyContinue
+                            } catch {}
+                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet -HubProgressFile $progressFile
+                        } -ArgumentList $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder, $progressPath, $req.JobNumber
                         Write-HubLog "Dispatched recheck for job $($req.JobNumber) -> $($req.TargetOutputFolder)"
                     } else {
                         Write-HubLog "Recheck request missing from shared state." "ERROR"
@@ -833,12 +854,24 @@ function Start-HubService {
                     $req = $Global:HubState.ReplayRequest
                     if ($req) {
                         $job = Start-Job -Name "Hub_RebuildReplay" -ScriptBlock {
-                            param($rebuildPath, $configFile, $replayPath, $bomFile, $configPath, $outputFolder)
+                            param($rebuildPath, $configFile, $replayPath, $bomFile, $configPath, $outputFolder, $progressFile, $jobNumber)
+                            try {
+                                @{
+                                    Message   = ("Step 1 of 2: rebuilding index for job {0}..." -f $jobNumber)
+                                    Count     = 0
+                                    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                                } | ConvertTo-Json | Set-Content -Path $progressFile -Encoding UTF8 -Force -ErrorAction SilentlyContinue
+                            } catch {}
                             & $rebuildPath -Config $configFile
-                            if ($LASTEXITCODE -ne 0) { throw "Index rebuild exited with code $LASTEXITCODE" }
-                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet
-                            if ($LASTEXITCODE -ne 0) { throw "Rebuild + replay exited with code $LASTEXITCODE" }
-                        } -ArgumentList $rebuildPath, $script:configFile, $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder
+                            try {
+                                @{
+                                    Message   = ("Step 2 of 2: replaying job {0}..." -f $jobNumber)
+                                    Count     = 0
+                                    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                                } | ConvertTo-Json | Set-Content -Path $progressFile -Encoding UTF8 -Force -ErrorAction SilentlyContinue
+                            } catch {}
+                            & $replayPath -BomFile $bomFile -ConfigPath $configPath -OutputFolder $outputFolder -Quiet -HubProgressFile $progressFile
+                        } -ArgumentList $rebuildPath, $script:configFile, $replayPath, $req.BomFile, $req.ConfigPath, $req.TargetOutputFolder, $progressPath, $req.JobNumber
                         Write-HubLog "Dispatched rebuild + replay for job $($req.JobNumber) -> $($req.TargetOutputFolder)"
                     } else {
                         Write-HubLog "Rebuild + replay request missing from shared state." "ERROR"
@@ -858,6 +891,7 @@ function Start-HubService {
             } elseif ($task -in @("email","replay","recheck","rebuild-replay")) {
                 Write-HubLog "Task '$task' failed to dispatch (no process object returned)." "ERROR"
                 $Global:HubState.ActiveTask    = "None"
+                $Global:HubState.ActiveTaskStartedAt = $null
                 $Global:HubState.ActiveJobId   = $null
                 $Global:HubState.ActiveJobName = $null
             }
@@ -888,12 +922,17 @@ function Start-HubService {
                 Write-HubLog "$jobName completed with state $jobState"
             }
 
-            if ($jobName -eq "Hub_Crawl") {
-                $Global:HubState.LastIndexRebuild = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                # Clear stale progress.json so it can't appear during unrelated tasks
+            if ($jobName -in @("Hub_Crawl","Hub_RebuildReplay")) {
+                try {
+                    $rebuildSummaryPath = Join-Path $script:indexDir "last_rebuild.json"
+                    if (Test-Path $rebuildSummaryPath) {
+                        $rs = Get-Content $rebuildSummaryPath -Raw | ConvertFrom-Json
+                        if ($rs.Timestamp) { $Global:HubState.LastIndexRebuild = [string]$rs.Timestamp }
+                    }
+                } catch {}
                 Remove-Item (Join-Path $script:indexDir "progress.json") -Force -ErrorAction SilentlyContinue
             }
-            if ($jobName -eq "Hub_Clean") {
+            if ($jobName -in @("Hub_Clean","Hub_Replay","Hub_Recheck")) {
                 Remove-Item (Join-Path $script:indexDir "progress.json") -Force -ErrorAction SilentlyContinue
             }
             if ($jobName -eq "Hub_Email") {
@@ -906,6 +945,7 @@ function Start-HubService {
                 $Global:HubState.ReplayRequest = $null
             }
             $Global:HubState.ActiveTask = "None"
+            $Global:HubState.ActiveTaskStartedAt = $null
             $Global:HubState.ActiveJobId = $null
             $Global:HubState.ActiveJobName = $null
             Remove-Job $_ -Force
@@ -954,6 +994,7 @@ function Start-HubService {
                 }
 
                 $Global:HubState.ActiveTask    = "None"
+                $Global:HubState.ActiveTaskStartedAt = $null
                 $Global:HubState.ActiveJobId   = $null
                 $Global:HubState.ActiveJobName = $null
                 $script:activeEmailProcess = $null

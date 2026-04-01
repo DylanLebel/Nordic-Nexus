@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory = $true)][string]$ConfigPath,
     [Parameter(Mandatory = $true)][string]$OutputFolder,
     [string]$ExpectedSummaryPath = "",
+    [string]$HubProgressFile = "",
     [switch]$Quiet
 )
 
@@ -11,6 +12,22 @@ $scriptDir = Split-Path $PSCommandPath -Parent
 $collectorScript = Join-Path $scriptDir "SimpleCollector.ps1"
 if (-not (Test-Path $collectorScript)) {
     throw "SimpleCollector.ps1 not found at $collectorScript"
+}
+
+function Write-HubTaskProgress {
+    param(
+        [string]$Message,
+        [int]$Count = 0
+    )
+
+    if ([string]::IsNullOrWhiteSpace($HubProgressFile)) { return }
+    try {
+        @{
+            Message   = $Message
+            Count     = $Count
+            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+        } | ConvertTo-Json | Set-Content -Path $HubProgressFile -Encoding UTF8 -Force -ErrorAction SilentlyContinue
+    } catch {}
 }
 
 function Convert-CollectorSummaryToComparisonView {
@@ -48,6 +65,7 @@ function Convert-CollectorSummaryToComparisonView {
 }
 
 if (-not (Test-Path $OutputFolder)) {
+    Write-HubTaskProgress -Message "Preparing replay output folder..."
     New-Item -ItemType Directory -Path $OutputFolder -Force | Out-Null
 }
 
@@ -56,6 +74,7 @@ if (Test-Path $summaryPath) {
     Remove-Item -Path $summaryPath -Force -ErrorAction SilentlyContinue
 }
 
+Write-HubTaskProgress -Message "Collecting PDFs and DXFs for replay..."
 & powershell -NoProfile -ExecutionPolicy Bypass -File $collectorScript $BomFile $OutputFolder "BOTH" $ConfigPath
 if ($LASTEXITCODE -ne 0) {
     throw "SimpleCollector exited with code $LASTEXITCODE"
@@ -66,6 +85,7 @@ if (-not (Test-Path $summaryPath)) {
 }
 
 $summary = Get-Content -Path $summaryPath -Raw | ConvertFrom-Json
+Write-HubTaskProgress -Message ("Replay summary ready: {0} PDF, {1} DXF, {2} missing" -f ([int]$summary.pdfsFound), ([int]$summary.dxfsFound), @($summary.notFound).Count)
 $view = Convert-CollectorSummaryToComparisonView -Summary $summary
 
 if (-not $Quiet) {

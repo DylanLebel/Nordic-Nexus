@@ -174,6 +174,12 @@
         }
         .progress-message { font-size: 0.875rem; font-weight: 500; }
         .progress-sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.125rem; }
+        .progress-meta {
+            font-size: 0.675rem;
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+            line-height: 1.35;
+        }
 
         /* === STATS ROW === */
         .stats-row {
@@ -510,6 +516,12 @@
         }
         .detail-stat .label { display: block; font-size: 0.6875rem; color: var(--text-dim); font-weight: 500; }
         .detail-stat .value { font-size: 0.9375rem; font-weight: 700; }
+        .detail-stat .value-truncate {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .not-found-box {
             margin-top: 0.75rem;
             padding: 0.625rem 0.75rem;
@@ -848,6 +860,7 @@
             <div class="progress-label">Active Task</div>
             <div id="progressMsg" class="progress-message">Initializing...</div>
             <div id="progressCount" class="progress-sub"></div>
+            <div id="progressMeta" class="progress-meta"></div>
         </div>
         <div id="emailProgressBox" class="progress-banner">
             <div id="emailProgressLabel" class="progress-label">Email Status</div>
@@ -1121,6 +1134,34 @@
                 .replace(/'/g, '&#39;');
         }
 
+        function getSummarySourceInfo(h) {
+            const hasPdf = !!(h?.SourcePdfPath);
+            const hasDoc = !!(h?.SourceDocPath);
+            if (hasPdf && hasDoc) {
+                return {
+                    text: 'F80 + PDF',
+                    title: `${h.SourceDocPath}\n${h.SourcePdfPath}`
+                };
+            }
+            if (hasPdf) {
+                return {
+                    text: 'PDF',
+                    title: h.SourcePdfPath
+                };
+            }
+            if (hasDoc) {
+                return {
+                    text: 'F80',
+                    title: h.SourceDocPath
+                };
+            }
+            const fallback = h?.EmailSubject || '';
+            return {
+                text: fallback ? 'Email' : '\u2014',
+                title: fallback
+            };
+        }
+
         function formatDurationSeconds(totalSeconds) {
             const secs = Math.round(Number(totalSeconds));
             if (!Number.isFinite(secs) || secs < 0) return '';
@@ -1136,6 +1177,96 @@
         function formatPhaseDuration(label, seconds) {
             const formatted = formatDurationSeconds(seconds);
             return formatted ? `${label} ${formatted}` : '';
+        }
+
+        function isRebuildProgressMessage(message) {
+            const msg = String(message || '').trim().toLowerCase();
+            if (!msg) return false;
+            return msg.includes('scanning pdf') ||
+                msg.includes('scanning dxf') ||
+                msg.includes('scanning model') ||
+                msg.includes('deduplicating') ||
+                msg.includes('rebuild') ||
+                msg.includes('crawl') ||
+                msg.includes('cleaning index');
+        }
+
+        function buildTaskProgressView(data) {
+            const activeTask = data?.ActiveTask || 'None';
+            const progress = data?.Progress || null;
+            const progressMessage = String(progress?.Message || '').trim();
+            const progressCount = Number(progress?.Count || 0);
+            const progressTimestamp = progress?.Timestamp || '';
+            const taskStartedAt = data?.ActiveTaskStartedAt || '';
+            const meta = [];
+
+            if (taskStartedAt) {
+                const rel = relativeTime(taskStartedAt);
+                meta.push(rel ? `Started ${rel}` : `Started ${taskStartedAt}`);
+            }
+            if (progressTimestamp) {
+                const rel = relativeTime(progressTimestamp);
+                meta.push(rel ? `Updated ${rel}` : `Updated ${progressTimestamp}`);
+                if (rel) meta.push(progressTimestamp);
+            }
+            if (progressCount > 0) {
+                meta.push(`${progressCount.toLocaleString()} items processed`);
+            }
+
+            if (activeTask === 'Rebuild + Replay') {
+                const rebuilding = !progressMessage || isRebuildProgressMessage(progressMessage);
+                return {
+                    title: rebuilding ? 'Step 1 of 2: Rebuilding index' : 'Step 2 of 2: Replaying order',
+                    detail: progressMessage || (rebuilding ? 'Preparing a full index rebuild before replay.' : 'Running the saved order back through the collector.'),
+                    meta: meta.join(' • ')
+                };
+            }
+
+            if (activeTask === 'Index Rebuild') {
+                return {
+                    title: 'Index rebuild in progress',
+                    detail: progressMessage || 'Preparing network crawl and dedupe.',
+                    meta: meta.join(' • ')
+                };
+            }
+
+            if (activeTask === 'Cleaning Index') {
+                return {
+                    title: 'Cleaning index',
+                    detail: progressMessage || 'Removing stale index files and rebuilding metadata.',
+                    meta: meta.join(' • ')
+                };
+            }
+
+            if (activeTask === 'Replay Order') {
+                return {
+                    title: 'Replaying order',
+                    detail: progressMessage || 'Running the collector against the saved BOM.',
+                    meta: meta.join(' • ')
+                };
+            }
+
+            if (activeTask === 'Recheck Order') {
+                return {
+                    title: 'Rechecking order',
+                    detail: progressMessage || 'Re-running the order against the current index.',
+                    meta: meta.join(' • ')
+                };
+            }
+
+            if (activeTask === 'Email Check') {
+                return {
+                    title: 'Checking email inbox',
+                    detail: 'Scanning for new orders and extracting attachments.',
+                    meta: meta.join(' • ')
+                };
+            }
+
+            return {
+                title: `${activeTask} in progress...`,
+                detail: progressMessage,
+                meta: meta.join(' • ')
+            };
         }
 
         function copyTextToClipboard(text, successMessage = 'Copied to clipboard') {
@@ -1546,7 +1677,7 @@
                     ${countsStr ? `<div class="run-item-counts">${countsStr}</div>` : ''}
                 </div>`;
             }).join('');
-            renderRunDetail(selectedRunIndex);
+            renderRunDetail(selectedRunIndex, false);
         }
 
         // === Copy Parts to Clipboard ===
@@ -1732,10 +1863,44 @@
             return '';
         }
 
-        function renderRunDetail(index) {
+        function captureDetailPanelState(container) {
+            if (!container) return null;
+            const openMap = {};
+            const keyCounts = {};
+            container.querySelectorAll('details').forEach(el => {
+                const summaryText = (el.querySelector('summary')?.textContent || '').trim() || 'details';
+                const ordinal = keyCounts[summaryText] || 0;
+                keyCounts[summaryText] = ordinal + 1;
+                openMap[`${summaryText}__${ordinal}`] = !!el.open;
+            });
+            return {
+                openMap,
+                scrollTop: container.scrollTop
+            };
+        }
+
+        function restoreDetailPanelState(container, state) {
+            if (!container || !state) return;
+            const keyCounts = {};
+            container.querySelectorAll('details').forEach(el => {
+                const summaryText = (el.querySelector('summary')?.textContent || '').trim() || 'details';
+                const ordinal = keyCounts[summaryText] || 0;
+                keyCounts[summaryText] = ordinal + 1;
+                const key = `${summaryText}__${ordinal}`;
+                if (Object.prototype.hasOwnProperty.call(state.openMap, key)) {
+                    el.open = !!state.openMap[key];
+                }
+            });
+            if (Number.isFinite(state.scrollTop)) {
+                container.scrollTop = state.scrollTop;
+            }
+        }
+
+        function renderRunDetail(index, preserveState = true) {
             const h = currentHistory[index];
             if (!h) return;
             const detail = document.getElementById('runDetail');
+            const panelState = preserveState ? captureDetailPanelState(detail) : null;
             const outcome = getHistoryOutcome(h);
             const issueSummary = getRunIssueSummary(h);
 
@@ -1765,6 +1930,7 @@
             const relTs = relativeTime(h.Timestamp);
             const tsDisplay = h.Timestamp ? `${h.Timestamp}${relTs ? ` (${relTs})` : ''}` : '';
             const runDuration = formatDurationSeconds(h.RunDurationSeconds) || '&mdash;';
+            const summarySource = getSummarySourceInfo(h);
             const statusWhy = outcome.reason
                 ? `<details class="detail-section-card"><summary style="cursor:pointer; font-weight:700; font-size:0.78rem;">Why this status?</summary><div style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.5rem;">${escapeHtml(outcome.reason)}</div></details>`
                 : '';
@@ -1811,8 +1977,8 @@
                         <span class="value">${runDuration}</span>
                     </div>
                     <div class="detail-stat">
-                        <span class="label">Source</span>
-                        <span class="value" style="font-size:0.78rem;">${h.SourcePdfPath || h.EmailSubject || '&mdash;'}</span>
+                        <span class="label">Order Source</span>
+                        <span class="value value-truncate" style="font-size:0.78rem;" title="${escapeHtml(summarySource.title)}">${escapeHtml(summarySource.text)}</span>
                     </div>
                 </div>
                 ${renderActionStrip(h)}
@@ -1831,6 +1997,7 @@
                     ${rerunButtons}
                     <button class="btn btn-sm btn-danger" onclick="clearHistoryItem(${index})">Remove from Log</button>
                 </div>`;
+            restoreDetailPanelState(detail, panelState);
         }
 
         function selectRun(index) {
@@ -1838,7 +2005,7 @@
             document.querySelectorAll('.run-list-item').forEach(el => {
                 el.classList.toggle('selected', parseInt(el.dataset.idx) === index);
             });
-            renderRunDetail(index);
+            renderRunDetail(index, false);
         }
 
         function getLatestProblemRunInfo(history) {
@@ -1974,26 +2141,22 @@
 
                 // Progress box
                 const pBox = document.getElementById('progressBox');
+                const pMsg = document.getElementById('progressMsg');
+                const pCount = document.getElementById('progressCount');
+                const pMeta = document.getElementById('progressMeta');
                 if (data.ActiveTask !== "None") {
                     pBox.classList.add('active');
                     pBox.style.display = 'block';
-                    const isCrawlTask = (data.ActiveTask === 'Index Rebuild' || data.ActiveTask === 'Cleaning Index');
-                    if (isCrawlTask && data.Progress) {
-                        document.getElementById('progressMsg').innerText = data.Progress.Message;
-                        document.getElementById('progressCount').innerText = `Total items processed: ${data.Progress.Count.toLocaleString()}`;
-                    } else if (isCrawlTask) {
-                        document.getElementById('progressMsg').innerText = "Task Initializing...";
-                        document.getElementById('progressCount').innerText = "Waiting for network discovery...";
-                    } else if (data.ActiveTask === 'Email Check') {
-                        document.getElementById('progressMsg').innerText = "Checking email inbox for new orders...";
-                        document.getElementById('progressCount').innerText = "";
-                    } else {
-                        document.getElementById('progressMsg').innerText = data.ActiveTask + " in progress...";
-                        document.getElementById('progressCount').innerText = "";
-                    }
+                    const taskView = buildTaskProgressView(data);
+                    pMsg.innerText = taskView.title;
+                    pCount.innerText = taskView.detail || '';
+                    pMeta.innerText = taskView.meta || '';
                 } else {
                     pBox.classList.remove('active');
                     pBox.style.display = 'none';
+                    pMsg.innerText = 'Initializing...';
+                    pCount.innerText = '';
+                    pMeta.innerText = '';
                 }
 
                 // Email progress

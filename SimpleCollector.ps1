@@ -202,6 +202,11 @@ function Convert-IndexRow {
     if ([string]::IsNullOrWhiteSpace($rev) -and $fileName -match '(?i)[ _-]REV[ _-]*(?<rev>[A-Z0-9]+)\.') {
         $rev = $Matches['rev'].Trim().ToUpperInvariant()
     }
+    $lastWriteText = [string]$Row.LastWriteTime
+    $lastWriteValue = $null
+    if (-not [string]::IsNullOrWhiteSpace($lastWriteText)) {
+        try { $lastWriteValue = [datetime]$lastWriteText } catch { $lastWriteValue = $null }
+    }
 
     return [pscustomobject]@{
         BasePart          = $basePart
@@ -212,6 +217,60 @@ function Convert-IndexRow {
         Rev               = $rev
         FileType          = [string]$Row.FileType
         IsObsolete        = [string]$Row.IsObsolete
+        RootFolder        = [string]$Row.RootFolder
+        LastWriteTime     = $lastWriteText
+        LastWriteTimeValue = $lastWriteValue
+        SourceIndex       = "clean"
+    }
+}
+
+function Convert-RawIndexRow {
+    param(
+        [object]$Row,
+        [string]$DefaultFileType = ""
+    )
+    if ($null -eq $Row) { return $null }
+
+    $fullPath = [string]$Row.FullPath
+    $fileName = [string]$Row.FileName
+    if ([string]::IsNullOrWhiteSpace($fileName)) {
+        try { $fileName = [System.IO.Path]::GetFileName($fullPath) } catch { $fileName = "" }
+    }
+
+    $baseName = ([string]$Row.BaseName).Trim().ToUpperInvariant()
+    if ([string]::IsNullOrWhiteSpace($baseName)) {
+        $baseName = Get-FileBaseUpper $fileName
+    }
+    $canonicalBasePart = Get-CanonicalPartKey $baseName
+    $canonicalFileBase = Get-CanonicalPartKey $fileName
+    $rev = ""
+    foreach ($candidate in @($baseName, $fileName)) {
+        if ([string]::IsNullOrWhiteSpace($candidate)) { continue }
+        if ($candidate -match '(?i)[ _-]REV[ _-]*(?<rev>[A-Z0-9]+)(?:\.|$)') {
+            $rev = $Matches['rev'].Trim().ToUpperInvariant()
+            break
+        }
+    }
+    $lastWriteText = [string]$Row.LastWriteTime
+    $lastWriteValue = $null
+    if (-not [string]::IsNullOrWhiteSpace($lastWriteText)) {
+        try { $lastWriteValue = [datetime]$lastWriteText } catch { $lastWriteValue = $null }
+    }
+
+    return [pscustomobject]@{
+        BasePart          = $canonicalBasePart
+        CanonicalBasePart = $canonicalBasePart
+        CanonicalFileBase = $canonicalFileBase
+        FileName          = $fileName
+        FullPath          = $fullPath
+        Rev               = $rev
+        FileType          = $DefaultFileType
+        IsObsolete        = ""
+        RootFolder        = [string]$Row.RootFolder
+        LastWriteTime     = $lastWriteText
+        LastWriteTimeValue = $lastWriteValue
+        SourceIndex       = "raw"
+        BaseNameRaw       = $baseName
     }
 }
 
@@ -283,6 +342,200 @@ function Add-MatchSet {
     }
 }
 
+function Add-RowSet {
+    param(
+        [System.Collections.ArrayList]$Target,
+        [hashtable]$Seen,
+        [object[]]$Rows = @()
+    )
+
+    foreach ($row in @($Rows)) {
+        if ($null -eq $row) { continue }
+        $key = ([string]$row.FullPath).Trim().ToUpperInvariant()
+        if ([string]::IsNullOrWhiteSpace($key)) { continue }
+        if ($Seen.ContainsKey($key)) { continue }
+        $Seen[$key] = $true
+        [void]$Target.Add($row)
+    }
+}
+
+function Test-PathUnderRoots {
+    param(
+        [string]$Path,
+        [string[]]$Roots = @()
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Path) -or @($Roots).Count -eq 0) { return $false }
+
+    $pathNorm = ""
+    try { $pathNorm = [System.IO.Path]::GetFullPath($Path).TrimEnd('\').ToUpperInvariant() } catch { $pathNorm = $Path.Trim().TrimEnd('\').ToUpperInvariant() }
+    if ([string]::IsNullOrWhiteSpace($pathNorm)) { return $false }
+
+    foreach ($root in @($Roots)) {
+        if ([string]::IsNullOrWhiteSpace($root)) { continue }
+        $rootNorm = ""
+        try { $rootNorm = [System.IO.Path]::GetFullPath($root).TrimEnd('\').ToUpperInvariant() } catch { $rootNorm = $root.Trim().TrimEnd('\').ToUpperInvariant() }
+        if ([string]::IsNullOrWhiteSpace($rootNorm)) { continue }
+        if ($pathNorm -eq $rootNorm -or $pathNorm.StartsWith($rootNorm + "\")) { return $true }
+    }
+    return $false
+}
+
+function Get-DistinctMatchRevisions {
+    param([object[]]$Matches = @())
+
+    $vals = @(
+        @($Matches) |
+        ForEach-Object { ([string]$_.Rev).Trim().ToUpperInvariant() } |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Select-Object -Unique
+    )
+    return $vals
+}
+
+function Get-ExactLookupRows {
+    param(
+        [hashtable]$ByCanonicalBase,
+        [hashtable]$ByCanonicalFileBase,
+        [string[]]$RequestedKeys = @()
+    )
+
+    $rows = New-Object System.Collections.ArrayList
+    $seen = @{}
+    foreach ($k in @($RequestedKeys | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique)) {
+        Add-RowSet -Target $rows -Seen $seen -Rows @($ByCanonicalBase[$k])
+        Add-RowSet -Target $rows -Seen $seen -Rows @($ByCanonicalFileBase[$k])
+    }
+    return @($rows)
+}
+
+function Select-PreferredLiveRows {
+    param(
+        [object[]]$Rows = @(),
+        [string[]]$DesiredRevs = @(),
+        [string[]]$ProtectedRoots = @(),
+        [bool]$AllowMultipleWithoutRev = $false,
+        [bool]$RequireProtectedRoot = $false
+    )
+
+    $candidates = @(
+        @($Rows) |
+        Where-Object {
+            $null -ne $_ -and
+            -not [string]::IsNullOrWhiteSpace($_.FullPath) -and
+            (Test-Path ([string]$_.FullPath))
+        }
+    )
+    if (@($candidates).Count -eq 0) { return @() }
+
+    $desiredRevSet = @{}
+    foreach ($rev in @($DesiredRevs)) {
+        $revKey = ([string]$rev).Trim().ToUpperInvariant()
+        if (-not [string]::IsNullOrWhiteSpace($revKey)) { $desiredRevSet[$revKey] = $true }
+    }
+    if ($desiredRevSet.Count -gt 0) {
+        $candidates = @(
+            @($candidates) |
+            Where-Object {
+                $revKey = ([string]$_.Rev).Trim().ToUpperInvariant()
+                $desiredRevSet.ContainsKey($revKey)
+            }
+        )
+        if (@($candidates).Count -eq 0) { return @() }
+    }
+
+    $protected = @()
+    if (@($ProtectedRoots).Count -gt 0) {
+        $protected = @(
+            @($candidates) |
+            Where-Object { Test-PathUnderRoots -Path ([string]$_.FullPath) -Roots $ProtectedRoots }
+        )
+    }
+    if (@($protected).Count -gt 0) {
+        $candidates = $protected
+    } elseif ($RequireProtectedRoot -and @($ProtectedRoots).Count -gt 0) {
+        return @()
+    }
+
+    $candidates = @(
+        @($candidates) |
+        Sort-Object `
+            @{Expression={ if ($_.LastWriteTimeValue) { [datetime]$_.LastWriteTimeValue } else { [datetime]::MinValue } };Descending=$true},`
+            @{Expression={ [string]$_.FileName };Descending=$false},`
+            @{Expression={ [string]$_.FullPath };Descending=$false}
+    )
+
+    if (-not $AllowMultipleWithoutRev -and $desiredRevSet.Count -eq 0 -and @($candidates).Count -gt 1) {
+        return @()
+    }
+
+    return $candidates
+}
+
+function Test-ModelEntryExtension {
+    param(
+        [object]$Row,
+        [string]$ExpectedExtension
+    )
+    if ($null -eq $Row -or [string]::IsNullOrWhiteSpace($ExpectedExtension)) { return $false }
+    $fileName = [string]$Row.FileName
+    if ([string]::IsNullOrWhiteSpace($fileName)) {
+        $fileName = [string]$Row.FullPath
+    }
+    if ([string]::IsNullOrWhiteSpace($fileName)) { return $false }
+    return $fileName.Trim().ToUpperInvariant().EndsWith($ExpectedExtension.Trim().ToUpperInvariant())
+}
+
+function Copy-MatchRecordsForPart {
+    param(
+        [object[]]$Matches = @(),
+        [hashtable]$AlreadyCopied,
+        [string]$DestinationFolder,
+        [System.Collections.ArrayList]$CollectedFiles,
+        [System.Collections.IDictionary]$Summary,
+        [string]$RequestedPart,
+        [string]$Kind
+    )
+
+    $foundForPart = $false
+    foreach ($match in @($Matches)) {
+        if ($null -eq $match -or -not (Test-Path ([string]$match.FullPath))) { continue }
+        $srcKey = ([string]$match.FullPath).Trim().ToUpperInvariant()
+        if ([string]::IsNullOrWhiteSpace($srcKey)) { continue }
+        if ($AlreadyCopied.ContainsKey($srcKey)) {
+            $foundForPart = $true
+            continue
+        }
+        $destFileName = [string]$match.FileName
+        if ([string]::IsNullOrWhiteSpace($destFileName)) {
+            try { $destFileName = [System.IO.Path]::GetFileName([string]$match.FullPath) } catch { $destFileName = "" }
+        }
+        if ([string]::IsNullOrWhiteSpace($destFileName)) { continue }
+        $dest = Join-Path $DestinationFolder $destFileName
+        if (-not (Copy-FileIfChanged -Source ([string]$match.FullPath) -Dest $dest)) { continue }
+
+        $AlreadyCopied[$srcKey] = $true
+        $foundForPart = $true
+        $entry = [ordered]@{
+            RequestedPart = $RequestedPart
+            FileName      = $destFileName
+            SourcePath    = [string]$match.FullPath
+            DestPath      = $dest
+            Strategy      = [string]$match.Strategy
+            Rev           = [string]$match.Rev
+        }
+        [void]$CollectedFiles.Add($entry)
+        if ($Kind -eq "PDF") {
+            $Summary["pdfsFound"] = [int]$Summary["pdfsFound"] + 1
+            $Summary["CollectedPdfFiles"] = @($Summary["CollectedPdfFiles"]) + @($entry)
+        } else {
+            $Summary["dxfsFound"] = [int]$Summary["dxfsFound"] + 1
+            $Summary["CollectedDxfFiles"] = @($Summary["CollectedDxfFiles"]) + @($entry)
+        }
+    }
+    return [bool]$foundForPart
+}
+
 $cfgPathResolved = ""
 if (-not [string]::IsNullOrWhiteSpace($ConfigPath)) {
     if ([System.IO.Path]::IsPathRooted($ConfigPath)) {
@@ -304,6 +557,9 @@ $configBaseDir = if ([string]::IsNullOrWhiteSpace($cfgPathResolved)) { $scriptDi
 $indexFolder = Resolve-ConfiguredPath -PathValue $cfg.indexFolder -BasePath $configBaseDir -DefaultValue "C:\Users\dlebel\Documents\PDFIndex"
 $pdfIndexClean = Join-Path $indexFolder "pdf_index_clean.csv"
 $dxfIndexClean = Join-Path $indexFolder "dxf_index_clean.csv"
+$pdfIndexRaw = Join-Path $indexFolder "pdf_index_raw.csv"
+$dxfIndexRaw = Join-Path $indexFolder "dxf_index_raw.csv"
+$modelIndexClean = Join-Path $indexFolder "model_index_clean.csv"
 
 $collectorCfg = if ($cfg -and $cfg.collector) { $cfg.collector } else { $null }
 $strictMatching = $true
@@ -318,11 +574,28 @@ $indexStaleWarningHours = 24.0
 if ($collectorCfg -and $collectorCfg.indexStaleWarningHours) {
     try { $indexStaleWarningHours = [double]$collectorCfg.indexStaleWarningHours } catch { $indexStaleWarningHours = 24.0 }
 }
+$enableLiveExactRawFallback = $false
+if ($collectorCfg -and $null -ne $collectorCfg.enableLiveExactRawFallback) {
+    try { $enableLiveExactRawFallback = [bool]$collectorCfg.enableLiveExactRawFallback } catch { $enableLiveExactRawFallback = $false }
+}
+$enableAssemblyParentPdfFallback = $false
+if ($collectorCfg -and $null -ne $collectorCfg.enableAssemblyParentPdfFallback) {
+    try { $enableAssemblyParentPdfFallback = [bool]$collectorCfg.enableAssemblyParentPdfFallback } catch { $enableAssemblyParentPdfFallback = $false }
+}
 $disallowedFolderNames = @()
 $disallowedNamePatterns = @()
 if ($cfg -and $cfg.pathFilters) {
     if ($cfg.pathFilters.disallowedModelFolderNames) { $disallowedFolderNames = @($cfg.pathFilters.disallowedModelFolderNames) }
     if ($cfg.pathFilters.disallowedModelNamePatterns) { $disallowedNamePatterns = @($cfg.pathFilters.disallowedModelNamePatterns) }
+}
+$protectedRoots = @()
+if ($cfg -and $cfg.protectedRoots) {
+    $protectedRoots = @(
+        @($cfg.protectedRoots) |
+        ForEach-Object { Resolve-ConfiguredPath -PathValue ([string]$_) -BasePath $configBaseDir } |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Select-Object -Unique
+    )
 }
 $copyExtraMatches = ((-not $strictMatching) -or $copyChildVariants)
 
@@ -336,6 +609,8 @@ $summary = [ordered]@{
     ConfigPath       = $cfgPathResolved
     StrictMatching   = [bool]$strictMatching
     CopyChildVariants = [bool]$copyChildVariants
+    EnableLiveExactRawFallback = [bool]$enableLiveExactRawFallback
+    EnableAssemblyParentPdfFallback = [bool]$enableAssemblyParentPdfFallback
     RequestedParts   = @()
     pdfsFound        = 0
     dxfsFound        = 0
@@ -349,6 +624,9 @@ $summary = [ordered]@{
     indexInfo        = [ordered]@{
         PdfIndex = Get-IndexMetadata -Path $pdfIndexClean -StaleWarningHours $indexStaleWarningHours
         DxfIndex = Get-IndexMetadata -Path $dxfIndexClean -StaleWarningHours $indexStaleWarningHours
+        PdfRawIndex = $(if ($enableLiveExactRawFallback -or $enableAssemblyParentPdfFallback) { Get-IndexMetadata -Path $pdfIndexRaw -StaleWarningHours $indexStaleWarningHours } else { $null })
+        DxfRawIndex = $(if ($enableLiveExactRawFallback) { Get-IndexMetadata -Path $dxfIndexRaw -StaleWarningHours $indexStaleWarningHours } else { $null })
+        ModelIndex = $(if ($enableAssemblyParentPdfFallback) { Get-IndexMetadata -Path $modelIndexClean -StaleWarningHours $indexStaleWarningHours } else { $null })
         WarningHours = $indexStaleWarningHours
         IsStale = $false
     }
@@ -359,6 +637,7 @@ Write-CollectorLog "BOM: $BOMFile"
 Write-CollectorLog "Output: $OutputFolder"
 Write-CollectorLog "Mode: $CollectMode"
 Write-CollectorLog "Strict matching: $strictMatching | Copy child variants: $copyChildVariants"
+Write-CollectorLog "Live exact fallback: $enableLiveExactRawFallback | Assembly parent fallback: $enableAssemblyParentPdfFallback"
 
 if (-not (Test-Path $BOMFile)) {
     Write-CollectorLog "ERROR: BOM file not found: $BOMFile"
@@ -384,6 +663,15 @@ if ($summary.indexInfo.PdfIndex.IsStale) {
 }
 if ($summary.indexInfo.DxfIndex.IsStale) {
     $summary.warnings += "DXF index is stale ($($summary.indexInfo.DxfIndex.AgeHours) hours old)"
+}
+if ($enableLiveExactRawFallback -and $collectPDFs -and $summary.indexInfo.PdfRawIndex -and -not $summary.indexInfo.PdfRawIndex.Exists) {
+    $summary.warnings += "PDF raw index not found: $pdfIndexRaw"
+}
+if ($enableLiveExactRawFallback -and $collectDXFs -and $summary.indexInfo.DxfRawIndex -and -not $summary.indexInfo.DxfRawIndex.Exists) {
+    $summary.warnings += "DXF raw index not found: $dxfIndexRaw"
+}
+if ($enableAssemblyParentPdfFallback -and $summary.indexInfo.ModelIndex -and -not $summary.indexInfo.ModelIndex.Exists) {
+    $summary.warnings += "Model index not found: $modelIndexClean"
 }
 $summary.indexInfo.IsStale = [bool]($summary.indexInfo.PdfIndex.IsStale -or $summary.indexInfo.DxfIndex.IsStale)
 
@@ -415,6 +703,47 @@ if ($collectDXFs -and (Test-Path $dxfIndexClean)) {
     )
 }
 
+$pdfRawIndexRows = @()
+if (($enableLiveExactRawFallback -or $enableAssemblyParentPdfFallback) -and $collectPDFs -and (Test-Path $pdfIndexRaw)) {
+    Write-CollectorLog "Loading PDF raw index fallback data..."
+    $pdfRawIndexRows = @(
+        Get-IndexRowsCached -IndexPath $pdfIndexRaw |
+        ForEach-Object { Convert-RawIndexRow -Row $_ -DefaultFileType "PDF" } |
+        Where-Object {
+            $null -ne $_ -and
+            -not [string]::IsNullOrWhiteSpace($_.FullPath) -and
+            -not (Test-DisallowedIndexedPath -FullPath $_.FullPath -DisallowedFolderNames $disallowedFolderNames -DisallowedNamePatterns $disallowedNamePatterns)
+        }
+    )
+}
+
+$dxfRawIndexRows = @()
+if ($enableLiveExactRawFallback -and $collectDXFs -and (Test-Path $dxfIndexRaw)) {
+    Write-CollectorLog "Loading DXF raw index fallback data..."
+    $dxfRawIndexRows = @(
+        Get-IndexRowsCached -IndexPath $dxfIndexRaw |
+        ForEach-Object { Convert-RawIndexRow -Row $_ -DefaultFileType "DXF" } |
+        Where-Object {
+            $null -ne $_ -and
+            -not [string]::IsNullOrWhiteSpace($_.FullPath) -and
+            -not (Test-DisallowedIndexedPath -FullPath $_.FullPath -DisallowedFolderNames $disallowedFolderNames -DisallowedNamePatterns $disallowedNamePatterns)
+        }
+    )
+}
+
+$modelIndexRows = @()
+if ($enableAssemblyParentPdfFallback -and (Test-Path $modelIndexClean)) {
+    Write-CollectorLog "Loading model index for assembly fallback..."
+    $modelIndexRows = @(
+        Get-IndexRowsCached -IndexPath $modelIndexClean |
+        Where-Object {
+            $null -ne $_ -and
+            -not [string]::IsNullOrWhiteSpace([string]$_.BasePart) -and
+            -not [string]::IsNullOrWhiteSpace([string]$_.FullPath)
+        }
+    )
+}
+
 $pdfByCanonicalBase = @{}
 $pdfByCanonicalFileBase = @{}
 $pdfByParentChildBase = @{}
@@ -439,6 +768,27 @@ foreach ($row in @($dxfIndex)) {
     if (-not [string]::IsNullOrWhiteSpace($parentBase)) { Add-ToLookup -Lookup $dxfByParentChildBase -Key $parentBase -Row $row }
     $parentFile = Get-AllowedChildParentKey -CandidatePart ([string]$row.CanonicalFileBase)
     if (-not [string]::IsNullOrWhiteSpace($parentFile)) { Add-ToLookup -Lookup $dxfByParentChildFileBase -Key $parentFile -Row $row }
+}
+
+$pdfRawByCanonicalBase = @{}
+$pdfRawByCanonicalFileBase = @{}
+foreach ($row in @($pdfRawIndexRows)) {
+    Add-ToLookup -Lookup $pdfRawByCanonicalBase -Key ([string]$row.CanonicalBasePart) -Row $row
+    Add-ToLookup -Lookup $pdfRawByCanonicalFileBase -Key ([string]$row.CanonicalFileBase) -Row $row
+}
+
+$dxfRawByCanonicalBase = @{}
+$dxfRawByCanonicalFileBase = @{}
+foreach ($row in @($dxfRawIndexRows)) {
+    Add-ToLookup -Lookup $dxfRawByCanonicalBase -Key ([string]$row.CanonicalBasePart) -Row $row
+    Add-ToLookup -Lookup $dxfRawByCanonicalFileBase -Key ([string]$row.CanonicalFileBase) -Row $row
+}
+
+$modelByBasePart = @{}
+foreach ($row in @($modelIndexRows)) {
+    $basePartKey = ([string]$row.BasePart).Trim().ToUpperInvariant()
+    if ([string]::IsNullOrWhiteSpace($basePartKey)) { continue }
+    Add-ToLookup -Lookup $modelByBasePart -Key $basePartKey -Row $row
 }
 
 $partNumbers = @(
@@ -485,56 +835,82 @@ foreach ($partNum in $partNumbers) {
 
     $copiedPdfFiles = New-Object System.Collections.ArrayList
     $copiedDxfFiles = New-Object System.Collections.ArrayList
+    $fallbackPdfMatches = New-Object System.Collections.ArrayList
+    $fallbackDxfMatches = New-Object System.Collections.ArrayList
+    $fallbackNotes = New-Object System.Collections.ArrayList
     $pdfFoundForPart = $false
     $dxfFoundForPart = $false
+    $pdfFallbackSeen = @{}
+    $dxfFallbackSeen = @{}
 
     $pdfMatchesToCopy = @($primaryPdfMatches)
     if ($copyExtraMatches) { $pdfMatchesToCopy += @($extraPdfMatches) }
-    foreach ($match in $pdfMatchesToCopy) {
-        if ($null -eq $match -or -not (Test-Path $match.FullPath)) { continue }
-        $pdfSrcKey = ([string]$match.FullPath).Trim().ToUpperInvariant()
-        if ($copiedPdf.ContainsKey($pdfSrcKey)) {
-            $pdfFoundForPart = $true
-            continue
-        }
-        $destFileName = [string]$match.FileName
-        if ([string]::IsNullOrWhiteSpace($destFileName)) {
-            try { $destFileName = [System.IO.Path]::GetFileName([string]$match.FullPath) } catch { $destFileName = "" }
-        }
-        if ([string]::IsNullOrWhiteSpace($destFileName)) { continue }
-        $dest = Join-Path $OutputFolder $destFileName
-        if (Copy-FileIfChanged -Source $match.FullPath -Dest $dest) {
-            $copiedPdf[$pdfSrcKey] = $true
-            $summary.pdfsFound++
-            $pdfFoundForPart = $true
-            $pdfEntry = [ordered]@{ RequestedPart = $partNum; FileName = $destFileName; SourcePath = [string]$match.FullPath; DestPath = $dest; Strategy = [string]$match.Strategy; Rev = [string]$match.Rev }
-            [void]$copiedPdfFiles.Add($pdfEntry)
-            $summary.CollectedPdfFiles += $pdfEntry
-        }
-    }
+    $pdfFoundForPart = Copy-MatchRecordsForPart -Matches @($pdfMatchesToCopy) -AlreadyCopied $copiedPdf -DestinationFolder $OutputFolder -CollectedFiles $copiedPdfFiles -Summary $summary -RequestedPart $partNum -Kind "PDF"
 
     $dxfMatchesToCopy = @($primaryDxfMatches)
     if ($copyExtraMatches) { $dxfMatchesToCopy += @($extraDxfMatches) }
-    foreach ($match in $dxfMatchesToCopy) {
-        if ($null -eq $match -or -not (Test-Path $match.FullPath)) { continue }
-        $dxfSrcKey = ([string]$match.FullPath).Trim().ToUpperInvariant()
-        if ($copiedDxf.ContainsKey($dxfSrcKey)) {
-            $dxfFoundForPart = $true
-            continue
+    $dxfFoundForPart = Copy-MatchRecordsForPart -Matches @($dxfMatchesToCopy) -AlreadyCopied $copiedDxf -DestinationFolder $dxfSubFolder -CollectedFiles $copiedDxfFiles -Summary $summary -RequestedPart $partNum -Kind "DXF"
+
+    if (-not $pdfFoundForPart -and $enableLiveExactRawFallback -and $collectPDFs) {
+        $desiredPdfRevs = Get-DistinctMatchRevisions -Matches @($primaryPdfMatches)
+        $rawPdfExactRows = Get-ExactLookupRows -ByCanonicalBase $pdfRawByCanonicalBase -ByCanonicalFileBase $pdfRawByCanonicalFileBase -RequestedKeys $requestedKeys
+        $selectedRawPdfRows = Select-PreferredLiveRows -Rows @($rawPdfExactRows) -DesiredRevs @($desiredPdfRevs) -ProtectedRoots $protectedRoots -AllowMultipleWithoutRev $false
+        if (@($selectedRawPdfRows).Count -gt 0) {
+            Add-MatchSet -Target $fallbackPdfMatches -Seen $pdfFallbackSeen -Rows @($selectedRawPdfRows | Select-Object -First 1) -RequestedPart $partNum -Strategy "live-exact-raw-fallback" -Kind "PDF"
+            if (Copy-MatchRecordsForPart -Matches @($fallbackPdfMatches) -AlreadyCopied $copiedPdf -DestinationFolder $OutputFolder -CollectedFiles $copiedPdfFiles -Summary $summary -RequestedPart $partNum -Kind "PDF") {
+                $pdfFoundForPart = $true
+                [void]$fallbackNotes.Add("Used live exact PDF fallback.")
+            }
         }
-        $destFileName = [string]$match.FileName
-        if ([string]::IsNullOrWhiteSpace($destFileName)) {
-            try { $destFileName = [System.IO.Path]::GetFileName([string]$match.FullPath) } catch { $destFileName = "" }
+    }
+
+    if (-not $dxfFoundForPart -and $enableLiveExactRawFallback -and $collectDXFs) {
+        $desiredDxfRevs = Get-DistinctMatchRevisions -Matches @($primaryDxfMatches)
+        $rawDxfExactRows = Get-ExactLookupRows -ByCanonicalBase $dxfRawByCanonicalBase -ByCanonicalFileBase $dxfRawByCanonicalFileBase -RequestedKeys $requestedKeys
+        $selectedRawDxfRows = Select-PreferredLiveRows -Rows @($rawDxfExactRows) -DesiredRevs @($desiredDxfRevs) -ProtectedRoots $protectedRoots -AllowMultipleWithoutRev $false
+        if (@($selectedRawDxfRows).Count -gt 0) {
+            Add-MatchSet -Target $fallbackDxfMatches -Seen $dxfFallbackSeen -Rows @($selectedRawDxfRows | Select-Object -First 1) -RequestedPart $partNum -Strategy "live-exact-raw-fallback" -Kind "DXF"
+            if (Copy-MatchRecordsForPart -Matches @($fallbackDxfMatches) -AlreadyCopied $copiedDxf -DestinationFolder $dxfSubFolder -CollectedFiles $copiedDxfFiles -Summary $summary -RequestedPart $partNum -Kind "DXF") {
+                $dxfFoundForPart = $true
+                [void]$fallbackNotes.Add("Used live exact DXF fallback.")
+            }
         }
-        if ([string]::IsNullOrWhiteSpace($destFileName)) { continue }
-        $dest = Join-Path $dxfSubFolder $destFileName
-        if (Copy-FileIfChanged -Source $match.FullPath -Dest $dest) {
-            $copiedDxf[$dxfSrcKey] = $true
-            $summary.dxfsFound++
-            $dxfFoundForPart = $true
-            $dxfEntry = [ordered]@{ RequestedPart = $partNum; FileName = $destFileName; SourcePath = [string]$match.FullPath; DestPath = $dest; Strategy = [string]$match.Strategy; Rev = [string]$match.Rev }
-            [void]$copiedDxfFiles.Add($dxfEntry)
-            $summary.CollectedDxfFiles += $dxfEntry
+    }
+
+    if (-not $pdfFoundForPart -and $enableAssemblyParentPdfFallback -and $collectPDFs) {
+        $parentPart = Get-AllowedChildParentKey -CandidatePart $partNumBase
+        if (-not [string]::IsNullOrWhiteSpace($parentPart)) {
+            $parentKeys = @($parentPart) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+            $selectedParentRows = @()
+            $parentSelectionSource = ""
+            $selectedParentCleanRows = Select-PreferredLiveRows -Rows @(Get-ExactLookupRows -ByCanonicalBase $pdfByCanonicalBase -ByCanonicalFileBase $pdfByCanonicalFileBase -RequestedKeys $parentKeys) -DesiredRevs @() -ProtectedRoots $protectedRoots -AllowMultipleWithoutRev $true -RequireProtectedRoot $true
+            if (@($selectedParentCleanRows).Count -gt 0) {
+                $selectedParentRows = @($selectedParentCleanRows)
+                $parentSelectionSource = "clean"
+            } else {
+                $selectedParentRawRows = Select-PreferredLiveRows -Rows @(Get-ExactLookupRows -ByCanonicalBase $pdfRawByCanonicalBase -ByCanonicalFileBase $pdfRawByCanonicalFileBase -RequestedKeys $parentKeys) -DesiredRevs @() -ProtectedRoots $protectedRoots -AllowMultipleWithoutRev $true -RequireProtectedRoot $true
+                if (@($selectedParentRawRows).Count -gt 0) {
+                    $selectedParentRows = @($selectedParentRawRows)
+                    $parentSelectionSource = "raw"
+                }
+            }
+            if (@($selectedParentRows).Count -gt 0) {
+                Add-MatchSet -Target $fallbackPdfMatches -Seen $pdfFallbackSeen -Rows @($selectedParentRows | Select-Object -First 1) -RequestedPart $partNum -Strategy "assembly-parent-pdf-fallback" -Kind "PDF"
+                if (Copy-MatchRecordsForPart -Matches @($fallbackPdfMatches) -AlreadyCopied $copiedPdf -DestinationFolder $OutputFolder -CollectedFiles $copiedPdfFiles -Summary $summary -RequestedPart $partNum -Kind "PDF") {
+                    $pdfFoundForPart = $true
+                    $note = "Used assembly parent PDF fallback via $parentPart"
+                    if (-not [string]::IsNullOrWhiteSpace($parentSelectionSource)) {
+                        $note += " ($parentSelectionSource index"
+                        if (@($selectedParentRows).Count -gt 1) {
+                            $note += ", newest of $(@($selectedParentRows).Count) live candidates"
+                        }
+                        $note += ")."
+                    } else {
+                        $note += "."
+                    }
+                    [void]$fallbackNotes.Add($note)
+                }
+            }
         }
     }
 
@@ -560,15 +936,42 @@ foreach ($partNum in $partNumbers) {
         PrimaryDxfMatches       = @($primaryDxfMatches)
         ExtraPdfCandidates      = @($extraPdfMatches)
         ExtraDxfCandidates      = @($extraDxfMatches)
+        FallbackPdfMatches      = @($fallbackPdfMatches)
+        FallbackDxfMatches      = @($fallbackDxfMatches)
+        FallbackNotes           = @($fallbackNotes)
         VariantOnly             = [bool]((-not $pdfFoundForPart -and @($extraPdfMatches).Count -gt 0) -or (-not $dxfFoundForPart -and @($extraDxfMatches).Count -gt 0))
     }
 }
 
 $summary.notFound = @($summary.notFound | Select-Object -Unique)
-$summary.extraPdfs = @($summary.extraPdfs | Sort-Object RequestedPart, FileName -Unique)
-$summary.extraDxfs = @($summary.extraDxfs | Sort-Object RequestedPart, FileName -Unique)
-$summary.CollectedPdfFiles = @($summary.CollectedPdfFiles | Sort-Object FileName, DestPath -Unique)
-$summary.CollectedDxfFiles = @($summary.CollectedDxfFiles | Sort-Object FileName, DestPath -Unique)
+$summary.extraPdfs = @(
+    @($summary.extraPdfs) |
+    Sort-Object `
+        @{Expression={ [string]$_['RequestedPart'] };Descending=$false},`
+        @{Expression={ [string]$_['FileName'] };Descending=$false},`
+        @{Expression={ [string]$_['FullPath'] };Descending=$false} -Unique
+)
+$summary.extraDxfs = @(
+    @($summary.extraDxfs) |
+    Sort-Object `
+        @{Expression={ [string]$_['RequestedPart'] };Descending=$false},`
+        @{Expression={ [string]$_['FileName'] };Descending=$false},`
+        @{Expression={ [string]$_['FullPath'] };Descending=$false} -Unique
+)
+$summary.CollectedPdfFiles = @(
+    @($summary.CollectedPdfFiles) |
+    Sort-Object `
+        @{Expression={ [string]$_['FileName'] };Descending=$false},`
+        @{Expression={ [string]$_['DestPath'] };Descending=$false},`
+        @{Expression={ [string]$_['SourcePath'] };Descending=$false} -Unique
+)
+$summary.CollectedDxfFiles = @(
+    @($summary.CollectedDxfFiles) |
+    Sort-Object `
+        @{Expression={ [string]$_['FileName'] };Descending=$false},`
+        @{Expression={ [string]$_['DestPath'] };Descending=$false},`
+        @{Expression={ [string]$_['SourcePath'] };Descending=$false} -Unique
+)
 
 if ((@($summary.extraPdfs).Count + @($summary.extraDxfs).Count) -gt 0 -and -not $copyExtraMatches) {
     $summary.warnings += "Extra parent-child matches were found but not copied because strict matching is enabled."

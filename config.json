@@ -74,6 +74,8 @@
     "collector": {
         "strictMatching": true,
         "copyChildVariants": false,
-        "indexStaleWarningHours": 24
+        "indexStaleWarningHours": 24,
+        "enableLiveExactRawFallback": true,
+        "enableAssemblyParentPdfFallback": true
     }
 }
